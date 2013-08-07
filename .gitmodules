@@ -1,0 +1,6 @@
+[submodule "luaobjc"]
+	path = luaobjc
+	url = git@github.com:torus/Lua-Objective-C-Bridge.git
+[submodule "lua"]
+	path = lua
+	url = https://github.com/LuaDist/lua.git
