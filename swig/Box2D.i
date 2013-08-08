@@ -1,7 +1,7 @@
 %module b2
 
 %{
-#include "Box2D/Box2D.h"
+#include <Box2D/Box2D.h>
 
   // workaround
   void b2WheelJoint::GetDefinition(b2WheelJointDef*) const {}
