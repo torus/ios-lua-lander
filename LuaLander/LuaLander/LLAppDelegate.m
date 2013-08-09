@@ -10,20 +10,25 @@
 #import "lua.h"
 #import "lualib.h"
 #import "lauxlib.h"
+#import "LuaBridge.h"
 
 @implementation LLAppDelegate
 
-static lua_State *L;
+//static lua_State *L;
 int luaopen_cg(lua_State *);
 int luaopen_b2(lua_State *);
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    L = luaL_newstate();
-    luaL_openlibs(L);
+//    L = luaL_newstate();
+    LuaBridge *brdg = [LuaBridge instance];
+    lua_State *L = [brdg L];
+//    luaL_openlibs(L);
     luaopen_cg(L);
     luaopen_b2(L);
+    
+    luaL_dostring(L, "print 'hoge'");
     return YES;
 }
 							

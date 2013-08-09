@@ -181,7 +181,7 @@
 		9CF9678D17B2942300607D8B /* Box2D_wrap.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9678C17B2942300607D8B /* Box2D_wrap.cxx */; };
 		9CF9678E17B2942300607D8B /* Box2D_wrap.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9678C17B2942300607D8B /* Box2D_wrap.cxx */; };
 		9CF967A317B2954C00607D8B /* LuaBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9679C17B2954C00607D8B /* LuaBridge.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		9CF967A417B2954C00607D8B /* LuaBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9679C17B2954C00607D8B /* LuaBridge.m */; };
+		9CF967A417B2954C00607D8B /* LuaBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9679C17B2954C00607D8B /* LuaBridge.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9CF967A517B2954C00607D8B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 9CF9679E17B2954C00607D8B /* README.md */; };
 		9CF967A617B2954C00607D8B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 9CF9679E17B2954C00607D8B /* README.md */; };
 		9CF967A717B2954C00607D8B /* utils.lua in Resources */ = {isa = PBXBuildFile; fileRef = 9CF9679F17B2954C00607D8B /* utils.lua */; };
