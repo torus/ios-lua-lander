@@ -28,7 +28,11 @@ int luaopen_b2(lua_State *);
     luaopen_cg(L);
     luaopen_b2(L);
     
-    luaL_dostring(L, "print 'hoge'");
+    NSString *fn = [[NSBundle mainBundle] pathForResource:@"bootstrap" ofType:@"lua"];
+    NSLog(@"file: %@", fn);
+    if (luaL_dofile(L, [fn UTF8String])) {
+        NSLog(@"Lua Error: %s", lua_tostring(L, -1));
+    }
     return YES;
 }
 							

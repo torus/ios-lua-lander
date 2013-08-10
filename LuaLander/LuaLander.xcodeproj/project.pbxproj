@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C110A6917B5EF8300576079 /* bootstrap.lua in Resources */ = {isa = PBXBuildFile; fileRef = 9C110A6817B5EF8300576079 /* bootstrap.lua */; };
 		9CF9661417B135B700607D8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661317B135B700607D8B /* UIKit.framework */; };
 		9CF9661617B135B700607D8B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661517B135B700607D8B /* Foundation.framework */; };
 		9CF9661817B135B700607D8B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661717B135B700607D8B /* CoreGraphics.framework */; };
@@ -201,6 +202,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9C110A6817B5EF8300576079 /* bootstrap.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bootstrap.lua; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.lua; };
 		9CF9661017B135B700607D8B /* LuaLander.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LuaLander.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CF9661317B135B700607D8B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9CF9661517B135B700607D8B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -377,7 +379,7 @@
 		9CF9679C17B2954C00607D8B /* LuaBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LuaBridge.m; path = ../../luaobjc/LuaBridge.m; sourceTree = "<group>"; };
 		9CF9679D17B2954C00607D8B /* LuaBridgeInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LuaBridgeInternal.h; path = ../../luaobjc/LuaBridgeInternal.h; sourceTree = "<group>"; };
 		9CF9679E17B2954C00607D8B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../../luaobjc/README.md; sourceTree = "<group>"; };
-		9CF9679F17B2954C00607D8B /* utils.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = utils.lua; path = ../../luaobjc/utils.lua; sourceTree = "<group>"; };
+		9CF9679F17B2954C00607D8B /* utils.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = utils.lua; path = ../../luaobjc/utils.lua; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.lua; };
 		9CF967AA17B3DCFC00607D8B /* CGAffineTransform_wrap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CGAffineTransform_wrap.m; path = ../../luaobjc/swig/CGAffineTransform_wrap.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -449,6 +451,7 @@
 				9CF9663117B135B700607D8B /* LLViewController.h */,
 				9CF9663217B135B700607D8B /* LLViewController.m */,
 				9CF9661A17B135B700607D8B /* Supporting Files */,
+				9C110A6817B5EF8300576079 /* bootstrap.lua */,
 			);
 			path = LuaLander;
 			sourceTree = "<group>";
@@ -809,6 +812,7 @@
 				9CF9663017B135B700607D8B /* MainStoryboard_iPad.storyboard in Resources */,
 				9CF967A517B2954C00607D8B /* README.md in Resources */,
 				9CF967A717B2954C00607D8B /* utils.lua in Resources */,
+				9C110A6917B5EF8300576079 /* bootstrap.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1200,6 +1204,7 @@
 				9CF9664D17B135B800607D8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9CF9664E17B135B800607D8B /* Build configuration list for PBXNativeTarget "LuaLanderTests" */ = {
 			isa = XCConfigurationList;
@@ -1208,6 +1213,7 @@
 				9CF9665017B135B800607D8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
