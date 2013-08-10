@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LLViewController : UIViewController
+@interface LLViewController : UIViewController {
+    int gameState;
+    CFTimeInterval startTime;
+}
 
 @end

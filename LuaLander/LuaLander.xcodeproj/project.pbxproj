@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		9C110A6917B5EF8300576079 /* bootstrap.lua in Resources */ = {isa = PBXBuildFile; fileRef = 9C110A6817B5EF8300576079 /* bootstrap.lua */; };
+		9C110A6B17B63CD000576079 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C110A6A17B63CD000576079 /* QuartzCore.framework */; };
+		9C110A6D17B6A66800576079 /* spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C110A6C17B6A66800576079 /* spaceship.png */; };
 		9CF9661417B135B700607D8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661317B135B700607D8B /* UIKit.framework */; };
 		9CF9661617B135B700607D8B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661517B135B700607D8B /* Foundation.framework */; };
 		9CF9661817B135B700607D8B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661717B135B700607D8B /* CoreGraphics.framework */; };
@@ -203,6 +205,8 @@
 
 /* Begin PBXFileReference section */
 		9C110A6817B5EF8300576079 /* bootstrap.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bootstrap.lua; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.lua; };
+		9C110A6A17B63CD000576079 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		9C110A6C17B6A66800576079 /* spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spaceship.png; path = ../../images/spaceship.png; sourceTree = "<group>"; };
 		9CF9661017B135B700607D8B /* LuaLander.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LuaLander.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CF9661317B135B700607D8B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9CF9661517B135B700607D8B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -388,6 +392,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C110A6B17B63CD000576079 /* QuartzCore.framework in Frameworks */,
 				9CF9661417B135B700607D8B /* UIKit.framework in Frameworks */,
 				9CF9661617B135B700607D8B /* Foundation.framework in Frameworks */,
 				9CF9661817B135B700607D8B /* CoreGraphics.framework in Frameworks */,
@@ -410,6 +415,7 @@
 		9CF9660717B135B700607D8B = {
 			isa = PBXGroup;
 			children = (
+				9C110A6A17B63CD000576079 /* QuartzCore.framework */,
 				9CF9661917B135B700607D8B /* LuaLander */,
 				9CF9664017B135B800607D8B /* LuaLanderTests */,
 				9CF9661217B135B700607D8B /* Frameworks */,
@@ -440,6 +446,7 @@
 		9CF9661917B135B700607D8B /* LuaLander */ = {
 			isa = PBXGroup;
 			children = (
+				9C110A6C17B6A66800576079 /* spaceship.png */,
 				9CF9678F17B2950500607D8B /* LuaBridge */,
 				9CF9678B17B2940400607D8B /* SWIG */,
 				9CF966CE17B2914E00607D8B /* Box2D */,
@@ -813,6 +820,7 @@
 				9CF967A517B2954C00607D8B /* README.md in Resources */,
 				9CF967A717B2954C00607D8B /* utils.lua in Resources */,
 				9C110A6917B5EF8300576079 /* bootstrap.lua in Resources */,
+				9C110A6D17B6A66800576079 /* spaceship.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
