@@ -8,21 +8,50 @@ local function make_main_coro(stat)
       local ctx = objc.context:create()
       local view = ctx:wrap(stat.view_controller)("view")
       print ("view", -view)
-      -- local imgpath = (ctx:wrap(objc.class.NSBundle)
-      -- 		       ("mainBundle")
-      -- 		       ("pathForResource:ofType:", "spaceship", "png"))
-      -- print("imgpath", imgpath)
       local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "spaceship.png")
       print("img", -img)
 
-      local imgview = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
-      print("imgview", -imgview)
-      -- local ship = imgviewcls()
-      view("addSubview:", -imgview)
+      local ship = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
+      print("ship", -ship)
+      view("addSubview:", -ship)
+
+      local gravity = b2.b2Vec2(0, -10)
+      print("gravity")
+      print(gravity)
+
+      local world = b2.b2World(gravity)
+      print("world")
+      print(world)
+
+      local bodydef = b2.b2BodyDef()
+      bodydef.type = b2.b2_dynamicBody
+      bodydef.position:Set(3, 0)
+      bodydef.angle = 0
+      bodydef.allowSleep = true
+      bodydef.awake = true
+      bodydef.fixedRotation = false
+      print("bodydef")
+      print(bodydef)
+
+      local body = world:CreateBody(bodydef)
+      print("body")
+      print(body)
+
+      local pos = view("center")
+      print("pos")
+      print(-pos)
+
       while true do
-	 -- print(1 / (elapsed - stat.prev_time))
-	 stat.prev_time = elapsed
-	 elapsed = coroutine.yield()
+         elapsed = coroutine.yield()
+         world:Step(elapsed - stat.prev_time, 10, 8)
+         local pos = body:GetPosition()
+
+         local trans = cg.CGAffineTransformMakeTranslation(pos.x * 100, - pos.y * 100)
+         ship("setTransform:", cg.CGAffineTransformWrap(trans))
+
+         -- print()
+         -- print(1 / (elapsed - stat.prev_time))
+         stat.prev_time = elapsed
       end
    end
 end
