@@ -16,12 +16,7 @@ local function make_main_coro(stat)
       view("addSubview:", -ship)
 
       local gravity = b2.b2Vec2(0, -10)
-      print("gravity")
-      print(gravity)
-
       local world = b2.b2World(gravity)
-      print("world")
-      print(world)
 
       local bodydef = b2.b2BodyDef()
       bodydef.type = b2.b2_dynamicBody
@@ -30,16 +25,8 @@ local function make_main_coro(stat)
       bodydef.allowSleep = true
       bodydef.awake = true
       bodydef.fixedRotation = false
-      print("bodydef")
-      print(bodydef)
 
       local body = world:CreateBody(bodydef)
-      print("body")
-      print(body)
-
-      local pos = view("center")
-      print("pos")
-      print(-pos)
 
       while true do
          elapsed = coroutine.yield()
@@ -49,7 +36,6 @@ local function make_main_coro(stat)
          local trans = cg.CGAffineTransformMakeTranslation(pos.x * 100, - pos.y * 100)
          ship("setTransform:", cg.CGAffineTransformWrap(trans))
 
-         -- print()
          -- print(1 / (elapsed - stat.prev_time))
          stat.prev_time = elapsed
       end
