@@ -3,6 +3,19 @@ function bootstrap()
    print "hello bootstrap"
 end
 
+local function make_spaceship(world)
+   local bodydef = b2.b2BodyDef()
+   bodydef.type = b2.b2_dynamicBody
+   bodydef.position:Set(3, 0)
+   bodydef.angle = 0
+   bodydef.allowSleep = true
+   bodydef.awake = true
+   bodydef.fixedRotation = false
+
+   local body = world:CreateBody(bodydef)
+   return body
+end
+
 local function make_main_coro(stat)
    return function(elapsed)
       local ctx = objc.context:create()
@@ -18,15 +31,16 @@ local function make_main_coro(stat)
       local gravity = b2.b2Vec2(0, -10)
       local world = b2.b2World(gravity)
 
-      local bodydef = b2.b2BodyDef()
-      bodydef.type = b2.b2_dynamicBody
-      bodydef.position:Set(3, 0)
-      bodydef.angle = 0
-      bodydef.allowSleep = true
-      bodydef.awake = true
-      bodydef.fixedRotation = false
+      local body = make_spaceship(world)
 
-      local body = world:CreateBody(bodydef)
+      local prev_incline = math.random(3) - 2
+      local incline = {}
+      for i = 1, 16 do
+         local inc = prev_incline + math.random(3) - 2
+         prev_incline = inc
+         incline[i] = inc
+      end
+      print(table.unpack(incline))
 
       while true do
          elapsed = coroutine.yield()
@@ -53,7 +67,12 @@ function create(view_controller)
 end
 
 function update(stat, elapsed)
-   coroutine.resume(stat.main_coro, elapsed)
+   if coroutine.status(stat.main_coro) == "suspended" then
+      local result, err = coroutine.resume(stat.main_coro, elapsed)
+      if not result then
+         error(err)
+      end
+   end
 end
 
 bootstrap()
