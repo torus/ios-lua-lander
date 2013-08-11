@@ -6,14 +6,46 @@ end
 local function make_spaceship(world)
    local bodydef = b2.b2BodyDef()
    bodydef.type = b2.b2_dynamicBody
-   bodydef.position:Set(3, 0)
+   bodydef.position:Set(0, 0)
    bodydef.angle = 0
    bodydef.allowSleep = true
    bodydef.awake = true
    bodydef.fixedRotation = false
 
    local body = world:CreateBody(bodydef)
+
+   local box = b2.b2PolygonShape()
+   box:SetAsBox(0.5, 0.5)
+   body:CreateFixture(box, 1)
+
    return body
+end
+
+local function make_terrain()
+   local prev_incline = math.random(3) - 2
+   local incline = {}
+   local height = {}
+   local prev_height = 0
+   local max_height = -100
+   local min_height = 100
+   for i = 1, 16 do
+      local inc = prev_incline + math.random(3) - 2
+      prev_incline = inc
+      incline[i] = inc
+      local h = prev_height + inc
+      prev_height = h
+      height[i] = h
+      if max_height < h then
+         max_height = h
+      end
+      if min_height > h then
+         min_height = h
+      end
+   end
+   print(table.unpack(incline))
+   print(table.unpack(height))
+   print(max_height, min_height)
+   local height_offset = min_height - 1
 end
 
 local function make_main_coro(stat)
@@ -21,6 +53,14 @@ local function make_main_coro(stat)
       local ctx = objc.context:create()
       local view = ctx:wrap(stat.view_controller)("view")
       print ("view", -view)
+      -- local bounds = ctx:wrap(objc.class.UIScreen)("mainScreen")("bounds")
+      local bounds = view("bounds")
+      print("bounds", -bounds)
+      ---- extract
+      objc.push(ctx.stack, -bounds)
+      local x, y, width, height = objc.extract(ctx.stack, "CGRect")
+      print(x, y, width, height)
+
       local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "spaceship.png")
       print("img", -img)
 
@@ -32,22 +72,22 @@ local function make_main_coro(stat)
       local world = b2.b2World(gravity)
 
       local body = make_spaceship(world)
+      make_terrain()
 
-      local prev_incline = math.random(3) - 2
-      local incline = {}
-      for i = 1, 16 do
-         local inc = prev_incline + math.random(3) - 2
-         prev_incline = inc
-         incline[i] = inc
-      end
-      print(table.unpack(incline))
+      local bodydef = b2.b2BodyDef()
+      bodydef.position:Set(51.2, -70 - 1)
+      -- bodydef.position:Set(51.2, -76.8 - 1)
+      local groundbody = world:CreateBody(bodydef)
+      local box = b2.b2PolygonShape()
+      box:SetAsBox(51.2, 1)
+      groundbody:CreateFixture(box, 0)
 
       while true do
          elapsed = coroutine.yield()
          world:Step(elapsed - stat.prev_time, 10, 8)
          local pos = body:GetPosition()
 
-         local trans = cg.CGAffineTransformMakeTranslation(pos.x * 100, - pos.y * 100)
+         local trans = cg.CGAffineTransformMakeTranslation(pos.x * 10, - pos.y * 10)
          ship("setTransform:", cg.CGAffineTransformWrap(trans))
 
          -- print(1 / (elapsed - stat.prev_time))
