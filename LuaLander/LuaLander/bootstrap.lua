@@ -18,11 +18,13 @@ local function make_spaceship(world)
 
    local body = world:CreateBody(bodydef)
 
-   local box = b2.b2PolygonShape()
-   box:SetAsBox(0.5, 0.5)
-   body:CreateFixture(box, 1)
-
    return body
+end
+
+local function set_fixture(body, width, height)
+   local box = b2.b2PolygonShape()
+   box:SetAsBox(width / 2 / 10, height / 2 / 10)
+   body:CreateFixture(box, 1)
 end
 
 local function make_terrain()
@@ -59,12 +61,23 @@ local function get_bounds(ctx, view)
       return objc.extract(ctx.stack, "CGRect")
 end
 
+local function make_ground(world, screen_size)
+   local bodydef = b2.b2BodyDef()
+   bodydef.position:Set(screen_size[1] / 10 / 2, -screen_size[2] / 10 - 1)
+   local groundbody = world:CreateBody(bodydef)
+   local box = b2.b2PolygonShape()
+   box:SetAsBox(51.2, 1)
+   groundbody:CreateFixture(box, 0)
+
+   return groundbody
+end
+
 local function make_main_coro(stat)
    return function(elapsed)
       local ctx = objc.context:create()
       local view = ctx:wrap(stat.view_controller)("view")
       print ("view", -view)
-      print(get_bounds(ctx, view))
+      local screen_bounds = {get_bounds(ctx, view)}
 
       local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "spaceship.png")
       print("img", -img)
@@ -72,28 +85,25 @@ local function make_main_coro(stat)
       local ship = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
       print("ship", -ship)
       view("addSubview:", -ship)
-      print(get_bounds(ctx, ship))
+      local x, y, width, height = get_bounds(ctx, ship)
+      print(x, y, width, height)
 
       local gravity = b2.b2Vec2(0, -10)
       local world = b2.b2World(gravity)
 
-      local body = make_spaceship(world)
+      local shipbody = make_spaceship(world)
+      set_fixture(shipbody, width, height)
       make_terrain()
 
-      local bodydef = b2.b2BodyDef()
-      bodydef.position:Set(51.2, -70 - 1)
-      -- bodydef.position:Set(51.2, -76.8 - 1)
-      local groundbody = world:CreateBody(bodydef)
-      local box = b2.b2PolygonShape()
-      box:SetAsBox(51.2, 1)
-      groundbody:CreateFixture(box, 0)
+      local groundbody = make_ground(world, {screen_bounds[3], screen_bounds[4]})
 
       while true do
          elapsed = coroutine.yield()
          world:Step(elapsed - stat.prev_time, 10, 8)
-         local pos = body:GetPosition()
+         local pos = shipbody:GetPosition()
 
-         local trans = cg.CGAffineTransformMakeTranslation(pos.x * 10, - pos.y * 10)
+         local trans = cg.CGAffineTransformMakeTranslation(
+            pos.x * 10 - width / 2, - pos.y * 10 - height / 2)
          ship("setTransform:", cg.CGAffineTransformWrap(trans))
 
          -- print(1 / (elapsed - stat.prev_time))
