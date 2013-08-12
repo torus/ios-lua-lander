@@ -1,3 +1,7 @@
+setmetatable(_G, {__index = function(tbl, key)
+                     error ("undefined global variable: " .. key, 2)
+end})
+
 function bootstrap()
    -- TODO: load some scripts
    print "hello bootstrap"
@@ -48,18 +52,24 @@ local function make_terrain()
    local height_offset = min_height - 1
 end
 
+local function get_bounds(ctx, view)
+      local bounds = view("bounds")
+      objc.push(ctx.stack, -bounds)
+      -- returns 4 values: x, y, width, height
+      return objc.extract(ctx.stack, "CGRect")
+end
+
 local function make_main_coro(stat)
    return function(elapsed)
       local ctx = objc.context:create()
       local view = ctx:wrap(stat.view_controller)("view")
       print ("view", -view)
       -- local bounds = ctx:wrap(objc.class.UIScreen)("mainScreen")("bounds")
-      local bounds = view("bounds")
-      print("bounds", -bounds)
-      ---- extract
-      objc.push(ctx.stack, -bounds)
-      local x, y, width, height = objc.extract(ctx.stack, "CGRect")
-      print(x, y, width, height)
+      -- local bounds = view("bounds")
+      -- print("bounds", -bounds)
+      -- ---- extract
+      -- objc.push(ctx.stack, -bounds)
+      print(get_bounds(ctx, view))
 
       local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "spaceship.png")
       print("img", -img)
@@ -67,6 +77,7 @@ local function make_main_coro(stat)
       local ship = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
       print("ship", -ship)
       view("addSubview:", -ship)
+      print(get_bounds(ctx, ship))
 
       local gravity = b2.b2Vec2(0, -10)
       local world = b2.b2World(gravity)
