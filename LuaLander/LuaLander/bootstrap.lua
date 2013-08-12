@@ -64,11 +64,6 @@ local function make_main_coro(stat)
       local ctx = objc.context:create()
       local view = ctx:wrap(stat.view_controller)("view")
       print ("view", -view)
-      -- local bounds = ctx:wrap(objc.class.UIScreen)("mainScreen")("bounds")
-      -- local bounds = view("bounds")
-      -- print("bounds", -bounds)
-      -- ---- extract
-      -- objc.push(ctx.stack, -bounds)
       print(get_bounds(ctx, view))
 
       local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "spaceship.png")
