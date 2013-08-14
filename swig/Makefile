@@ -7,4 +7,4 @@ CoreGraphics_wrap.m: CoreGraphics.i
 	swig -I/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/ -I/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform//Developer/SDKs/iPhoneOS6.1.sdk/usr/include/ -lua -o $@ $^
 
 clean:
-	rm -f *_wrap.c*
+	rm -f *_wrap.c* *~
