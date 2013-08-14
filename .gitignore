@@ -2,3 +2,5 @@
 /LuaLander/LuaLander.xcodeproj/xcuserdata/
 /swig/Box2D_wrap.cxx
 /work/
+*.ipa
+swig/*_wrap.*
