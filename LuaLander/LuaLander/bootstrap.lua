@@ -102,9 +102,12 @@ local function make_main_coro(stat)
          world:Step(elapsed - stat.prev_time, 10, 8)
          local pos = shipbody:GetPosition()
 
-         local trans = cg.CGAffineTransformMakeTranslation(
-            pos.x * 10 - width / 2, - pos.y * 10 - height / 2)
-         ship("setTransform:", cg.CGAffineTransformWrap(trans))
+         -- local trans = cg.CGAffineTransformMakeTranslation(
+         --    pos.x * 10 - width / 2, - pos.y * 10 - height / 2)
+         -- ship("setTransform:", cg.CGAffineTransformWrap(trans))
+         ship("setTransform:", cg.CGAffineTransformWrap(
+                 cg.CGAffineTransformMakeTranslation(pos.x * 10 - width / 2,
+                                                        - pos.y * 10 - height / 2)))
 
          -- print(1 / (elapsed - stat.prev_time))
          stat.prev_time = elapsed
