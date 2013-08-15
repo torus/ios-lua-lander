@@ -38,9 +38,6 @@ WRAP_TYPE_FUNC(CGRect)
 %native(CGAffineTransformWrap) int CGAffineTransform_to_NSValue (lua_State *L);
 %native(CGRectWrap) int CGRect_to_NSValue (lua_State *L);
 
-/* %include <AvailabilityInternal.h> */
-/* %include <Availability.h> */
-
 /* cat *.h | perl -e '$/=undef;$b=<>;@a=$b=~/CG_EXTERN (?:const )?\w+ (\w+)[^\n]*\n[^\n]*__IPHONE_NA/mg;print join("\n",@a)'  */
 
 %ignore CGColorCreateGenericGray;
@@ -107,3 +104,42 @@ WRAP_TYPE_FUNC(CGRect)
 %include <CGPath.h>
 %include <CGPattern.h>
 %include <CGShading.h>
+
+
+/* UIGraphics.h */
+#define UIKIT_EXTERN
+#define NS_AVAILABLE_IOS(x)
+
+UIKIT_EXTERN CGContextRef UIGraphicsGetCurrentContext(void);
+/* UIKIT_EXTERN void UIGraphicsPushContext(CGContextRef context); */
+/* UIKIT_EXTERN void UIGraphicsPopContext(void); */
+
+/* UIKIT_EXTERN void UIRectFillUsingBlendMode(CGRect rect, CGBlendMode blendMode); */
+/* UIKIT_EXTERN void UIRectFill(CGRect rect); */
+
+/* UIKIT_EXTERN void UIRectFrameUsingBlendMode(CGRect rect, CGBlendMode blendMode); */
+/* UIKIT_EXTERN void UIRectFrame(CGRect rect); */
+
+/* UIKIT_EXTERN void UIRectClip(CGRect rect); */
+
+/* // UIImage context */
+
+/* UIKIT_EXTERN void     UIGraphicsBeginImageContext(CGSize size); */
+/* UIKIT_EXTERN void     UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, CGFloat scale) NS_AVAILABLE_IOS(4_0); */
+/* UIKIT_EXTERN UIImage* UIGraphicsGetImageFromCurrentImageContext(void); */
+/* UIKIT_EXTERN void     UIGraphicsEndImageContext(void);  */
+
+/* // PDF context */
+
+/* UIKIT_EXTERN BOOL UIGraphicsBeginPDFContextToFile(NSString *path, CGRect bounds, NSDictionary *documentInfo) NS_AVAILABLE_IOS(3_2); */
+/* UIKIT_EXTERN void UIGraphicsBeginPDFContextToData(NSMutableData *data, CGRect bounds, NSDictionary *documentInfo) NS_AVAILABLE_IOS(3_2); */
+/* UIKIT_EXTERN void UIGraphicsEndPDFContext(void) NS_AVAILABLE_IOS(3_2); */
+
+/* UIKIT_EXTERN void UIGraphicsBeginPDFPage(void) NS_AVAILABLE_IOS(3_2); */
+/* UIKIT_EXTERN void UIGraphicsBeginPDFPageWithInfo(CGRect bounds, NSDictionary *pageInfo) NS_AVAILABLE_IOS(3_2); */
+
+/* UIKIT_EXTERN CGRect UIGraphicsGetPDFContextBounds(void) NS_AVAILABLE_IOS(3_2); */
+
+/* UIKIT_EXTERN void UIGraphicsSetPDFContextURLForRect(NSURL *url, CGRect rect) NS_AVAILABLE_IOS(3_2); */
+/* UIKIT_EXTERN void UIGraphicsAddPDFContextDestinationAtPoint(NSString *name, CGPoint point) NS_AVAILABLE_IOS(3_2); */
+/* UIKIT_EXTERN void UIGraphicsSetPDFContextDestinationForRect(NSString *name, CGRect rect) NS_AVAILABLE_IOS(3_2); */

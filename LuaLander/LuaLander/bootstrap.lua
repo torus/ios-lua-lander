@@ -10,7 +10,7 @@ end
 local function make_spaceship(world)
    local bodydef = b2.b2BodyDef()
    bodydef.type = b2.b2_dynamicBody
-   bodydef.position:Set(0, 0)
+   bodydef.position:Set(10, 0)
    bodydef.angle = 0
    bodydef.allowSleep = true
    bodydef.awake = true
@@ -27,7 +27,7 @@ local function set_fixture(body, width, height)
    body:CreateFixture(box, 1)
 end
 
-local function make_terrain()
+local function make_terrain(ctx, view)
    local prev_incline = math.random(3) - 2
    local incline = {}
    local height = {}
@@ -52,6 +52,23 @@ local function make_terrain()
    print(table.unpack(height))
    print(max_height, min_height)
    local height_offset = min_height - 1
+
+   local rect = view("bounds")
+   local terview = ctx:wrap(objc.class.LLTerrainView)("alloc")("initWithFrame:", -rect)
+   view("insertSubview:atIndex:", -terview, 0)
+
+   local function drawRect(rect)
+      local cgctx = cg.UIGraphicsGetCurrentContext()
+
+      cg.CGContextSetRGBFillColor(cgctx, 1, 1, 1, 1)
+      cg.CGContextFillRect(cgctx, cg.CGRectMake(0, 0, 1024, 748))
+      cg.CGContextSetRGBFillColor(cgctx, 1, 0, 0, 1)
+      cg.CGContextFillRect(cgctx, cg.CGRectMake(0, 0, 200, 100))
+      cg.CGContextSetRGBFillColor(cgctx, 0, 0, 1, .5)
+      cg.CGContextFillRect(cgctx, cg.CGRectMake(0, 0, 100, 200))
+   end
+
+   terview("setDrawRect:", drawRect)
 end
 
 local function get_bounds(ctx, view)
@@ -93,21 +110,27 @@ local function make_main_coro(stat)
 
       local shipbody = make_spaceship(world)
       set_fixture(shipbody, width, height)
-      make_terrain()
+      make_terrain(ctx, view)
 
       local groundbody = make_ground(world, {screen_bounds[3], screen_bounds[4]})
+
+      shipbody:ApplyLinearImpulse(b2.b2Vec2(1000, 0), b2.b2Vec2(0, 1))
 
       while true do
          elapsed = coroutine.yield()
          world:Step(elapsed - stat.prev_time, 10, 8)
          local pos = shipbody:GetPosition()
+         local rot = shipbody:GetAngle()
 
          -- local trans = cg.CGAffineTransformMakeTranslation(
          --    pos.x * 10 - width / 2, - pos.y * 10 - height / 2)
          -- ship("setTransform:", cg.CGAffineTransformWrap(trans))
-         ship("setTransform:", cg.CGAffineTransformWrap(
-                 cg.CGAffineTransformMakeTranslation(pos.x * 10 - width / 2,
-                                                        - pos.y * 10 - height / 2)))
+         ship("setTransform:",
+              cg.CGAffineTransformWrap(
+                 cg.CGAffineTransformConcat(
+                    cg.CGAffineTransformMakeRotation(rot),
+                    cg.CGAffineTransformMakeTranslation(pos.x * 10 - width / 2,
+                                                           - pos.y * 10 - height / 2))))
 
          -- print(1 / (elapsed - stat.prev_time))
          stat.prev_time = elapsed

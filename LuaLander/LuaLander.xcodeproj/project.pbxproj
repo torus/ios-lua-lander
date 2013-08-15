@@ -11,6 +11,7 @@
 		9C110A6B17B63CD000576079 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C110A6A17B63CD000576079 /* QuartzCore.framework */; };
 		9C110A6D17B6A66800576079 /* spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C110A6C17B6A66800576079 /* spaceship.png */; };
 		9C51A28617BBB8D7007CE54C /* CoreGraphics_wrap.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28517BBB8D7007CE54C /* CoreGraphics_wrap.m */; };
+		9C51A28917BD0153007CE54C /* LLTerrainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28817BD0153007CE54C /* LLTerrainView.m */; };
 		9CF9661417B135B700607D8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661317B135B700607D8B /* UIKit.framework */; };
 		9CF9661617B135B700607D8B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661517B135B700607D8B /* Foundation.framework */; };
 		9CF9661817B135B700607D8B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661717B135B700607D8B /* CoreGraphics.framework */; };
@@ -207,6 +208,8 @@
 		9C110A6A17B63CD000576079 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		9C110A6C17B6A66800576079 /* spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spaceship.png; path = ../../images/spaceship.png; sourceTree = "<group>"; };
 		9C51A28517BBB8D7007CE54C /* CoreGraphics_wrap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreGraphics_wrap.m; path = ../../swig/CoreGraphics_wrap.m; sourceTree = "<group>"; };
+		9C51A28717BD0153007CE54C /* LLTerrainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLTerrainView.h; sourceTree = "<group>"; };
+		9C51A28817BD0153007CE54C /* LLTerrainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLTerrainView.m; sourceTree = "<group>"; };
 		9CF9661017B135B700607D8B /* LuaLander.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LuaLander.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CF9661317B135B700607D8B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9CF9661517B135B700607D8B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -458,6 +461,8 @@
 				9CF9663217B135B700607D8B /* LLViewController.m */,
 				9CF9661A17B135B700607D8B /* Supporting Files */,
 				9C110A6817B5EF8300576079 /* bootstrap.lua */,
+				9C51A28717BD0153007CE54C /* LLTerrainView.h */,
+				9C51A28817BD0153007CE54C /* LLTerrainView.m */,
 			);
 			path = LuaLander;
 			sourceTree = "<group>";
@@ -939,6 +944,7 @@
 				9CF9678D17B2942300607D8B /* Box2D_wrap.cxx in Sources */,
 				9CF967A317B2954C00607D8B /* LuaBridge.m in Sources */,
 				9C51A28617BBB8D7007CE54C /* CoreGraphics_wrap.m in Sources */,
+				9C51A28917BD0153007CE54C /* LLTerrainView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
