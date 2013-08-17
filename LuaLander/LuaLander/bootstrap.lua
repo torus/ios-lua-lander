@@ -28,17 +28,18 @@ local function set_fixture(body, width, height)
 end
 
 local function make_height_map()
+   math.randomseed(os.time())
    local prev_incline = math.random(3) - 2
-   local incline = {}
+   -- local incline = {}
    local height = {}
-   local prev_height = 0
+   local prev_height = math.random(10) + 1
    local max_height = -100
    local min_height = 100
    for i = 0, 16 do
       local inc = prev_incline + math.random(3) - 2
       prev_incline = inc
-      incline[i] = inc
-      local h = prev_height + inc
+      -- incline[i] = inc
+      local h = math.max(1, math.min(prev_height + inc, 20))
       prev_height = h
       height[i] = h
       if max_height < h then
@@ -181,7 +182,7 @@ local function make_main_coro(stat)
          ship("setTransform:",
               cg.CGAffineTransformWrap(
                  cg.CGAffineTransformConcat(
-                    cg.CGAffineTransformMakeRotation(rot),
+                    cg.CGAffineTransformMakeRotation(-rot),
                     cg.CGAffineTransformMakeTranslation(pos.x * 10 - width / 2,
                                                            - pos.y * 10 - height / 2))))
 
