@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreMotion/CoreMotion.h>
 
 @interface LLViewController : UIViewController {
     int gameState;
     CFTimeInterval startTime;
 }
-
+@property CMMotionManager *motionManager;
 @end

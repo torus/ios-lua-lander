@@ -17,6 +17,7 @@
 @end
 
 @implementation LLViewController
+@synthesize motionManager;
 
 - (void)viewDidLoad
 {
@@ -33,6 +34,10 @@
     }
     self->gameState = luaL_ref(L, LUA_REGISTRYINDEX);
     
+    motionManager = [[CMMotionManager alloc] init];
+    motionManager.accelerometerUpdateInterval = 1.0 / 60.0;
+    [motionManager startAccelerometerUpdates];
+
     [NSTimer scheduledTimerWithTimeInterval:1.0/60 target:self selector:@selector(onInterval:) userInfo:nil repeats:YES];
 }
 
@@ -44,13 +49,17 @@
 
 - (void)onInterval:(NSTimer*)theTimer {
     CFTimeInterval elapsedTime = CACurrentMediaTime() - self->startTime;
+    CMAcceleration acc = motionManager.accelerometerData.acceleration;
 
     lua_State *L = [[LuaBridge instance] L];
     lua_getglobal(L, "update");
     lua_rawgeti(L, LUA_REGISTRYINDEX, self->gameState);
     lua_pushnumber(L, elapsedTime);
+    lua_pushnumber(L, acc.x);
+    lua_pushnumber(L, acc.y);
+    lua_pushnumber(L, acc.z);
 
-    if (lua_pcall(L, 2, 0, 0)) {
+    if (lua_pcall(L, 5, 0, 0)) {
         fprintf(stderr, "Lua Error: %s", lua_tostring(L, -1));
     }
 }

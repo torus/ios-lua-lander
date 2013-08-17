@@ -37,9 +37,10 @@ local function make_height_map()
    local min_height = 100
    for i = 0, 16 do
       local inc = prev_incline + math.random(3) - 2
-      prev_incline = inc
+      -- prev_incline = inc
       -- incline[i] = inc
       local h = math.max(1, math.min(prev_height + inc, 20))
+      prev_incline = h - prev_height
       prev_height = h
       height[i] = h
       if max_height < h then
@@ -80,13 +81,13 @@ local function make_terrain(ctx, view, world)
 
       local vtx
       if h1 > h2 then
-         print("h1 > h2", h1, h2)
+         -- print("h1 > h2", h1, h2)
          vtx = {b2.b2Vec2(x1, h2), b2.b2Vec2(x2, h2), b2.b2Vec2(x1, h1)}
       elseif h1 == h2 then
-         print("h1 == h2", h1, h2)
+         -- print("h1 == h2", h1, h2)
          vtx = {b2.b2Vec2(x1, h1), b2.b2Vec2(x2, h1 - 1), b2.b2Vec2(x2, h1)}
       else
-         print("h1 < h2", h1, h2)
+         -- print("h1 < h2", h1, h2)
          vtx = {b2.b2Vec2(x1, h1), b2.b2Vec2(x2, h1), b2.b2Vec2(x2, h2)}
       end
 
@@ -144,7 +145,7 @@ local function make_ground(world, screen_size)
 end
 
 local function make_main_coro(stat)
-   return function(elapsed)
+   return function()
       local ctx = objc.context:create()
       local view = ctx:wrap(stat.view_controller)("view")
       print ("view", -view)
@@ -159,7 +160,7 @@ local function make_main_coro(stat)
       local x, y, width, height = get_bounds(ctx, ship)
       print(x, y, width, height)
 
-      local gravity = b2.b2Vec2(0, -10)
+      local gravity = b2.b2Vec2(0, -1)
       local world = b2.b2World(gravity)
 
       local shipbody = make_spaceship(world)
@@ -168,13 +169,40 @@ local function make_main_coro(stat)
 
       local groundbody = make_ground(world, {screen_bounds[3], screen_bounds[4]})
 
-      shipbody:ApplyLinearImpulse(b2.b2Vec2(1000, 0), b2.b2Vec2(0, 1))
+      shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
 
       while true do
-         elapsed = coroutine.yield()
+         local elapsed, accx, accy, accz = coroutine.yield()
+         print(accx, accy, accz)
+
          world:Step(elapsed - stat.prev_time, 10, 8)
          local pos = shipbody:GetPosition()
          local rot = shipbody:GetAngle()
+
+         if accx ~= 0 and accy ~= 0 then
+            local target_angle = - (math.atan(- accy / accx))
+            print(target_angle)
+
+            local tor = target_angle - rot
+            shipbody:ApplyTorque(tor * 10000)
+         end
+
+         if accz ~= 0 then
+            local a = accx * accx + accy * accy
+            if a > 0 then
+               local tan = accz / math.sqrt(a)
+               if tan < 0 then
+                  print("FIRE!!!!!!!!!", tan)
+                  local ang = - math.atan(tan)
+                  local sin = math.sin(rot + math.pi / 2)
+                  local cos = math.cos(rot + math.pi / 2)
+                  shipbody:ApplyForceToCenter(b2.b2Vec2(ang * cos * 1000, ang * sin * 1000))
+               end
+            end
+         end
+
+         local av = shipbody:GetAngularVelocity()
+         shipbody:ApplyTorque(-av * 10000)
 
          ship("setTransform:",
               cg.CGAffineTransformWrap(
@@ -198,9 +226,9 @@ function create(view_controller)
    return stat
 end
 
-function update(stat, elapsed)
+function update(stat, elapsed, accx, accy, accz)
    if coroutine.status(stat.main_coro) == "suspended" then
-      local result, err = coroutine.resume(stat.main_coro, elapsed)
+      local result, err = coroutine.resume(stat.main_coro, elapsed, accx, accy, accz)
       if not result then
          error(err, 2)
       end
