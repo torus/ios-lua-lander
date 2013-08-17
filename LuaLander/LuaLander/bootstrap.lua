@@ -27,7 +27,7 @@ local function set_fixture(body, width, height)
    body:CreateFixture(box, 1)
 end
 
-local function make_terrain(ctx, view)
+local function make_height_map()
    local prev_incline = math.random(3) - 2
    local incline = {}
    local height = {}
@@ -48,10 +48,20 @@ local function make_terrain(ctx, view)
          min_height = h
       end
    end
-   print(table.unpack(incline))
-   print(table.unpack(height))
-   print(max_height, min_height)
+   -- print(table.unpack(incline))
+   -- print(table.unpack(height))
+   -- print(max_height, min_height)
    local height_offset = - (min_height - 1)
+
+   for i = 0, 16 do
+      height[i] = height[i] + height_offset
+   end
+
+   return height
+end
+
+local function make_terrain(ctx, view)
+   local height = make_height_map()
 
    local rect = view("bounds")
    local terview = ctx:wrap(objc.class.LLTerrainView)("alloc")("initWithFrame:", -rect)
@@ -62,7 +72,7 @@ local function make_terrain(ctx, view)
 
       objc.push(ctx.stack, rect)
       local x, y, sw, sh = objc.extract(ctx.stack, "CGRect")
-      print(x, y, sw, sh)
+      -- print(x, y, sw, sh)
 
       cg.CGContextSetRGBFillColor(cgctx, 1, 1, 1, 1)
       cg.CGContextFillRect(cgctx, cg.CGRectMake(0, 0, sw, sh))
@@ -72,8 +82,8 @@ local function make_terrain(ctx, view)
       cg.CGContextBeginPath(cgctx)
       cg.CGContextMoveToPoint(cgctx, 0, sh)
       for i = 0, 16 do
-         local h = height[i] + height_offset
-         print(i, h, i * 64, 1024 - h * 64)
+         local h = height[i]
+         -- print(i, h, i * 64, 1024 - h * 64)
          cg.CGContextAddLineToPoint(cgctx, i * 64, sh - h * 32)
       end
       cg.CGContextAddLineToPoint(cgctx, sw, sh)
