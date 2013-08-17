@@ -60,18 +60,48 @@ local function make_height_map()
    return height
 end
 
-local function make_terrain(ctx, view)
+local function make_terrain(ctx, view, world)
    local height = make_height_map()
 
-   local rect = view("bounds")
-   local terview = ctx:wrap(objc.class.LLTerrainView)("alloc")("initWithFrame:", -rect)
+   local scr_rect = view("bounds")
+   local terview = ctx:wrap(objc.class.LLTerrainView)("alloc")("initWithFrame:", -scr_rect)
    view("insertSubview:atIndex:", -terview, 0)
+
+   objc.push(ctx.stack, -scr_rect)
+   local x, y, sw, sh = objc.extract(ctx.stack, "CGRect")
+   print(x, y, sw, sh)
+
+   for i = 1, 16 do
+      local h1 = (height[i - 1] * 32 - sh) / 10
+      local h2 = (height[i] * 32 - sh) / 10
+      local x1 = (i - 1) * 64 / 10
+      local x2 = i * 64 / 10
+
+      local vtx
+      if h1 > h2 then
+         print("h1 > h2", h1, h2)
+         vtx = {b2.b2Vec2(x1, h2), b2.b2Vec2(x2, h2), b2.b2Vec2(x1, h1)}
+      elseif h1 == h2 then
+         print("h1 == h2", h1, h2)
+         vtx = {b2.b2Vec2(x1, h1), b2.b2Vec2(x2, h1 - 1), b2.b2Vec2(x2, h1)}
+      else
+         print("h1 < h2", h1, h2)
+         vtx = {b2.b2Vec2(x1, h1), b2.b2Vec2(x2, h1), b2.b2Vec2(x2, h2)}
+      end
+
+      local poly = b2.b2PolygonShape()
+      poly:Set(vtx)
+
+      local bodydef = b2.b2BodyDef()
+      local body = world:CreateBody(bodydef)
+      body:CreateFixture(poly, 0)
+   end
 
    local function drawRect(rect)
       local cgctx = cg.UIGraphicsGetCurrentContext()
 
-      objc.push(ctx.stack, rect)
-      local x, y, sw, sh = objc.extract(ctx.stack, "CGRect")
+      -- objc.push(ctx.stack, rect)
+      -- local x, y, sw, sh = objc.extract(ctx.stack, "CGRect")
       -- print(x, y, sw, sh)
 
       cg.CGContextSetRGBFillColor(cgctx, 1, 1, 1, 1)
@@ -133,7 +163,7 @@ local function make_main_coro(stat)
 
       local shipbody = make_spaceship(world)
       set_fixture(shipbody, width, height)
-      make_terrain(ctx, view)
+      make_terrain(ctx, view, world)
 
       local groundbody = make_ground(world, {screen_bounds[3], screen_bounds[4]})
 
@@ -175,7 +205,7 @@ function update(stat, elapsed)
    if coroutine.status(stat.main_coro) == "suspended" then
       local result, err = coroutine.resume(stat.main_coro, elapsed)
       if not result then
-         error(err)
+         error(err, 2)
       end
    end
 end
