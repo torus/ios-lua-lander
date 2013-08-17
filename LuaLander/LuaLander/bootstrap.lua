@@ -102,10 +102,6 @@ local function make_terrain(ctx, view, world)
    local function drawRect(rect)
       local cgctx = cg.UIGraphicsGetCurrentContext()
 
-      -- objc.push(ctx.stack, rect)
-      -- local x, y, sw, sh = objc.extract(ctx.stack, "CGRect")
-      -- print(x, y, sw, sh)
-
       cg.CGContextSetRGBFillColor(cgctx, 1, 1, 1, 1)
       cg.CGContextFillRect(cgctx, cg.CGRectMake(0, 0, sw, sh))
 
@@ -115,7 +111,6 @@ local function make_terrain(ctx, view, world)
       cg.CGContextMoveToPoint(cgctx, 0, sh)
       for i = 0, 16 do
          local h = height[i]
-         -- print(i, h, i * 64, 1024 - h * 64)
          cg.CGContextAddLineToPoint(cgctx, i * 64, sh - h * 32)
       end
       cg.CGContextAddLineToPoint(cgctx, sw, sh)
@@ -150,7 +145,7 @@ local function make_spaceship(ctx, world)
 
       local ship = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
       print("ship", -ship)
-      -- view("addSubview:", -ship)
+
       local x, y, width, height = get_bounds(ctx, ship)
       print(x, y, width, height)
 
@@ -164,24 +159,15 @@ local function make_main_coro(stat)
    return function()
       local ctx = objc.context:create()
       local view = ctx:wrap(stat.view_controller)("view")
-      print ("view", -view)
       local screen_bounds = {get_bounds(ctx, view)}
-
-      -- local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "spaceship.png")
-      -- print("img", -img)
 
       local gravity = b2.b2Vec2(0, -1)
       local world = b2.b2World(gravity)
 
       local ship, shipbody = make_spaceship(ctx, world)
-      -- local ship = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
-      -- print("ship", -ship)
       view("addSubview:", -ship)
       local x, y, width, height = get_bounds(ctx, ship)
-      -- print(x, y, width, height)
 
-      -- local shipbody = make_spaceship_body(world)
-      -- set_fixture(shipbody, width, height)
       make_terrain(ctx, view, world)
 
       local groundbody = make_ground(world, {screen_bounds[3], screen_bounds[4]})
