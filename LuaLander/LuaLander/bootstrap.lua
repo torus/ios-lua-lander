@@ -7,7 +7,7 @@ function bootstrap()
    print "hello bootstrap"
 end
 
-local function make_spaceship(world)
+local function make_spaceship_body(world)
    local bodydef = b2.b2BodyDef()
    bodydef.type = b2.b2_dynamicBody
    bodydef.position:Set(10, 0)
@@ -144,6 +144,22 @@ local function make_ground(world, screen_size)
    return groundbody
 end
 
+local function make_spaceship(ctx, world)
+      local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "spaceship.png")
+      print("img", -img)
+
+      local ship = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
+      print("ship", -ship)
+      -- view("addSubview:", -ship)
+      local x, y, width, height = get_bounds(ctx, ship)
+      print(x, y, width, height)
+
+      local shipbody = make_spaceship_body(world)
+      set_fixture(shipbody, width, height)
+
+      return ship, shipbody
+end
+
 local function make_main_coro(stat)
    return function()
       local ctx = objc.context:create()
@@ -151,20 +167,21 @@ local function make_main_coro(stat)
       print ("view", -view)
       local screen_bounds = {get_bounds(ctx, view)}
 
-      local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "spaceship.png")
-      print("img", -img)
-
-      local ship = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
-      print("ship", -ship)
-      view("addSubview:", -ship)
-      local x, y, width, height = get_bounds(ctx, ship)
-      print(x, y, width, height)
+      -- local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "spaceship.png")
+      -- print("img", -img)
 
       local gravity = b2.b2Vec2(0, -1)
       local world = b2.b2World(gravity)
 
-      local shipbody = make_spaceship(world)
-      set_fixture(shipbody, width, height)
+      local ship, shipbody = make_spaceship(ctx, world)
+      -- local ship = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
+      -- print("ship", -ship)
+      view("addSubview:", -ship)
+      local x, y, width, height = get_bounds(ctx, ship)
+      -- print(x, y, width, height)
+
+      -- local shipbody = make_spaceship_body(world)
+      -- set_fixture(shipbody, width, height)
       make_terrain(ctx, view, world)
 
       local groundbody = make_ground(world, {screen_bounds[3], screen_bounds[4]})
@@ -173,7 +190,7 @@ local function make_main_coro(stat)
 
       while true do
          local elapsed, accx, accy, accz = coroutine.yield()
-         print(accx, accy, accz)
+         -- print(accx, accy, accz)
 
          world:Step(elapsed - stat.prev_time, 10, 8)
          local pos = shipbody:GetPosition()
@@ -181,7 +198,7 @@ local function make_main_coro(stat)
 
          if accx ~= 0 and accy ~= 0 then
             local target_angle = - (math.atan(- accy / accx))
-            print(target_angle)
+            -- print(target_angle)
 
             local tor = target_angle - rot
             shipbody:ApplyTorque(tor * 10000)
@@ -192,11 +209,12 @@ local function make_main_coro(stat)
             if a > 0 then
                local tan = accz / math.sqrt(a)
                if tan < 0 then
-                  print("FIRE!!!!!!!!!", tan)
+                  -- print("FIRE!!!!!!!!!", tan)
                   local ang = - math.atan(tan)
                   local sin = math.sin(rot + math.pi / 2)
                   local cos = math.cos(rot + math.pi / 2)
-                  shipbody:ApplyForceToCenter(b2.b2Vec2(ang * cos * 1000, ang * sin * 1000))
+                  shipbody:ApplyForceToCenter(b2.b2Vec2(ang * cos * 1000,
+                                                        ang * sin * 1000))
                end
             end
          end
