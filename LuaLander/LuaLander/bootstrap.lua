@@ -34,7 +34,7 @@ local function make_terrain(ctx, view)
    local prev_height = 0
    local max_height = -100
    local min_height = 100
-   for i = 1, 16 do
+   for i = 0, 16 do
       local inc = prev_incline + math.random(3) - 2
       prev_incline = inc
       incline[i] = inc
@@ -51,7 +51,7 @@ local function make_terrain(ctx, view)
    print(table.unpack(incline))
    print(table.unpack(height))
    print(max_height, min_height)
-   local height_offset = min_height - 1
+   local height_offset = - (min_height - 1)
 
    local rect = view("bounds")
    local terview = ctx:wrap(objc.class.LLTerrainView)("alloc")("initWithFrame:", -rect)
@@ -60,12 +60,25 @@ local function make_terrain(ctx, view)
    local function drawRect(rect)
       local cgctx = cg.UIGraphicsGetCurrentContext()
 
+      objc.push(ctx.stack, rect)
+      local x, y, sw, sh = objc.extract(ctx.stack, "CGRect")
+      print(x, y, sw, sh)
+
       cg.CGContextSetRGBFillColor(cgctx, 1, 1, 1, 1)
-      cg.CGContextFillRect(cgctx, cg.CGRectMake(0, 0, 1024, 748))
-      cg.CGContextSetRGBFillColor(cgctx, 1, 0, 0, 1)
-      cg.CGContextFillRect(cgctx, cg.CGRectMake(0, 0, 200, 100))
-      cg.CGContextSetRGBFillColor(cgctx, 0, 0, 1, .5)
-      cg.CGContextFillRect(cgctx, cg.CGRectMake(0, 0, 100, 200))
+      cg.CGContextFillRect(cgctx, cg.CGRectMake(0, 0, sw, sh))
+
+      cg.CGContextSetRGBStrokeColor(cgctx, 0, 0, 0, 1)
+      cg.CGContextSetLineWidth(cgctx, 3)
+      cg.CGContextBeginPath(cgctx)
+      cg.CGContextMoveToPoint(cgctx, 0, sh)
+      for i = 0, 16 do
+         local h = height[i] + height_offset
+         print(i, h, i * 64, 1024 - h * 64)
+         cg.CGContextAddLineToPoint(cgctx, i * 64, sh - h * 32)
+      end
+      cg.CGContextAddLineToPoint(cgctx, sw, sh)
+      cg.CGContextClosePath(cgctx)
+      cg.CGContextStrokePath(cgctx)
    end
 
    terview("setDrawRect:", drawRect)
