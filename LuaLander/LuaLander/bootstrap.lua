@@ -156,6 +156,7 @@ local function make_spaceship(ctx, world)
    local jetimg = ctx:wrap(objc.class.UIImage)("imageNamed:", "fire.png")
    local jetview = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -jetimg)
    jetview("setHidden:", true)
+   shipview("addSubview:", -jetview)
 
    local jx, jy, jet_w, jet_h = get_bounds(ctx, jetview)
 
@@ -163,13 +164,17 @@ local function make_spaceship(ctx, world)
       if x == 0 then
          jetview("setHidden:", true)
       else
+         local t = cg.CGAffineTransformConcat(
+            cg.CGAffineTransformMakeScale(x, x),
+            cg.CGAffineTransformMakeTranslation((width - jet_w) / 2,
+                                                (height - jet_h * (1 - x) / 2)))
+         local twraped = cg.CGAffineTransformWrap(t)
+
+         objc.push(ctx.stack, twraped)
+         print("trans", objc.extract(ctx.stack, "CGAffineTransform"))
+
          jetview("setHidden:", false)
-         jetview("setTransform:", cg.CGAffineTransformWrap(
-                    cg.CGAffineTransformConcat(
-                       cg.CGAffineTransformMakeScale(x, x),
-                       cg.CGAffineTransformMakeTranslation((width - jet_w * x) / 2,
-                                                           height))))
-         shipview("addSubview:", -jetview)
+         jetview("setTransform:", twraped)
       end
    end
 
@@ -185,7 +190,7 @@ local function make_main_coro(stat)
       local gravity = b2.b2Vec2(0, -1)
       local world = b2.b2World(gravity)
 
-      local ship, shipbody = make_spaceship(ctx, world)
+      local ship, shipbody, set_power = make_spaceship(ctx, world)
       view("addSubview:", -ship)
       local x, y, width, height = get_bounds(ctx, ship)
 
@@ -216,12 +221,13 @@ local function make_main_coro(stat)
             if a > 0 then
                local tan = accz / math.sqrt(a)
                if tan < 0 then
-                  -- print("FIRE!!!!!!!!!", tan)
                   local ang = - math.atan(tan)
                   local sin = math.sin(rot + math.pi / 2)
                   local cos = math.cos(rot + math.pi / 2)
-                  shipbody:ApplyForceToCenter(b2.b2Vec2(ang * cos * 1000,
-                                                        ang * sin * 1000))
+                  local pow = ang / (math.pi / 2)
+                  shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 1000,
+                                                        pow * sin * 1000))
+                  set_power(pow)
                end
             end
          end
