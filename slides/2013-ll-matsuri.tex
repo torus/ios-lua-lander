@@ -1,0 +1,98 @@
+% -*- coding: utf-8 -*-
+
+\documentclass[slide,papersize]{jsarticle}
+\renewcommand\kanjifamilydefault{\mcdefault}
+\renewcommand\familydefault{\rmdefault}
+
+
+\usepackage[dvipdfmx]{graphicx,color,hyperref}
+\usepackage{ascmac}
+\usepackage{times}
+
+\newcommand{\link}[1]{\textcolor[named]{Blue}{\underline{#1}}}
+
+
+\begin{document}
+
+\title{Lua組み込みプログラミング}
+\author{久井 亨\thanks{Kronecker's Delta Studio}}
+
+
+\begin{flushright}
+ {\small 2013/8/24 LLまつり Lightning Talk}
+\end{flushright}
+
+\vspace*{0.8cm}
+\begin{center}
+ {\Large Lua組み込みプログラミング}
+
+\vspace*{0.3cm}
+
+Kronecker's Delta Studio
+
+\vspace*{0.1cm}
+
+{\large 久井 亨}
+
+\end{center}
+
+
+\section*{Lua 20周年！}
+
+
+{\scriptsize
+\textbf{Subject}: 20 years of Lua\footnote{http://lua-users.org/lists/lua-l/2013-07/msg00846.html}\\
+\textbf{From}: Luiz Henrique de Figueiredo \texttt{<lhf@...>}\\
+\textbf{Date}: Sun, 28 Jul 2013 20:07:52 -0300\\
+}
+
+
+\begin{center}
+The earliest implementation of Lua that we have found to date has files
+dated 28 Jul 1993.
+
+\vspace*{0.2cm}
+
+\link{http://www.lua.org/ftp/lua-1.0.tar.gz}
+\end{center}
+
+
+\section*{デモ内容}
+
+\begin{itemize}
+ \item Xcodeを使ってiOS appを作る
+ \item メインプログラムをLuaで書く
+\end{itemize}
+
+
+\section*{Ingredients}
+
+\begin{itemize}
+ \item Lua
+ \item Box2D（物理エンジン）
+ \item iOS SDK
+       \begin{itemize}
+        \item UIKit Framework（PNG画像表示）
+        \item Core Graphics Framework（ベクタ描画）
+        \item Core Motion Framework（加速度センサ）
+       \end{itemize}
+\end{itemize}
+
+
+\section*{Glue}
+
+\begin{itemize}
+ \item SWIG
+       \begin{itemize}
+        \item C/C++のコードをLuaから呼び出す
+        \item （地雷原）
+       \end{itemize}
+
+ \item Lua-Objective-C Bridge
+       \begin{itemize}
+        \item Objective-CのオブジェクトにLuaからメッセージを送る
+        \item （自作）\footnote{https://github.com/torus/Lua-Objective-C-Bridge}
+       \end{itemize}
+\end{itemize}
+
+\end{document}
