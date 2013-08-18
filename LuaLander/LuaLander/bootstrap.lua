@@ -140,19 +140,40 @@ local function make_ground(world, screen_size)
 end
 
 local function make_spaceship(ctx, world)
-      local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "spaceship.png")
-      print("img", -img)
+   local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "spaceship.png")
+   local ship = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
 
-      local ship = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
-      print("ship", -ship)
+   local x, y, width, height = get_bounds(ctx, ship)
+   print(x, y, width, height)
 
-      local x, y, width, height = get_bounds(ctx, ship)
-      print(x, y, width, height)
+   local shipview = ctx:wrap(objc.class.UIView)("alloc")("initWithFrame:",
+                                                            -(ship("bounds")))
+   shipview("addSubview:", -ship)
 
-      local shipbody = make_spaceship_body(world)
-      set_fixture(shipbody, width, height)
+   local shipbody = make_spaceship_body(world)
+   set_fixture(shipbody, width, height)
 
-      return ship, shipbody
+   local jetimg = ctx:wrap(objc.class.UIImage)("imageNamed:", "fire.png")
+   local jetview = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -jetimg)
+   jetview("setHidden:", true)
+
+   local jx, jy, jet_w, jet_h = get_bounds(ctx, jetview)
+
+   local function set_power(x)
+      if x == 0 then
+         jetview("setHidden:", true)
+      else
+         jetview("setHidden:", false)
+         jetview("setTransform:", cg.CGAffineTransformWrap(
+                    cg.CGAffineTransformConcat(
+                       cg.CGAffineTransformMakeScale(x, x),
+                       cg.CGAffineTransformMakeTranslation((width - jet_w * x) / 2,
+                                                           height))))
+         shipview("addSubview:", -jetview)
+      end
+   end
+
+   return shipview, shipbody, set_power
 end
 
 local function make_main_coro(stat)

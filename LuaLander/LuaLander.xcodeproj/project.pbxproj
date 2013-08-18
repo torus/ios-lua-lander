@@ -13,6 +13,8 @@
 		9C51A28617BBB8D7007CE54C /* CoreGraphics_wrap.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28517BBB8D7007CE54C /* CoreGraphics_wrap.m */; };
 		9C51A28917BD0153007CE54C /* LLTerrainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28817BD0153007CE54C /* LLTerrainView.m */; };
 		9C51A28B17BF85F8007CE54C /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C51A28A17BF85F8007CE54C /* CoreMotion.framework */; };
+		9CD0346517C0BA7F000C588A /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CD0346317C0BA7F000C588A /* fire.png */; };
+		9CD0346617C0BA7F000C588A /* moon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CD0346417C0BA7F000C588A /* moon.png */; };
 		9CF9661417B135B700607D8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661317B135B700607D8B /* UIKit.framework */; };
 		9CF9661617B135B700607D8B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661517B135B700607D8B /* Foundation.framework */; };
 		9CF9661817B135B700607D8B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661717B135B700607D8B /* CoreGraphics.framework */; };
@@ -212,6 +214,8 @@
 		9C51A28717BD0153007CE54C /* LLTerrainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLTerrainView.h; sourceTree = "<group>"; };
 		9C51A28817BD0153007CE54C /* LLTerrainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLTerrainView.m; sourceTree = "<group>"; };
 		9C51A28A17BF85F8007CE54C /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		9CD0346317C0BA7F000C588A /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire.png; path = ../../images/fire.png; sourceTree = "<group>"; };
+		9CD0346417C0BA7F000C588A /* moon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = moon.png; path = ../../images/moon.png; sourceTree = "<group>"; };
 		9CF9661017B135B700607D8B /* LuaLander.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LuaLander.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CF9661317B135B700607D8B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9CF9661517B135B700607D8B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -453,6 +457,8 @@
 			isa = PBXGroup;
 			children = (
 				9C110A6C17B6A66800576079 /* spaceship.png */,
+				9CD0346317C0BA7F000C588A /* fire.png */,
+				9CD0346417C0BA7F000C588A /* moon.png */,
 				9CF9678F17B2950500607D8B /* LuaBridge */,
 				9CF9678B17B2940400607D8B /* SWIG */,
 				9CF966CE17B2914E00607D8B /* Box2D */,
@@ -823,9 +829,11 @@
 				9CF9662617B135B700607D8B /* Default.png in Resources */,
 				9CF9662817B135B700607D8B /* Default@2x.png in Resources */,
 				9CF9662A17B135B700607D8B /* Default-568h@2x.png in Resources */,
+				9CD0346517C0BA7F000C588A /* fire.png in Resources */,
 				9CF9662D17B135B700607D8B /* MainStoryboard_iPhone.storyboard in Resources */,
 				9CF9663017B135B700607D8B /* MainStoryboard_iPad.storyboard in Resources */,
 				9CF967A517B2954C00607D8B /* README.md in Resources */,
+				9CD0346617C0BA7F000C588A /* moon.png in Resources */,
 				9CF967A717B2954C00607D8B /* utils.lua in Resources */,
 				9C110A6917B5EF8300576079 /* bootstrap.lua in Resources */,
 				9C110A6D17B6A66800576079 /* spaceship.png in Resources */,
