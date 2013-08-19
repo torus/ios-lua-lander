@@ -129,14 +129,33 @@ local function get_bounds(ctx, view)
 end
 
 local function make_ground(world, screen_size)
+   print("screen_size", table.unpack(screen_size))
+
+   local half_width = screen_size[1] / 10 / 2
+   local half_height = screen_size[2] / 10 / 2
+
    local bodydef = b2.b2BodyDef()
-   bodydef.position:Set(screen_size[1] / 10 / 2, -screen_size[2] / 10 - 1)
+   bodydef.position:Set(half_width, 1)
    local groundbody = world:CreateBody(bodydef)
    local box = b2.b2PolygonShape()
-   box:SetAsBox(51.2, 1)
+   box:SetAsBox(half_width, 1)
    groundbody:CreateFixture(box, 0)
 
-   return groundbody
+   local left_bodydef = b2.b2BodyDef()
+   left_bodydef.position:Set(-1, -half_height)
+   local left_groundbody = world:CreateBody(left_bodydef)
+   local left_box = b2.b2PolygonShape()
+   left_box:SetAsBox(1, half_height)
+   left_groundbody:CreateFixture(left_box, 0)
+
+   local right_bodydef = b2.b2BodyDef()
+   right_bodydef.position:Set(half_width * 2 + 1, -half_height)
+   local right_groundbody = world:CreateBody(right_bodydef)
+   local right_box = b2.b2PolygonShape()
+   right_box:SetAsBox(1, half_height)
+   right_groundbody:CreateFixture(right_box, 0)
+
+   return {groundbody, left_groundbody, right_groundbody}
 end
 
 local function make_spaceship(ctx, world)
@@ -196,8 +215,8 @@ local function make_main_coro(stat)
 
       make_terrain(ctx, view, world)
 
-      local groundbody = make_ground(world, {screen_bounds[3], screen_bounds[4]})
-
+      local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
+      shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
       shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
 
       while true do
