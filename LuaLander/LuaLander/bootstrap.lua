@@ -243,9 +243,9 @@ local function make_main_coro(stat)
                   local ang = - math.atan(tan)
                   local sin = math.sin(rot + math.pi / 2)
                   local cos = math.cos(rot + math.pi / 2)
-                  local pow = ang / (math.pi / 2)
-                  shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 1000,
-                                                        pow * sin * 1000))
+                  local pow = math.min(1, ang / (math.pi / 4))
+                  shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 200,
+                                                        pow * sin * 200))
                   set_power(pow)
                end
             end
