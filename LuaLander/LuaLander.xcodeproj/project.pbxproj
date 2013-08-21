@@ -13,6 +13,7 @@
 		9C51A28617BBB8D7007CE54C /* CoreGraphics_wrap.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28517BBB8D7007CE54C /* CoreGraphics_wrap.m */; };
 		9C51A28917BD0153007CE54C /* LLTerrainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28817BD0153007CE54C /* LLTerrainView.m */; };
 		9C51A28B17BF85F8007CE54C /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C51A28A17BF85F8007CE54C /* CoreMotion.framework */; };
+		9C9B326217C276EB00ED256D /* LLShipContactListener.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9C9B326017C276EB00ED256D /* LLShipContactListener.mm */; };
 		9CD0346517C0BA7F000C588A /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CD0346317C0BA7F000C588A /* fire.png */; };
 		9CD0346617C0BA7F000C588A /* moon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CD0346417C0BA7F000C588A /* moon.png */; };
 		9CF9661417B135B700607D8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661317B135B700607D8B /* UIKit.framework */; };
@@ -214,6 +215,8 @@
 		9C51A28717BD0153007CE54C /* LLTerrainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLTerrainView.h; sourceTree = "<group>"; };
 		9C51A28817BD0153007CE54C /* LLTerrainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLTerrainView.m; sourceTree = "<group>"; };
 		9C51A28A17BF85F8007CE54C /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		9C9B326017C276EB00ED256D /* LLShipContactListener.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LLShipContactListener.mm; sourceTree = "<group>"; };
+		9C9B326117C276EB00ED256D /* LLShipContactListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLShipContactListener.h; sourceTree = "<group>"; };
 		9CD0346317C0BA7F000C588A /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire.png; path = ../../images/fire.png; sourceTree = "<group>"; };
 		9CD0346417C0BA7F000C588A /* moon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = moon.png; path = ../../images/moon.png; sourceTree = "<group>"; };
 		9CF9661017B135B700607D8B /* LuaLander.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LuaLander.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -473,6 +476,8 @@
 				9C110A6817B5EF8300576079 /* bootstrap.lua */,
 				9C51A28717BD0153007CE54C /* LLTerrainView.h */,
 				9C51A28817BD0153007CE54C /* LLTerrainView.m */,
+				9C9B326017C276EB00ED256D /* LLShipContactListener.mm */,
+				9C9B326117C276EB00ED256D /* LLShipContactListener.h */,
 			);
 			path = LuaLander;
 			sourceTree = "<group>";
@@ -918,6 +923,7 @@
 				9CF9673F17B2918800607D8B /* b2TimeOfImpact.cpp in Sources */,
 				9CF9674117B2918800607D8B /* b2ChainShape.cpp in Sources */,
 				9CF9674317B2918800607D8B /* b2CircleShape.cpp in Sources */,
+				9C9B326217C276EB00ED256D /* LLShipContactListener.mm in Sources */,
 				9CF9674517B2918800607D8B /* b2EdgeShape.cpp in Sources */,
 				9CF9674717B2918800607D8B /* b2PolygonShape.cpp in Sources */,
 				9CF9674917B2918800607D8B /* b2BlockAllocator.cpp in Sources */,
