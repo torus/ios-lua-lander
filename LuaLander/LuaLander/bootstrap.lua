@@ -223,15 +223,17 @@ function State:set_contact_listner(world)
    end
 end
 
+local function make_world()
+   local gravity = b2.b2Vec2(0, -1)
+   return b2.b2World(gravity)
+end
+
 local function make_main_coro(stat)
    return function()
       local ctx = objc.context:create()
       local view = ctx:wrap(stat.view_controller)("view")
       local screen_bounds = {get_bounds(ctx, view)}
-
-      local gravity = b2.b2Vec2(0, -1)
-      local world = b2.b2World(gravity)
-
+      local world = make_world()
       local ship, shipbody, set_power = make_spaceship(ctx, world)
       view("addSubview:", -ship)
       local x, y, width, height = get_bounds(ctx, ship)
@@ -239,25 +241,11 @@ local function make_main_coro(stat)
       make_terrain(ctx, view, world)
 
       local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
+
       shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
       shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
 
       stat:set_contact_listner(world)
-      -- local listbl = {}
-      -- local listener = b2.create_contact_listener(listbl)
-      -- world:SetContactListener(listener)
-      -- stat.collision_detected = false
-      -- function listbl:got_impulses(imp)
-      --    if not stat.collision_detected then
-      --       for i, v in pairs(imp) do
-      --          print("imp", i, v)
-      --          if v > 30 then
-      --             stat.collision_detected = true
-      --             break
-      --          end
-      --       end
-      --    end
-      -- end
 
       while true do
          local elapsed, accx, accy, accz = coroutine.yield()
