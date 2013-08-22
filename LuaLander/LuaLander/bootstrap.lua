@@ -200,6 +200,29 @@ local function make_spaceship(ctx, world)
    return shipview, shipbody, set_power
 end
 
+local State = {}
+function State:set_contact_listner(world)
+   local listbl = {}
+   local listener = b2.create_contact_listener(listbl)
+   world:SetContactListener(listener)
+   self.collision_detected = false
+   self.listener = listener
+   self.listbl = listbl
+   local stat = self
+
+   function listbl:got_impulses(imp)
+      if not stat.collision_detected then
+         for i, v in pairs(imp) do
+            print("imp", i, v)
+            if v > 30 then
+               stat.collision_detected = true
+               break
+            end
+         end
+      end
+   end
+end
+
 local function make_main_coro(stat)
    return function()
       local ctx = objc.context:create()
@@ -219,21 +242,22 @@ local function make_main_coro(stat)
       shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
       shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
 
-      local listbl = {}
-      local listener = b2.create_contact_listener(listbl)
-      world:SetContactListener(listener)
-      local collision_detected = false
-      function listbl:got_impulses(imp)
-         if not collision_detected then
-            for i, v in pairs(imp) do
-               print("imp", i, v)
-               if v > 30 then
-                  collision_detected = true
-                  break
-               end
-            end
-         end
-      end
+      stat:set_contact_listner(world)
+      -- local listbl = {}
+      -- local listener = b2.create_contact_listener(listbl)
+      -- world:SetContactListener(listener)
+      -- stat.collision_detected = false
+      -- function listbl:got_impulses(imp)
+      --    if not stat.collision_detected then
+      --       for i, v in pairs(imp) do
+      --          print("imp", i, v)
+      --          if v > 30 then
+      --             stat.collision_detected = true
+      --             break
+      --          end
+      --       end
+      --    end
+      -- end
 
       while true do
          local elapsed, accx, accy, accz = coroutine.yield()
@@ -244,7 +268,8 @@ local function make_main_coro(stat)
          local pos = shipbody:GetPosition()
          local rot = shipbody:GetAngle()
 
-         if collision_detected then
+         if stat.collision_detected then
+            print("collision_detected")
             ship("setHidden:", true)
             shipbody:SetAwake(false)
             local parts = {}
@@ -349,6 +374,7 @@ function create(view_controller)
       view_controller = view_controller,
       prev_time = 0
    }
+   setmetatable(stat, {__index = State})
    stat.main_coro = coroutine.create(make_main_coro(stat))
 
    return stat
