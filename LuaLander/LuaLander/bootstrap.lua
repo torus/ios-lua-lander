@@ -224,8 +224,51 @@ function State:set_contact_listner(world)
 end
 
 local function make_world()
-   local gravity = b2.b2Vec2(0, -1)
+   local gravity = b2.b2Vec2(0, -10)
    return b2.b2World(gravity)
+end
+
+local function on_collision_detected(ctx, view, world, ship, shipbody, pos)
+   print("collision_detected")
+   ship("setHidden:", true)
+   shipbody:SetAwake(false)
+   local parts = {}
+   for i = 1, 50 do
+      local bdef = b2.b2BodyDef()
+      local ang = math.random() * math.pi * 2
+      bdef.position:Set(pos.x + math.random() * math.cos(ang),
+                        pos.y + math.random() * math.sin(ang))
+      bdef.type = b2.b2_dynamicBody
+      local body = world:CreateBody(bdef)
+      local box = b2.b2PolygonShape()
+      box:SetAsBox(0.5, 0.5)
+      body:CreateFixture(box, 1)
+      body:ApplyLinearImpulse(b2.b2Vec2(0.2 * math.cos(ang),
+                                        0.2 * math.sin(ang)),
+                              b2.b2Vec2(math.random() - 0.5, math.random() - 0.5))
+
+      local rect = cg.CGRectWrap(cg.CGRectMake(0, 0, 10, 10))
+      local partview = ctx:wrap(objc.class.LLTerrainView)("alloc")("initWithFrame:", rect)
+      partview("setClipsToBounds:", true)
+      local function drawRect(rect)
+         local cgctx = cg.UIGraphicsGetCurrentContext()
+         cg.CGContextSetRGBFillColor(cgctx, 1, 0, 0, 1)
+         cg.CGContextFillRect(cgctx, cg.CGRectMake(0, 0, 10, 10))
+      end
+
+      partview("setDrawRect:", drawRect)
+
+      -- local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "moon.png")
+      -- local partview = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
+
+      view("addSubview:", -partview)
+
+      -- print("partview", partview)
+
+      table.insert(parts, {body = body, view = partview})
+   end
+
+   return parts
 end
 
 local function make_main_coro(stat)
@@ -257,44 +300,45 @@ local function make_main_coro(stat)
          local rot = shipbody:GetAngle()
 
          if stat.collision_detected then
-            print("collision_detected")
-            ship("setHidden:", true)
-            shipbody:SetAwake(false)
-            local parts = {}
-            for i = 1, 50 do
-               local bdef = b2.b2BodyDef()
-               local ang = math.random() * math.pi * 2
-               bdef.position:Set(pos.x + math.random() * math.cos(ang),
-                                 pos.y + math.random() * math.sin(ang))
-               bdef.type = b2.b2_dynamicBody
-               local body = world:CreateBody(bdef)
-               local box = b2.b2PolygonShape()
-               box:SetAsBox(0.5, 0.5)
-               body:CreateFixture(box, 1)
-               body:ApplyLinearImpulse(b2.b2Vec2(0.2 * math.cos(ang),
-                                                 0.2 * math.sin(ang)),
-                                       b2.b2Vec2(math.random() - 0.5, math.random() - 0.5))
+            local parts = on_collision_detected(ctx, view, world, ship, shipbody, pos)
+            -- print("collision_detected")
+            -- ship("setHidden:", true)
+            -- shipbody:SetAwake(false)
+            -- local parts = {}
+            -- for i = 1, 50 do
+            --    local bdef = b2.b2BodyDef()
+            --    local ang = math.random() * math.pi * 2
+            --    bdef.position:Set(pos.x + math.random() * math.cos(ang),
+            --                      pos.y + math.random() * math.sin(ang))
+            --    bdef.type = b2.b2_dynamicBody
+            --    local body = world:CreateBody(bdef)
+            --    local box = b2.b2PolygonShape()
+            --    box:SetAsBox(0.5, 0.5)
+            --    body:CreateFixture(box, 1)
+            --    body:ApplyLinearImpulse(b2.b2Vec2(0.2 * math.cos(ang),
+            --                                      0.2 * math.sin(ang)),
+            --                            b2.b2Vec2(math.random() - 0.5, math.random() - 0.5))
 
-               local rect = cg.CGRectWrap(cg.CGRectMake(0, 0, 10, 10))
-               local partview = ctx:wrap(objc.class.LLTerrainView)("alloc")("initWithFrame:", rect)
-               partview("setClipsToBounds:", true)
-               local function drawRect(rect)
-                  local cgctx = cg.UIGraphicsGetCurrentContext()
-                  cg.CGContextSetRGBFillColor(cgctx, 1, 0, 0, 1)
-                  cg.CGContextFillRect(cgctx, cg.CGRectMake(0, 0, 10, 10))
-               end
+            --    local rect = cg.CGRectWrap(cg.CGRectMake(0, 0, 10, 10))
+            --    local partview = ctx:wrap(objc.class.LLTerrainView)("alloc")("initWithFrame:", rect)
+            --    partview("setClipsToBounds:", true)
+            --    local function drawRect(rect)
+            --       local cgctx = cg.UIGraphicsGetCurrentContext()
+            --       cg.CGContextSetRGBFillColor(cgctx, 1, 0, 0, 1)
+            --       cg.CGContextFillRect(cgctx, cg.CGRectMake(0, 0, 10, 10))
+            --    end
 
-               partview("setDrawRect:", drawRect)
+            --    partview("setDrawRect:", drawRect)
 
-               -- local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "moon.png")
-               -- local partview = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
+            --    -- local img = ctx:wrap(objc.class.UIImage)("imageNamed:", "moon.png")
+            --    -- local partview = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -img)
 
-               view("addSubview:", -partview)
+            --    view("addSubview:", -partview)
 
-               -- print("partview", partview)
+            --    -- print("partview", partview)
 
-               table.insert(parts, {body = body, view = partview})
-            end
+            --    table.insert(parts, {body = body, view = partview})
+            -- end
 
             while true do
                local elapsed, accx, accy, accz = coroutine.yield()
