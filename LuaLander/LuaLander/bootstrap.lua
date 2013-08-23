@@ -376,6 +376,39 @@ function State:game_main_loop_coro()
    end
 end
 
+function State:title_screen_coro()
+   local ctx = self.ctx
+   local view = self.view
+   local rect = view("bounds")
+   local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
+-- [[NSBundle mainBundle] pathForResource:@"bootstrap" ofType:@"lua"]
+   local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
+                                                           "title", "html")
+   local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
+   print("url", -url)
+   local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
+   print("req", -req)
+   webview("loadRequest:", -req)
+   webview("setOpaque:", false)
+   local clear = ctx:wrap(objc.class.UIColor)("clearColor")
+   webview("setBackgroundColor:", -clear)
+
+   local function func(url)
+      print("clicked", url)
+      if url:match("^lualander:start") then
+         webview("setHidden:", true)
+         print("start")
+         return false
+      else
+         return true
+      end
+   end
+   local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", func)
+   webview("setDelegate:", -delegate)
+
+   view("addSubview:", -webview)
+end
+
 local function make_main_coro(stat)
    return function()
       stat:initialize()
