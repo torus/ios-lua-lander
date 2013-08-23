@@ -267,7 +267,7 @@ local function on_collision_detected(ctx, view, world, ship, shipbody, pos)
    return parts
 end
 
-local function game_main_loop(stat, ctx, world, view, ship, shipbody)
+local function game_main_loop_coro(stat, ctx, world, view, ship, shipbody)
    local x, y, width, height = get_bounds(ctx, ship)
 
    while true do
@@ -348,7 +348,6 @@ local function make_main_coro(stat)
       local world = make_world()
       local ship, shipbody, set_power = make_spaceship(ctx, world)
       view("addSubview:", -ship)
-      -- local x, y, width, height = get_bounds(ctx, ship)
 
       make_terrain(ctx, view, world)
 
@@ -360,77 +359,8 @@ local function make_main_coro(stat)
       stat:set_contact_listner(world)
 
       while true do
-         game_main_loop(stat, ctx, world, view, ship, shipbody)
+         game_main_loop_coro(stat, ctx, world, view, ship, shipbody)
       end
-
-      -- while true do
-      --    local elapsed, accx, accy, accz = coroutine.yield()
-      --    -- print(accx, accy, accz)
-
-      --    world:Step(elapsed - stat.prev_time, 10, 8)
-
-      --    local pos = shipbody:GetPosition()
-      --    local rot = shipbody:GetAngle()
-
-      --    if stat.collision_detected then
-      --       local parts = on_collision_detected(ctx, view, world, ship, shipbody, pos)
-
-      --       while true do
-      --          local elapsed, accx, accy, accz = coroutine.yield()
-      --          world:Step(elapsed - stat.prev_time, 10, 8)
-
-      --          for i, p in pairs(parts) do
-      --             local pos = p.body:GetPosition()
-      --             local rot = p.body:GetAngle()
-
-      --             p.view("setTransform:",
-      --                    cg.CGAffineTransformWrap(
-      --                       cg.CGAffineTransformConcat(
-      --                          cg.CGAffineTransformMakeRotation(-rot),
-      --                          cg.CGAffineTransformMakeTranslation(pos.x * 10,
-      --                                                                 - pos.y * 10))))
-      --          end
-
-      --          stat.prev_time = elapsed
-      --       end
-      --    end
-
-      --    if accx ~= 0 and accy ~= 0 then
-      --       local target_angle = - (math.atan(- accy / accx))
-      --       -- print(target_angle)
-
-      --       local tor = target_angle - rot
-      --       shipbody:ApplyTorque(tor * 10000)
-      --    end
-
-      --    if accz ~= 0 then
-      --       local a = accx * accx + accy * accy
-      --       if a > 0 then
-      --          local tan = accz / math.sqrt(a)
-      --          if tan < 0 then
-      --             local ang = - math.atan(tan)
-      --             local sin = math.sin(rot + math.pi / 2)
-      --             local cos = math.cos(rot + math.pi / 2)
-      --             local pow = math.min(1, ang / (math.pi / 4))
-      --             shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 200,
-      --                                                   pow * sin * 200))
-      --             set_power(pow)
-      --          end
-      --       end
-      --    end
-
-      --    local av = shipbody:GetAngularVelocity()
-      --    shipbody:ApplyTorque(-av * 10000)
-
-      --    ship("setTransform:",
-      --         cg.CGAffineTransformWrap(
-      --            cg.CGAffineTransformConcat(
-      --               cg.CGAffineTransformMakeRotation(-rot),
-      --               cg.CGAffineTransformMakeTranslation(pos.x * 10 - width / 2,
-      --                                                      - pos.y * 10 - height / 2))))
-
-      --    stat.prev_time = elapsed
-      -- end
    end
 end
 
