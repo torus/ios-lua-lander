@@ -228,6 +228,38 @@ local function make_world()
    return b2.b2World(gravity)
 end
 
+function State:initialize()
+   local stat = self
+
+   local ctx = objc.context:create()
+   local view = ctx:wrap(stat.view_controller)("view")
+   local screen_bounds = {get_bounds(ctx, view)}
+   local world = make_world()
+   local ship, shipbody, set_power = make_spaceship(ctx, world)
+   view("addSubview:", -ship)
+
+   make_terrain(ctx, view, world)
+
+   local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
+
+   shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
+   shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
+
+   stat:set_contact_listner(world)
+
+   stat.ctx = ctx
+   stat.view = view
+   stat.screen_bounds = screen_bounds
+   stat.world = world
+   stat.ship = ship
+   stat.shipbody = shipbody
+   stat.set_power = set_power
+   stat.ground_bodies = groundbodies
+end
+
+function State:title_screen_coro()
+end
+
 local function on_collision_detected(ctx, view, world, ship, shipbody, pos)
    print("collision_detected")
    ship("setHidden:", true)
@@ -267,7 +299,11 @@ local function on_collision_detected(ctx, view, world, ship, shipbody, pos)
    return parts
 end
 
-local function game_main_loop_coro(stat, ctx, world, view, ship, shipbody)
+function State:game_main_loop_coro()
+   local stat = self
+   local ctx, world, view, ship, shipbody
+      = self.ctx, self.world, self.view, self.ship, self.shipbody
+
    local x, y, width, height = get_bounds(ctx, ship)
 
    while true do
@@ -342,24 +378,26 @@ end
 
 local function make_main_coro(stat)
    return function()
-      local ctx = objc.context:create()
-      local view = ctx:wrap(stat.view_controller)("view")
-      local screen_bounds = {get_bounds(ctx, view)}
-      local world = make_world()
-      local ship, shipbody, set_power = make_spaceship(ctx, world)
-      view("addSubview:", -ship)
+      -- local ctx = objc.context:create()
+      -- local view = ctx:wrap(stat.view_controller)("view")
+      -- local screen_bounds = {get_bounds(ctx, view)}
+      -- local world = make_world()
+      -- local ship, shipbody, set_power = make_spaceship(ctx, world)
+      -- view("addSubview:", -ship)
 
-      make_terrain(ctx, view, world)
+      -- make_terrain(ctx, view, world)
 
-      local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
+      -- local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
 
-      shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
-      shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
+      -- shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
+      -- shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
 
-      stat:set_contact_listner(world)
+      -- stat:set_contact_listner(world)
+      stat:initialize()
 
       while true do
-         game_main_loop_coro(stat, ctx, world, view, ship, shipbody)
+         stat:title_screen_coro()
+         stat:game_main_loop_coro()
       end
    end
 end
