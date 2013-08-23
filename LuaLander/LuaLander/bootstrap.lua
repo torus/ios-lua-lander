@@ -378,21 +378,6 @@ end
 
 local function make_main_coro(stat)
    return function()
-      -- local ctx = objc.context:create()
-      -- local view = ctx:wrap(stat.view_controller)("view")
-      -- local screen_bounds = {get_bounds(ctx, view)}
-      -- local world = make_world()
-      -- local ship, shipbody, set_power = make_spaceship(ctx, world)
-      -- view("addSubview:", -ship)
-
-      -- make_terrain(ctx, view, world)
-
-      -- local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
-
-      -- shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
-      -- shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
-
-      -- stat:set_contact_listner(world)
       stat:initialize()
 
       while true do
