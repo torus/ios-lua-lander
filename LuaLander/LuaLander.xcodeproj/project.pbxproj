@@ -14,6 +14,10 @@
 		9C51A28917BD0153007CE54C /* LLTerrainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28817BD0153007CE54C /* LLTerrainView.m */; };
 		9C51A28B17BF85F8007CE54C /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C51A28A17BF85F8007CE54C /* CoreMotion.framework */; };
 		9C9B326217C276EB00ED256D /* LLShipContactListener.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9C9B326017C276EB00ED256D /* LLShipContactListener.mm */; };
+		9C9B326517C7A76B00ED256D /* LLWebViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9B326417C7A76B00ED256D /* LLWebViewDelegate.m */; };
+		9C9B326A17C7AFF600ED256D /* gameover.html in Resources */ = {isa = PBXBuildFile; fileRef = 9C9B326717C7AFF600ED256D /* gameover.html */; };
+		9C9B326B17C7AFF600ED256D /* title.html in Resources */ = {isa = PBXBuildFile; fileRef = 9C9B326817C7AFF600ED256D /* title.html */; };
+		9C9B326C17C7AFF600ED256D /* welldone.html in Resources */ = {isa = PBXBuildFile; fileRef = 9C9B326917C7AFF600ED256D /* welldone.html */; };
 		9CD0346517C0BA7F000C588A /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CD0346317C0BA7F000C588A /* fire.png */; };
 		9CD0346617C0BA7F000C588A /* moon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CD0346417C0BA7F000C588A /* moon.png */; };
 		9CF9661417B135B700607D8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661317B135B700607D8B /* UIKit.framework */; };
@@ -217,6 +221,11 @@
 		9C51A28A17BF85F8007CE54C /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		9C9B326017C276EB00ED256D /* LLShipContactListener.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LLShipContactListener.mm; sourceTree = "<group>"; };
 		9C9B326117C276EB00ED256D /* LLShipContactListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLShipContactListener.h; sourceTree = "<group>"; };
+		9C9B326317C7A76B00ED256D /* LLWebViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLWebViewDelegate.h; sourceTree = "<group>"; };
+		9C9B326417C7A76B00ED256D /* LLWebViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLWebViewDelegate.m; sourceTree = "<group>"; };
+		9C9B326717C7AFF600ED256D /* gameover.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = gameover.html; path = ../../webview/gameover.html; sourceTree = "<group>"; };
+		9C9B326817C7AFF600ED256D /* title.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = title.html; path = ../../webview/title.html; sourceTree = "<group>"; };
+		9C9B326917C7AFF600ED256D /* welldone.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = welldone.html; path = ../../webview/welldone.html; sourceTree = "<group>"; };
 		9CD0346317C0BA7F000C588A /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire.png; path = ../../images/fire.png; sourceTree = "<group>"; };
 		9CD0346417C0BA7F000C588A /* moon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = moon.png; path = ../../images/moon.png; sourceTree = "<group>"; };
 		9CF9661017B135B700607D8B /* LuaLander.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LuaLander.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -424,6 +433,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9C9B326617C7AFCA00ED256D /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				9C9B326717C7AFF600ED256D /* gameover.html */,
+				9C9B326817C7AFF600ED256D /* title.html */,
+				9C9B326917C7AFF600ED256D /* welldone.html */,
+			);
+			name = WebView;
+			sourceTree = "<group>";
+		};
 		9CF9660717B135B700607D8B = {
 			isa = PBXGroup;
 			children = (
@@ -459,6 +478,7 @@
 		9CF9661917B135B700607D8B /* LuaLander */ = {
 			isa = PBXGroup;
 			children = (
+				9C9B326617C7AFCA00ED256D /* WebView */,
 				9C110A6C17B6A66800576079 /* spaceship.png */,
 				9CD0346317C0BA7F000C588A /* fire.png */,
 				9CD0346417C0BA7F000C588A /* moon.png */,
@@ -478,6 +498,8 @@
 				9C51A28817BD0153007CE54C /* LLTerrainView.m */,
 				9C9B326017C276EB00ED256D /* LLShipContactListener.mm */,
 				9C9B326117C276EB00ED256D /* LLShipContactListener.h */,
+				9C9B326317C7A76B00ED256D /* LLWebViewDelegate.h */,
+				9C9B326417C7A76B00ED256D /* LLWebViewDelegate.m */,
 			);
 			path = LuaLander;
 			sourceTree = "<group>";
@@ -831,6 +853,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CF9661E17B135B700607D8B /* InfoPlist.strings in Resources */,
+				9C9B326B17C7AFF600ED256D /* title.html in Resources */,
+				9C9B326C17C7AFF600ED256D /* welldone.html in Resources */,
 				9CF9662617B135B700607D8B /* Default.png in Resources */,
 				9CF9662817B135B700607D8B /* Default@2x.png in Resources */,
 				9CF9662A17B135B700607D8B /* Default-568h@2x.png in Resources */,
@@ -842,6 +866,7 @@
 				9CF967A717B2954C00607D8B /* utils.lua in Resources */,
 				9C110A6917B5EF8300576079 /* bootstrap.lua in Resources */,
 				9C110A6D17B6A66800576079 /* spaceship.png in Resources */,
+				9C9B326A17C7AFF600ED256D /* gameover.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -904,6 +929,7 @@
 				9CF966B417B1372900607D8B /* lopcodes.c in Sources */,
 				9CF966B617B1372900607D8B /* loslib.c in Sources */,
 				9CF966B817B1372900607D8B /* lparser.c in Sources */,
+				9C9B326517C7A76B00ED256D /* LLWebViewDelegate.m in Sources */,
 				9CF966BA17B1372900607D8B /* lstate.c in Sources */,
 				9CF966BC17B1372900607D8B /* lstring.c in Sources */,
 				9CF966BE17B1372900607D8B /* lstrlib.c in Sources */,

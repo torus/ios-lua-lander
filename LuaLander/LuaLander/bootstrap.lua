@@ -301,8 +301,8 @@ end
 
 function State:game_main_loop_coro()
    local stat = self
-   local ctx, world, view, ship, shipbody
-      = self.ctx, self.world, self.view, self.ship, self.shipbody
+   local ctx, world, view, ship, shipbody, set_power
+      = self.ctx, self.world, self.view, self.ship, self.shipbody, self.set_power
 
    local x, y, width, height = get_bounds(ctx, ship)
 
