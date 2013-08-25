@@ -342,7 +342,11 @@ function State:game_main_loop_coro()
          local function func(url)
             print("clicked", url)
             if url:match("^lualander:back") then
-               webview("setHidden:", true)
+               webview("removeFromSuperview")
+               for i, part in pairs(parts) do
+                  self.world:DestroyBody(part.body)
+                  part.view("removeFromSuperview")
+               end
                back_clicked = true
                return false
             else
