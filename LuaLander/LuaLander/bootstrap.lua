@@ -224,7 +224,7 @@ function State:set_contact_listner(world)
 end
 
 local function make_world()
-   local gravity = b2.b2Vec2(0, -1)
+   local gravity = b2.b2Vec2(0, -10)
    return b2.b2World(gravity)
 end
 
@@ -242,8 +242,10 @@ function State:initialize()
 
    local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
 
-   shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
-   shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
+   -- shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
+   -- shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
+   shipbody:SetActive(false)
+   ship("setHidden:", true)
 
    stat:set_contact_listner(world)
 
@@ -257,7 +259,12 @@ function State:initialize()
    stat.ground_bodies = groundbodies
 end
 
-function State:title_screen_coro()
+function State:game_start()
+   self.shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
+   self.shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
+   self.shipbody:SetActive(true)
+   self.ship("setHidden:", false)
+   self.collision_detected = false
 end
 
 local function on_collision_detected(ctx, view, world, ship, shipbody, pos)
@@ -318,7 +325,39 @@ function State:game_main_loop_coro()
       if stat.collision_detected then
          local parts = on_collision_detected(ctx, view, world, ship, shipbody, pos)
 
+         local ctx = self.ctx
+         local view = self.view
+         local rect = view("bounds")
+         local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
+         local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
+                                                                  "gameover", "html")
+         local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
+         local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
+         webview("loadRequest:", -req)
+         webview("setOpaque:", false)
+         local clear = ctx:wrap(objc.class.UIColor)("clearColor")
+         webview("setBackgroundColor:", -clear)
+
+         local back_clicked = false
+         local function func(url)
+            print("clicked", url)
+            if url:match("^lualander:back") then
+               webview("setHidden:", true)
+               back_clicked = true
+               return false
+            else
+               return true
+            end
+         end
+         local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", func)
+         webview("setDelegate:", -delegate)
+
+         view("addSubview:", -webview)
+
+
          while true do
+            if back_clicked then return end
+
             local elapsed, accx, accy, accz = coroutine.yield()
             world:Step(elapsed - stat.prev_time, 10, 8)
 
@@ -381,7 +420,6 @@ function State:title_screen_coro()
    local view = self.view
    local rect = view("bounds")
    local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
--- [[NSBundle mainBundle] pathForResource:@"bootstrap" ofType:@"lua"]
    local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
                                                            "title", "html")
    local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
@@ -393,10 +431,12 @@ function State:title_screen_coro()
    local clear = ctx:wrap(objc.class.UIColor)("clearColor")
    webview("setBackgroundColor:", -clear)
 
+   local started = false
    local function func(url)
       print("clicked", url)
       if url:match("^lualander:start") then
          webview("setHidden:", true)
+         started = true
          print("start")
          return false
       else
@@ -407,6 +447,14 @@ function State:title_screen_coro()
    webview("setDelegate:", -delegate)
 
    view("addSubview:", -webview)
+
+   while true do
+      if started then
+         break
+      else
+         coroutine.yield()
+      end
+   end
 end
 
 local function make_main_coro(stat)
@@ -415,6 +463,7 @@ local function make_main_coro(stat)
 
       while true do
          stat:title_screen_coro()
+         stat:game_start()
          stat:game_main_loop_coro()
       end
    end
