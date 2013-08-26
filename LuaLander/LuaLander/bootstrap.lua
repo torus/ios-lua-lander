@@ -224,7 +224,7 @@ function State:set_contact_listner(world)
 end
 
 local function make_world()
-   local gravity = b2.b2Vec2(0, -10)
+   local gravity = b2.b2Vec2(0, -1)
    return b2.b2World(gravity)
 end
 
