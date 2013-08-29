@@ -381,25 +381,7 @@ function State:game_main_loop_coro()
 
          while true do
             if back_clicked then return end
-
             stat.prev_time = update_explosion_coro(world, stat.prev_time, parts)
-
-            -- local elapsed, accx, accy, accz = coroutine.yield()
-            -- world:Step(elapsed - stat.prev_time, 10, 8)
-
-            -- for i, p in pairs(parts) do
-            --    local pos = p.body:GetPosition()
-            --    local rot = p.body:GetAngle()
-
-            --    p.view("setTransform:",
-            --           cg.CGAffineTransformWrap(
-            --              cg.CGAffineTransformConcat(
-            --                 cg.CGAffineTransformMakeRotation(-rot),
-            --                 cg.CGAffineTransformMakeTranslation(pos.x * 10,
-            --                                                        - pos.y * 10))))
-            -- end
-
-            -- stat.prev_time = elapsed
          end
       end
 
