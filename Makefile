@@ -25,6 +25,6 @@ $(TESTFLIGHT_RESULT): $(IPA)
     -F team_token='$(TEAM_TOKEN)' \
     -F notes='This build was uploaded via the upload API' \
     -F notify=True \
-    -F distribution_lists='Me' \
+    -F distribution_lists='lualander' \
 	> $@
 	cat $@

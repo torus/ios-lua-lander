@@ -224,7 +224,7 @@ function State:set_contact_listner(world)
 end
 
 local function make_world()
-   local gravity = b2.b2Vec2(0, -1)
+   local gravity = b2.b2Vec2(0, -10)
    return b2.b2World(gravity)
 end
 
@@ -306,6 +306,26 @@ local function on_collision_detected(ctx, view, world, ship, shipbody, pos)
    return parts
 end
 
+local function update_explosion_coro(world, prev_time, parts)
+   local elapsed, accx, accy, accz = coroutine.yield()
+   world:Step(elapsed - prev_time, 10, 8)
+
+   for i, p in pairs(parts) do
+      local pos = p.body:GetPosition()
+      local rot = p.body:GetAngle()
+
+      p.view("setTransform:",
+             cg.CGAffineTransformWrap(
+                cg.CGAffineTransformConcat(
+                   cg.CGAffineTransformMakeRotation(-rot),
+                   cg.CGAffineTransformMakeTranslation(pos.x * 10,
+                                                          - pos.y * 10))))
+   end
+
+   return elapsed
+   -- stat.prev_time = elapsed
+end
+
 function State:game_main_loop_coro()
    local stat = self
    local ctx, world, view, ship, shipbody, set_power
@@ -362,22 +382,24 @@ function State:game_main_loop_coro()
          while true do
             if back_clicked then return end
 
-            local elapsed, accx, accy, accz = coroutine.yield()
-            world:Step(elapsed - stat.prev_time, 10, 8)
+            stat.prev_time = update_explosion_coro(world, stat.prev_time, parts)
 
-            for i, p in pairs(parts) do
-               local pos = p.body:GetPosition()
-               local rot = p.body:GetAngle()
+            -- local elapsed, accx, accy, accz = coroutine.yield()
+            -- world:Step(elapsed - stat.prev_time, 10, 8)
 
-               p.view("setTransform:",
-                      cg.CGAffineTransformWrap(
-                         cg.CGAffineTransformConcat(
-                            cg.CGAffineTransformMakeRotation(-rot),
-                            cg.CGAffineTransformMakeTranslation(pos.x * 10,
-                                                                   - pos.y * 10))))
-            end
+            -- for i, p in pairs(parts) do
+            --    local pos = p.body:GetPosition()
+            --    local rot = p.body:GetAngle()
 
-            stat.prev_time = elapsed
+            --    p.view("setTransform:",
+            --           cg.CGAffineTransformWrap(
+            --              cg.CGAffineTransformConcat(
+            --                 cg.CGAffineTransformMakeRotation(-rot),
+            --                 cg.CGAffineTransformMakeTranslation(pos.x * 10,
+            --                                                        - pos.y * 10))))
+            -- end
+
+            -- stat.prev_time = elapsed
          end
       end
 
