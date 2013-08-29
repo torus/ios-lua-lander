@@ -326,6 +326,41 @@ local function update_explosion_coro(world, prev_time, parts)
    -- stat.prev_time = elapsed
 end
 
+function State:show_gameover(back_clicked, parts)
+   local ctx = self.ctx
+   local view = self.view
+   local rect = view("bounds")
+   local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
+   local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
+                                                            "gameover", "html")
+   local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
+   local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
+   webview("loadRequest:", -req)
+   webview("setOpaque:", false)
+   local clear = ctx:wrap(objc.class.UIColor)("clearColor")
+   webview("setBackgroundColor:", -clear)
+
+   -- local back_clicked = {false}
+   local function func(url)
+      print("clicked", url)
+      if url:match("^lualander:back") then
+         webview("removeFromSuperview")
+         for i, part in pairs(parts) do
+            self.world:DestroyBody(part.body)
+            part.view("removeFromSuperview")
+         end
+         back_clicked[1] = true
+         return false
+      else
+         return true
+      end
+   end
+   local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", func)
+   webview("setDelegate:", -delegate)
+
+   view("addSubview:", -webview)
+end
+
 function State:game_main_loop_coro()
    local stat = self
    local ctx, world, view, ship, shipbody, set_power
@@ -345,42 +380,43 @@ function State:game_main_loop_coro()
       if stat.collision_detected then
          local parts = on_collision_detected(ctx, view, world, ship, shipbody, pos)
 
-         local ctx = self.ctx
-         local view = self.view
-         local rect = view("bounds")
-         local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
-         local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
-                                                                  "gameover", "html")
-         local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
-         local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
-         webview("loadRequest:", -req)
-         webview("setOpaque:", false)
-         local clear = ctx:wrap(objc.class.UIColor)("clearColor")
-         webview("setBackgroundColor:", -clear)
+         -- local ctx = self.ctx
+         -- local view = self.view
+         -- local rect = view("bounds")
+         -- local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
+         -- local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
+         --                                                          "gameover", "html")
+         -- local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
+         -- local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
+         -- webview("loadRequest:", -req)
+         -- webview("setOpaque:", false)
+         -- local clear = ctx:wrap(objc.class.UIColor)("clearColor")
+         -- webview("setBackgroundColor:", -clear)
 
-         local back_clicked = false
-         local function func(url)
-            print("clicked", url)
-            if url:match("^lualander:back") then
-               webview("removeFromSuperview")
-               for i, part in pairs(parts) do
-                  self.world:DestroyBody(part.body)
-                  part.view("removeFromSuperview")
-               end
-               back_clicked = true
-               return false
-            else
-               return true
-            end
-         end
-         local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", func)
-         webview("setDelegate:", -delegate)
+         local back_clicked = {false}
+         self:show_gameover(back_clicked, parts)
+         -- local function func(url)
+         --    print("clicked", url)
+         --    if url:match("^lualander:back") then
+         --       webview("removeFromSuperview")
+         --       for i, part in pairs(parts) do
+         --          self.world:DestroyBody(part.body)
+         --          part.view("removeFromSuperview")
+         --       end
+         --       back_clicked[1] = true
+         --       return false
+         --    else
+         --       return true
+         --    end
+         -- end
+         -- local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", func)
+         -- webview("setDelegate:", -delegate)
 
-         view("addSubview:", -webview)
+         -- view("addSubview:", -webview)
 
 
          while true do
-            if back_clicked then return end
+            if back_clicked[1] then return end
             stat.prev_time = update_explosion_coro(world, stat.prev_time, parts)
          end
       end
