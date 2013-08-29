@@ -267,7 +267,11 @@ function State:game_start()
    self.collision_detected = false
 end
 
-local function on_collision_detected(ctx, view, world, ship, shipbody, pos)
+function State:on_collision_detected(pos)
+   local pos = self.shipbody:GetPosition()
+   local ctx, world, view, ship, shipbody
+      = self.ctx, self.world, self.view, self.ship, self.shipbody
+
    print("collision_detected")
    ship("setHidden:", true)
    shipbody:SetActive(false)
@@ -405,21 +409,14 @@ function State:game_main_loop_coro()
 
       world:Step(elapsed - stat.prev_time, 10, 8)
 
-      local pos = shipbody:GetPosition()
-      local rot = shipbody:GetAngle()
-
       if stat.collision_detected then
-         local parts = on_collision_detected(ctx, view, world, ship, shipbody, pos)
-         local back_clicked = {false}
-         self:show_gameover(back_clicked, parts)
-
-         while true do
-            if back_clicked[1] then return end
-            stat.prev_time = update_explosion_coro(world, stat.prev_time, parts)
-         end
+         return false
       end
 
       self:update_force(accx, accy, accz)
+
+      local pos = shipbody:GetPosition()
+      local rot = shipbody:GetAngle()
 
       ship("setTransform:",
            cg.CGAffineTransformWrap(
@@ -481,7 +478,21 @@ local function make_main_coro(stat)
       while true do
          stat:title_screen_coro()
          stat:game_start()
-         stat:game_main_loop_coro()
+         local cleared = stat:game_main_loop_coro()
+         if cleared then
+         else
+            local parts = stat:on_collision_detected()
+            local back_clicked = {false}
+            stat:show_gameover(back_clicked, parts)
+
+            while true do
+               if back_clicked[1] then
+                  break
+               else
+                  stat.prev_time = update_explosion_coro(stat.world, stat.prev_time, parts)
+               end
+            end
+         end
       end
    end
 end
