@@ -326,6 +326,37 @@ local function update_explosion_coro(world, prev_time, parts)
    -- stat.prev_time = elapsed
 end
 
+function State:update_force(accx, accy, accz)
+   local shipbody, set_power = self.shipbody, self.set_power
+
+   if accx ~= 0 and accy ~= 0 then
+      local target_angle = - (math.atan(- accy / accx))
+      -- print(target_angle)
+
+      local tor = target_angle - rot
+      shipbody:ApplyTorque(tor * 10000)
+   end
+
+   if accz ~= 0 then
+      local a = accx * accx + accy * accy
+      if a > 0 then
+         local tan = accz / math.sqrt(a)
+         if tan < 0 then
+            local ang = - math.atan(tan)
+            local sin = math.sin(rot + math.pi / 2)
+            local cos = math.cos(rot + math.pi / 2)
+            local pow = math.min(1, ang / (math.pi / 4))
+            shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 200,
+                                                  pow * sin * 200))
+            set_power(pow)
+         end
+      end
+   end
+
+   local av = shipbody:GetAngularVelocity()
+   shipbody:ApplyTorque(-av * 10000)
+end
+
 function State:show_gameover(back_clicked, parts)
    local ctx = self.ctx
    local view = self.view
@@ -388,32 +419,7 @@ function State:game_main_loop_coro()
          end
       end
 
-      if accx ~= 0 and accy ~= 0 then
-         local target_angle = - (math.atan(- accy / accx))
-         -- print(target_angle)
-
-         local tor = target_angle - rot
-         shipbody:ApplyTorque(tor * 10000)
-      end
-
-      if accz ~= 0 then
-         local a = accx * accx + accy * accy
-         if a > 0 then
-            local tan = accz / math.sqrt(a)
-            if tan < 0 then
-               local ang = - math.atan(tan)
-               local sin = math.sin(rot + math.pi / 2)
-               local cos = math.cos(rot + math.pi / 2)
-               local pow = math.min(1, ang / (math.pi / 4))
-               shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 200,
-                                                     pow * sin * 200))
-               set_power(pow)
-            end
-         end
-      end
-
-      local av = shipbody:GetAngularVelocity()
-      shipbody:ApplyTorque(-av * 10000)
+      self:update_force(accx, accy, accz)
 
       ship("setTransform:",
            cg.CGAffineTransformWrap(
