@@ -233,7 +233,7 @@ function State:set_contact_listner(world)
 end
 
 local function make_world()
-   local gravity = b2.b2Vec2(0, -10)
+   local gravity = b2.b2Vec2(0, -1)
    return b2.b2World(gravity)
 end
 
@@ -277,6 +277,8 @@ function State:game_start()
          stat.ship("removeFromSuperview")
          stat.ship = nil
       end
+
+      collectgarbage()
    end
 
    local ctx = stat.ctx
@@ -295,10 +297,8 @@ function State:game_start()
 
    -- shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
    -- shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
-   shipbody:SetActive(false)
-   ship("setHidden:", true)
-
-   stat:set_contact_listner(world)
+   -- shipbody:SetActive(false)
+   -- ship("setHidden:", true)
 
    stat.world = world
    stat.ship = ship
@@ -306,13 +306,13 @@ function State:game_start()
    stat.set_power = set_power
    stat.ground_bodies = groundbodies
 
+   self.shipbody:SetTransform(b2.b2Vec2(7, -10), 0)
+   self.shipbody:SetLinearVelocity(b2.b2Vec2(500, 0))
 
-   self.shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
-   self.shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
-   self.shipbody:SetActive(true)
-   self.ship("setHidden:", false)
    self.collision_detected = false
    self.successfully_landed = false
+
+   stat:set_contact_listner(world)
 end
 
 function State:on_collision_detected(pos)
