@@ -213,11 +213,11 @@ function State:set_contact_listner(world)
    function listbl:got_impulses(imp)
       if not stat.collision_detected then
          for i, v in pairs(imp) do
-            print("imp", i, v)
-            if v > 30 then
-               stat.collision_detected = true
-               break
-            end
+            -- print("imp", i, v)
+            -- if v > 30 then
+            --    stat.collision_detected = true
+            --    break
+            -- end
          end
 
          local v = stat.shipbody:GetLinearVelocity()
@@ -231,7 +231,7 @@ function State:set_contact_listner(world)
 end
 
 local function make_world()
-   local gravity = b2.b2Vec2(0, -1)
+   local gravity = b2.b2Vec2(0, -10)
    return b2.b2World(gravity)
 end
 
@@ -406,8 +406,7 @@ function State:show_gameover(back_clicked, parts)
    view("addSubview:", -webview)
 end
 
-function State:show_welldone(back_clicked)
-   print("State:show_welldone")
+function State:show_webview_hud(name, click_handler)
    local ctx = self.ctx
    local view = self.view
    local rect = view("bounds")
@@ -421,20 +420,47 @@ function State:show_welldone(back_clicked)
    local clear = ctx:wrap(objc.class.UIColor)("clearColor")
    webview("setBackgroundColor:", -clear)
 
-   local function func(url)
+   view("addSubview:", -webview)
+
+   local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", click_handler)
+   webview("setDelegate:", -delegate)
+
+   return webview
+end
+
+function State:show_welldone(back_clicked)
+   print("State:show_welldone")
+   -- local ctx = self.ctx
+   -- local view = self.view
+   -- local rect = view("bounds")
+   -- local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
+   -- local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
+   --                                                          "welldone", "html")
+   -- local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
+   -- local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
+   -- webview("loadRequest:", -req)
+   -- webview("setOpaque:", false)
+   -- local clear = ctx:wrap(objc.class.UIColor)("clearColor")
+   -- webview("setBackgroundColor:", -clear)
+
+   -- local webview
+   local function func(url, webview)
       print("clicked", url)
       if url:match("^lualander:back") then
-         webview("removeFromSuperview")
+         self.ctx:wrap(webview)("removeFromSuperview")
          back_clicked[1] = true
          return false
       else
          return true
       end
    end
-   local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", func)
-   webview("setDelegate:", -delegate)
+   -- local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", func)
+   -- webview("setDelegate:", -delegate)
 
-   view("addSubview:", -webview)
+   -- webview = self:show_webview_hud("welldone", func)
+   self:show_webview_hud("welldone", func)
+
+   -- view("addSubview:", -webview)
 end
 
 function State:game_main_loop_coro()

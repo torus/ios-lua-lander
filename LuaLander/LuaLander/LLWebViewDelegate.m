@@ -22,7 +22,8 @@
     lua_State *L = [func_ref L];
     lua_rawgeti(L, LUA_REGISTRYINDEX, [func_ref ref]);
     lua_pushstring(L, [[[request URL] absoluteString] UTF8String]);
-    if (lua_pcall(L, 1, 1, 0)) {
+    luabridge_push_object(L, webView);
+    if (lua_pcall(L, 2, 1, 0)) {
         NSLog(@"Lua Error: %s", lua_tostring(L, -1));
     }
     int sw = lua_toboolean(L, -1);
