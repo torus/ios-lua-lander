@@ -395,13 +395,25 @@ function State:show_gameover(back_clicked, parts)
    self:show_webview_hud("gameover", func)
 end
 
+function State:show_hud()
+   print("show_hud")
+   local function func(url, webview)
+      return true
+   end
+   return self:show_webview_hud("hud", func)
+end
+
 function State:show_webview_hud(name, click_handler)
+   print("show_webview_hud", name)
    local ctx = self.ctx
    local view = self.view
    local rect = view("bounds")
    local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
    local path = (ctx:wrap(objc.class.NSBundle)("mainBundle")
                  ("pathForResource:ofType:", name, "html"))
+   if not path then
+      error("HUD '" .. tostring(name) .. "' not found")
+   end
    local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
    local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
    webview("loadRequest:", -req)
@@ -518,6 +530,7 @@ local function make_main_coro(stat)
       while true do
          stat:title_screen_coro()
          stat:game_start()
+         local hud_view = stat:show_hud()
          local cleared = stat:game_main_loop_coro()
          local back_clicked = {false}
          if cleared then
@@ -542,6 +555,7 @@ local function make_main_coro(stat)
                end
             end
          end
+         hud_view("removeFromSuperview")
       end
    end
 end

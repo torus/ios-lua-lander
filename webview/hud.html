@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Lua Lander HUD</title>
+<script type="text/javascript">
+function set_display(data) {
+document.getElementById("mission").innerText = data.mission
+document.getElementById("velocity").innerText = data.velocity
+document.getElementById("fuel").innerText = data.fuel
+}
+</script>
+</head>
+<body style="font-family: Avenir">
+<div style="text-align: right; margin-top: 20px">
+MISSION #<span id="mission">9</span>
+</div>
+<div style="text-align: right">
+VELOCITY: <span id="velocity">99.9</span>
+</div>
+<div style="text-align: right">
+FUEL: <span id="fuel">99.9</span>
+</div>
+</body>
+</html>

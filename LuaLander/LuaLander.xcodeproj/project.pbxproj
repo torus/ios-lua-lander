@@ -31,6 +31,7 @@
 		9C51A28617BBB8D7007CE54C /* CoreGraphics_wrap.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28517BBB8D7007CE54C /* CoreGraphics_wrap.m */; };
 		9C51A28917BD0153007CE54C /* LLTerrainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28817BD0153007CE54C /* LLTerrainView.m */; };
 		9C51A28B17BF85F8007CE54C /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C51A28A17BF85F8007CE54C /* CoreMotion.framework */; };
+		9C7903E517D4C19500C0BFFD /* hud.html in Resources */ = {isa = PBXBuildFile; fileRef = 9C7903E417D4C19500C0BFFD /* hud.html */; };
 		9C9B326217C276EB00ED256D /* LLShipContactListener.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9C9B326017C276EB00ED256D /* LLShipContactListener.mm */; };
 		9C9B326517C7A76B00ED256D /* LLWebViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9B326417C7A76B00ED256D /* LLWebViewDelegate.m */; };
 		9C9B326A17C7AFF600ED256D /* gameover.html in Resources */ = {isa = PBXBuildFile; fileRef = 9C9B326717C7AFF600ED256D /* gameover.html */; };
@@ -255,6 +256,7 @@
 		9C51A28717BD0153007CE54C /* LLTerrainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLTerrainView.h; sourceTree = "<group>"; };
 		9C51A28817BD0153007CE54C /* LLTerrainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLTerrainView.m; sourceTree = "<group>"; };
 		9C51A28A17BF85F8007CE54C /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		9C7903E417D4C19500C0BFFD /* hud.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = hud.html; path = ../../webview/hud.html; sourceTree = "<group>"; };
 		9C9B326017C276EB00ED256D /* LLShipContactListener.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LLShipContactListener.mm; sourceTree = "<group>"; };
 		9C9B326117C276EB00ED256D /* LLShipContactListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLShipContactListener.h; sourceTree = "<group>"; };
 		9C9B326317C7A76B00ED256D /* LLWebViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLWebViewDelegate.h; sourceTree = "<group>"; };
@@ -497,6 +499,7 @@
 		9C9B326617C7AFCA00ED256D /* WebView */ = {
 			isa = PBXGroup;
 			children = (
+				9C7903E417D4C19500C0BFFD /* hud.html */,
 				9C9B326717C7AFF600ED256D /* gameover.html */,
 				9C9B326817C7AFF600ED256D /* title.html */,
 				9C9B326917C7AFF600ED256D /* welldone.html */,
@@ -926,6 +929,7 @@
 				9CF9662617B135B700607D8B /* Default.png in Resources */,
 				9C1D405A17CB967E00A323F9 /* Icon-Small.png in Resources */,
 				9C1D405217CB967E00A323F9 /* Icon-40.png in Resources */,
+				9C7903E517D4C19500C0BFFD /* hud.html in Resources */,
 				9C1D405B17CB967E00A323F9 /* Icon-Small@2x.png in Resources */,
 				9CF9662817B135B700607D8B /* Default@2x.png in Resources */,
 				9C1D405717CB967E00A323F9 /* Icon-76@2x.png in Resources */,
