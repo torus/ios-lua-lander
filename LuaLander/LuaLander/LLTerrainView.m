@@ -36,7 +36,7 @@
     lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
     luabridge_push_object(L, [NSValue valueWithCGRect:rect]);
     if (lua_pcall(L, 1, 0, 0)) {
-        NSLog(@"Lua Error: %s", lua_tostring(L, -1));
+        NSLog(@"Lua Error: %s\n", lua_tostring(L, -1));
     }
 }
 

@@ -24,7 +24,7 @@
     lua_pushstring(L, [[[request URL] absoluteString] UTF8String]);
     luabridge_push_object(L, webView);
     if (lua_pcall(L, 2, 1, 0)) {
-        NSLog(@"Lua Error: %s", lua_tostring(L, -1));
+        NSLog(@"Lua Error: %s\n", lua_tostring(L, -1));
     }
     int sw = lua_toboolean(L, -1);
     

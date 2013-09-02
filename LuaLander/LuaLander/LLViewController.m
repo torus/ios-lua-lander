@@ -30,7 +30,7 @@
     lua_getglobal(L, "create");
     lua_pushlightuserdata(L, (__bridge void *)(self));
     if (lua_pcall(L, 1, 1, 0)) {
-        fprintf(stderr, "Lua Error: %s", lua_tostring(L, -1));
+        NSLog(@"Lua Error: %s\n", lua_tostring(L, -1));
     }
     self->gameState = luaL_ref(L, LUA_REGISTRYINDEX);
     
@@ -60,7 +60,7 @@
     lua_pushnumber(L, acc.z);
 
     if (lua_pcall(L, 5, 0, 0)) {
-        fprintf(stderr, "Lua Error: %s", lua_tostring(L, -1));
+        NSLog(@"Lua Error: %s\n", lua_tostring(L, -1));
     }
 }
 

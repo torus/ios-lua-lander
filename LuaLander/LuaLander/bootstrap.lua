@@ -242,12 +242,51 @@ function State:initialize()
    local ctx = objc.context:create()
    local view = ctx:wrap(stat.view_controller)("view")
    local screen_bounds = {get_bounds(ctx, view)}
+   -- local world = make_world()
+   -- local ship, shipbody, set_power = make_spaceship(ctx, world)
+   -- view("addSubview:", -ship)
+
+   -- make_terrain(ctx, view, world)
+
+   -- local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
+
+   -- -- shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
+   -- -- shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
+   -- shipbody:SetActive(false)
+   -- ship("setHidden:", true)
+
+   -- stat:set_contact_listner(world)
+
+   stat.ctx = ctx
+   stat.view = view
+   stat.screen_bounds = screen_bounds
+   -- stat.world = world
+   -- stat.ship = ship
+   -- stat.shipbody = shipbody
+   -- stat.set_power = set_power
+   -- stat.ground_bodies = groundbodies
+end
+
+function State:game_start()
+   local stat = self
+
+   if stat.world then
+      stat.world = nil
+      if stat.ship then
+         stat.ship("removeFromSuperview")
+         stat.ship = nil
+      end
+   end
+
+   local ctx = stat.ctx
+   local view = stat.view
    local world = make_world()
    local ship, shipbody, set_power = make_spaceship(ctx, world)
    view("addSubview:", -ship)
 
    make_terrain(ctx, view, world)
 
+   local screen_bounds = stat.screen_bounds
    local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
 
    -- shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
@@ -257,17 +296,13 @@ function State:initialize()
 
    stat:set_contact_listner(world)
 
-   stat.ctx = ctx
-   stat.view = view
-   stat.screen_bounds = screen_bounds
    stat.world = world
    stat.ship = ship
    stat.shipbody = shipbody
    stat.set_power = set_power
    stat.ground_bodies = groundbodies
-end
 
-function State:game_start()
+
    self.shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
    self.shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
    self.shipbody:SetActive(true)
@@ -396,7 +431,7 @@ function State:show_webview_hud(name, click_handler)
    local rect = view("bounds")
    local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
    local path = (ctx:wrap(objc.class.NSBundle)("mainBundle")
-                 ("pathForResource:ofType:", "welldone", "html"))
+                 ("pathForResource:ofType:", name, "html"))
    local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
    local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
    webview("loadRequest:", -req)
@@ -443,9 +478,7 @@ function State:game_main_loop_coro()
 
       if stat.collision_detected then
          return false
-      end
-
-      if stat.successfully_landed then
+      elseif stat.successfully_landed then
          return true
       end
 
