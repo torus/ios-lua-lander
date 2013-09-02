@@ -66,7 +66,8 @@ local function make_terrain(ctx, view, world)
    local height = make_height_map()
 
    local scr_rect = view("bounds")
-   local terview = ctx:wrap(objc.class.LLTerrainView)("alloc")("initWithFrame:", -scr_rect)
+   local terview = (ctx:wrap(objc.class.LLTerrainView)("alloc")
+                    ("initWithFrame:", -scr_rect))
    view("insertSubview:atIndex:", -terview, 0)
 
    objc.push(ctx.stack, -scr_rect)
@@ -165,8 +166,8 @@ local function make_spaceship(ctx, world)
    local x, y, width, height = get_bounds(ctx, ship)
    print(x, y, width, height)
 
-   local shipview = ctx:wrap(objc.class.UIView)("alloc")("initWithFrame:",
-                                                            -(ship("bounds")))
+   local shipview = (ctx:wrap(objc.class.UIView)("alloc")
+                     ("initWithFrame:", -(ship("bounds"))))
    shipview("addSubview:", -ship)
 
    local shipbody = make_spaceship_body(world)
@@ -372,20 +373,6 @@ function State:update_force(accx, accy, accz)
 end
 
 function State:show_gameover(back_clicked, parts)
-   -- local ctx = self.ctx
-   -- local view = self.view
-   -- local rect = view("bounds")
-   -- local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
-   -- local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
-   --                                                          "gameover", "html")
-   -- local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
-   -- local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
-   -- webview("loadRequest:", -req)
-   -- webview("setOpaque:", false)
-   -- local clear = ctx:wrap(objc.class.UIColor)("clearColor")
-   -- webview("setBackgroundColor:", -clear)
-
-   -- local back_clicked = {false}
    local function func(url, webview)
       print("clicked", url)
       if url:match("^lualander:back") then
@@ -400,10 +387,6 @@ function State:show_gameover(back_clicked, parts)
          return true
       end
    end
-   -- local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", func)
-   -- webview("setDelegate:", -delegate)
-
-   -- view("addSubview:", -webview)
    self:show_webview_hud("gameover", func)
 end
 
@@ -412,8 +395,8 @@ function State:show_webview_hud(name, click_handler)
    local view = self.view
    local rect = view("bounds")
    local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
-   local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
-                                                            "welldone", "html")
+   local path = (ctx:wrap(objc.class.NSBundle)("mainBundle")
+                 ("pathForResource:ofType:", "welldone", "html"))
    local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
    local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
    webview("loadRequest:", -req)
@@ -423,7 +406,8 @@ function State:show_webview_hud(name, click_handler)
 
    view("addSubview:", -webview)
 
-   local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", click_handler)
+   local delegate = (ctx:wrap(objc.class.LLWebViewDelegate)("alloc")
+                     ("initWithFunc:", click_handler))
    webview("setDelegate:", -delegate)
 
    return webview
@@ -486,8 +470,8 @@ function State:title_screen_coro()
    local view = self.view
    local rect = view("bounds")
    local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
-   local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
-                                                           "title", "html")
+   local path = (ctx:wrap(objc.class.NSBundle)("mainBundle")
+                 ("pathForResource:ofType:", "title", "html"))
    local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
    print("url", -url)
    local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
@@ -509,7 +493,8 @@ function State:title_screen_coro()
          return true
       end
    end
-   local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", func)
+   local delegate = (ctx:wrap(objc.class.LLWebViewDelegate)("alloc")
+                     ("initWithFunc:", func))
    webview("setDelegate:", -delegate)
 
    view("addSubview:", -webview)
