@@ -214,10 +214,17 @@ function State:set_contact_listner(world)
       if not stat.collision_detected then
          for i, v in pairs(imp) do
             print("imp", i, v)
-            if v > 30 then
-               stat.collision_detected = true
-               break
-            end
+            -- if v > 30 then
+            --    stat.collision_detected = true
+            --    break
+            -- end
+         end
+
+         local v = stat.shipbody:GetLinearVelocity()
+         local vv = b2.b2Dot(v, v)
+         if vv < 1 then
+            print("v^2:", vv)
+            stat.successfully_landed = true
          end
       end
    end
@@ -265,6 +272,7 @@ function State:game_start()
    self.shipbody:SetActive(true)
    self.ship("setHidden:", false)
    self.collision_detected = false
+   self.successfully_landed = false
 end
 
 function State:on_collision_detected(pos)
@@ -396,6 +404,37 @@ function State:show_gameover(back_clicked, parts)
    view("addSubview:", -webview)
 end
 
+function State:show_welldone(back_clicked)
+   print("State:show_welldone")
+   local ctx = self.ctx
+   local view = self.view
+   local rect = view("bounds")
+   local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
+   local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
+                                                            "welldone", "html")
+   local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
+   local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
+   webview("loadRequest:", -req)
+   webview("setOpaque:", false)
+   local clear = ctx:wrap(objc.class.UIColor)("clearColor")
+   webview("setBackgroundColor:", -clear)
+
+   local function func(url)
+      print("clicked", url)
+      if url:match("^lualander:back") then
+         webview("removeFromSuperview")
+         back_clicked[1] = true
+         return false
+      else
+         return true
+      end
+   end
+   local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", func)
+   webview("setDelegate:", -delegate)
+
+   view("addSubview:", -webview)
+end
+
 function State:game_main_loop_coro()
    local stat = self
    local ctx, world, view, ship, shipbody, set_power
@@ -411,6 +450,10 @@ function State:game_main_loop_coro()
 
       if stat.collision_detected then
          return false
+      end
+
+      if stat.successfully_landed then
+         return true
       end
 
       self:update_force(accx, accy, accz)
@@ -479,10 +522,19 @@ local function make_main_coro(stat)
          stat:title_screen_coro()
          stat:game_start()
          local cleared = stat:game_main_loop_coro()
+         local back_clicked = {false}
          if cleared then
+            print("welldone!")
+            stat:show_welldone(back_clicked)
+            while true do
+               if back_clicked[1] then
+                  break
+               else
+                  coroutine.yield()
+               end
+            end
          else
             local parts = stat:on_collision_detected()
-            local back_clicked = {false}
             stat:show_gameover(back_clicked, parts)
 
             while true do
