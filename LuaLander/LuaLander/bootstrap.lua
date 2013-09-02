@@ -213,11 +213,11 @@ function State:set_contact_listner(world)
    function listbl:got_impulses(imp)
       if not stat.collision_detected then
          for i, v in pairs(imp) do
-            -- print("imp", i, v)
-            -- if v > 30 then
-            --    stat.collision_detected = true
-            --    break
-            -- end
+            print("imp", i, v)
+            if v > 30 then
+               stat.collision_detected = true
+               break
+            end
          end
 
          local v = stat.shipbody:GetLinearVelocity()
@@ -372,24 +372,24 @@ function State:update_force(accx, accy, accz)
 end
 
 function State:show_gameover(back_clicked, parts)
-   local ctx = self.ctx
-   local view = self.view
-   local rect = view("bounds")
-   local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
-   local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
-                                                            "gameover", "html")
-   local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
-   local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
-   webview("loadRequest:", -req)
-   webview("setOpaque:", false)
-   local clear = ctx:wrap(objc.class.UIColor)("clearColor")
-   webview("setBackgroundColor:", -clear)
+   -- local ctx = self.ctx
+   -- local view = self.view
+   -- local rect = view("bounds")
+   -- local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
+   -- local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
+   --                                                          "gameover", "html")
+   -- local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
+   -- local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
+   -- webview("loadRequest:", -req)
+   -- webview("setOpaque:", false)
+   -- local clear = ctx:wrap(objc.class.UIColor)("clearColor")
+   -- webview("setBackgroundColor:", -clear)
 
    -- local back_clicked = {false}
-   local function func(url)
+   local function func(url, webview)
       print("clicked", url)
       if url:match("^lualander:back") then
-         webview("removeFromSuperview")
+         self.ctx:wrap(webview)("removeFromSuperview")
          for i, part in pairs(parts) do
             self.world:DestroyBody(part.body)
             part.view("removeFromSuperview")
@@ -400,10 +400,11 @@ function State:show_gameover(back_clicked, parts)
          return true
       end
    end
-   local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", func)
-   webview("setDelegate:", -delegate)
+   -- local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", func)
+   -- webview("setDelegate:", -delegate)
 
-   view("addSubview:", -webview)
+   -- view("addSubview:", -webview)
+   self:show_webview_hud("gameover", func)
 end
 
 function State:show_webview_hud(name, click_handler)
@@ -430,20 +431,6 @@ end
 
 function State:show_welldone(back_clicked)
    print("State:show_welldone")
-   -- local ctx = self.ctx
-   -- local view = self.view
-   -- local rect = view("bounds")
-   -- local webview = ctx:wrap(objc.class.UIWebView)("alloc")("initWithFrame:", -rect)
-   -- local path = ctx:wrap(objc.class.NSBundle)("mainBundle")("pathForResource:ofType:",
-   --                                                          "welldone", "html")
-   -- local url = ctx:wrap(objc.class.NSURL)("fileURLWithPath:", path)
-   -- local req = ctx:wrap(objc.class.NSURLRequest)("requestWithURL:", -url)
-   -- webview("loadRequest:", -req)
-   -- webview("setOpaque:", false)
-   -- local clear = ctx:wrap(objc.class.UIColor)("clearColor")
-   -- webview("setBackgroundColor:", -clear)
-
-   -- local webview
    local function func(url, webview)
       print("clicked", url)
       if url:match("^lualander:back") then
@@ -454,13 +441,7 @@ function State:show_welldone(back_clicked)
          return true
       end
    end
-   -- local delegate = ctx:wrap(objc.class.LLWebViewDelegate)("alloc")("initWithFunc:", func)
-   -- webview("setDelegate:", -delegate)
-
-   -- webview = self:show_webview_hud("welldone", func)
    self:show_webview_hud("welldone", func)
-
-   -- view("addSubview:", -webview)
 end
 
 function State:game_main_loop_coro()
