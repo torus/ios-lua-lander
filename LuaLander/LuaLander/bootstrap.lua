@@ -214,10 +214,10 @@ function State:set_contact_listner(world)
       if not stat.collision_detected then
          for i, v in pairs(imp) do
             print("imp", i, v)
-            -- if v > 30 then
-            --    stat.collision_detected = true
-            --    break
-            -- end
+            if v > 30 then
+               stat.collision_detected = true
+               break
+            end
          end
 
          local v = stat.shipbody:GetLinearVelocity()
@@ -231,7 +231,7 @@ function State:set_contact_listner(world)
 end
 
 local function make_world()
-   local gravity = b2.b2Vec2(0, -10)
+   local gravity = b2.b2Vec2(0, -1)
    return b2.b2World(gravity)
 end
 
@@ -340,6 +340,8 @@ end
 
 function State:update_force(accx, accy, accz)
    local shipbody, set_power = self.shipbody, self.set_power
+
+   local rot = shipbody:GetAngle()
 
    if accx ~= 0 and accy ~= 0 then
       local target_angle = - (math.atan(- accy / accx))
