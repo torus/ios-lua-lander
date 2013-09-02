@@ -120,6 +120,7 @@ local function make_terrain(ctx, view, world)
    end
 
    terview("setDrawRect:", drawRect)
+   return terview
 end
 
 local function get_bounds(ctx, view)
@@ -284,7 +285,10 @@ function State:game_start()
    local ship, shipbody, set_power = make_spaceship(ctx, world)
    view("addSubview:", -ship)
 
-   make_terrain(ctx, view, world)
+   if self.terrain_view then
+      self.terrain_view("removeFromSuperview")
+   end
+   self.terrain_view = make_terrain(ctx, view, world)
 
    local screen_bounds = stat.screen_bounds
    local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
