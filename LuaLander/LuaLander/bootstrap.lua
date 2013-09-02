@@ -30,15 +30,12 @@ end
 local function make_height_map()
    math.randomseed(os.time())
    local prev_incline = math.random(3) - 2
-   -- local incline = {}
    local height = {}
    local prev_height = math.random(10) + 1
    local max_height = -100
    local min_height = 100
    for i = 0, 16 do
       local inc = prev_incline + math.random(3) - 2
-      -- prev_incline = inc
-      -- incline[i] = inc
       local h = math.max(1, math.min(prev_height + inc, 20))
       prev_incline = h - prev_height
       prev_height = h
@@ -50,9 +47,6 @@ local function make_height_map()
          min_height = h
       end
    end
-   -- print(table.unpack(incline))
-   -- print(table.unpack(height))
-   -- print(max_height, min_height)
    local height_offset = - (min_height - 1)
 
    for i = 0, 16 do
@@ -82,13 +76,10 @@ local function make_terrain(ctx, view, world)
 
       local vtx
       if h1 > h2 then
-         -- print("h1 > h2", h1, h2)
          vtx = {b2.b2Vec2(x1, h2), b2.b2Vec2(x2, h2), b2.b2Vec2(x1, h1)}
       elseif h1 == h2 then
-         -- print("h1 == h2", h1, h2)
          vtx = {b2.b2Vec2(x1, h1), b2.b2Vec2(x2, h1 - 1), b2.b2Vec2(x2, h1)}
       else
-         -- print("h1 < h2", h1, h2)
          vtx = {b2.b2Vec2(x1, h1), b2.b2Vec2(x2, h1), b2.b2Vec2(x2, h2)}
       end
 
@@ -243,29 +234,10 @@ function State:initialize()
    local ctx = objc.context:create()
    local view = ctx:wrap(stat.view_controller)("view")
    local screen_bounds = {get_bounds(ctx, view)}
-   -- local world = make_world()
-   -- local ship, shipbody, set_power = make_spaceship(ctx, world)
-   -- view("addSubview:", -ship)
-
-   -- make_terrain(ctx, view, world)
-
-   -- local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
-
-   -- -- shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
-   -- -- shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
-   -- shipbody:SetActive(false)
-   -- ship("setHidden:", true)
-
-   -- stat:set_contact_listner(world)
 
    stat.ctx = ctx
    stat.view = view
    stat.screen_bounds = screen_bounds
-   -- stat.world = world
-   -- stat.ship = ship
-   -- stat.shipbody = shipbody
-   -- stat.set_power = set_power
-   -- stat.ground_bodies = groundbodies
 end
 
 function State:game_start()
@@ -294,11 +266,6 @@ function State:game_start()
 
    local screen_bounds = stat.screen_bounds
    local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
-
-   -- shipbody:SetTransform(b2.b2Vec2(4, -5), 0)
-   -- shipbody:ApplyLinearImpulse(b2.b2Vec2(300, 0), b2.b2Vec2(0, 1))
-   -- shipbody:SetActive(false)
-   -- ship("setHidden:", true)
 
    stat.world = world
    stat.ship = ship
@@ -375,7 +342,6 @@ local function update_explosion_coro(world, prev_time, parts)
    end
 
    return elapsed
-   -- stat.prev_time = elapsed
 end
 
 function State:update_force(accx, accy, accz)
