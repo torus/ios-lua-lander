@@ -235,10 +235,14 @@ function State:initialize()
    local view = ctx:wrap(stat.view_controller)("view")
    local screen_bounds = {get_bounds(ctx, view)}
 
+   view("setBackgroundColor:", -(ctx:wrap(objc.class.UIColor)("grayColor")))
+
    local width, height = 1024, 768
    local innerview = (ctx:wrap(objc.class.UIView)("alloc")
                       ("initWithFrame:",
                        cg.CGRectWrap(cg.CGRectMake(0, 0, width, height))))
+   innerview("setBackgroundColor:", -(ctx:wrap(objc.class.UIColor)("whiteColor")))
+
    local ratio_x = screen_bounds[3] / width
    local ratio_y = screen_bounds[4] / height
    local ratio = math.min(ratio_x, ratio_y)
