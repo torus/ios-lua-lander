@@ -235,9 +235,27 @@ function State:initialize()
    local view = ctx:wrap(stat.view_controller)("view")
    local screen_bounds = {get_bounds(ctx, view)}
 
+   local width, height = 1024, 768
+   local innerview = (ctx:wrap(objc.class.UIView)("alloc")
+                      ("initWithFrame:",
+                       cg.CGRectWrap(cg.CGRectMake(0, 0, width, height))))
+   local ratio_x = screen_bounds[3] / width
+   local ratio_y = screen_bounds[4] / height
+   local ratio = math.min(ratio_x, ratio_y)
+   print("screen", screen_bounds[3], screen_bounds[4])
+   print("ratio", ratio, ratio_x, ratio_y)
+   innerview("setTransform:",
+             cg.CGAffineTransformWrap(
+                cg.CGAffineTransformConcat(
+                   cg.CGAffineTransformMakeScale(ratio, ratio),
+                   cg.CGAffineTransformMakeTranslation(- (width - screen_bounds[3]) / 2,
+                                                       - (height - screen_bounds[4]) / 2)
+   )))
+   view("addSubview:", -innerview)
+
    stat.ctx = ctx
-   stat.view = view
-   stat.screen_bounds = screen_bounds
+   stat.view = innerview
+   stat.screen_bounds = {0, 0, width, height}
 end
 
 function State:game_start()
