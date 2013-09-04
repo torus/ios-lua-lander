@@ -23,7 +23,7 @@ $(TESTFLIGHT_RESULT): $(IPA)
     -F file=@$(IPA) \
     -F api_token='$(API_TOKEN)' \
     -F team_token='$(TEAM_TOKEN)' \
-    -F notes='This build was uploaded via the upload API' \
+    -F notes=@ChangeLog \
     -F notify=True \
     -F distribution_lists='lualander' \
 	> $@
