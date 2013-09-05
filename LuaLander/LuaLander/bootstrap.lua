@@ -417,12 +417,22 @@ function State:show_gameover(back_clicked, parts)
    self:show_webview_hud("gameover", func)
 end
 
-function State:show_hud()
+function State:show_hud(mission)
    print("show_hud")
-   local function func(url, webview)
-      return true
-   end
-   return self:show_webview_hud("hud", func)
+
+      local webview
+      webview = self:show_webview_hud(
+         "hud",
+         function (url, wb)
+            if url:match("^lualander:ready") then
+               webview("stringByEvaluatingJavaScriptFromString:",
+                       string.format("set_display({mission:%d})", mission))
+            end
+            return true
+         end
+      )
+
+   return webview
 end
 
 function State:show_webview_hud(name, click_handler)
@@ -498,6 +508,11 @@ function State:game_main_loop_coro()
                  cg.CGAffineTransformMakeTranslation(pos.x * 10 - width / 2,
                                                         - pos.y * 10 - height / 2))))
 
+      local vel = shipbody:GetLinearVelocity()
+      local vel_abs = vel:Length()
+      self.hud_view("stringByEvaluatingJavaScriptFromString:",
+                    string.format("set_display({velocity:%.3f})", vel_abs))
+
       stat.prev_time = elapsed
    end
 end
@@ -549,13 +564,16 @@ local function make_main_coro(stat)
    return function()
       stat:initialize()
 
+      local mission_cleared = 0
       while true do
          stat:title_screen_coro()
          stat:game_start()
-         local hud_view = stat:show_hud()
+         local hud_view = stat:show_hud(mission_cleared + 1)
+         stat.hud_view = hud_view
          local cleared = stat:game_main_loop_coro()
          local back_clicked = {false}
          if cleared then
+            mission_cleared = mission_cleared + 1
             print("welldone!")
             stat:show_welldone(back_clicked)
             while true do
@@ -566,6 +584,7 @@ local function make_main_coro(stat)
                end
             end
          else
+            mission_cleared = 0
             local parts = stat:on_collision_detected()
             stat:show_gameover(back_clicked, parts)
 
