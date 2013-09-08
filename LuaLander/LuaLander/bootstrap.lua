@@ -27,37 +27,49 @@ local function set_fixture(body, width, height)
    body:CreateFixture(box, 1)
 end
 
-local function make_height_map()
-   math.randomseed(os.time())
-   local prev_incline = math.random(3) - 2
-   local height = {}
-   local prev_height = math.random(10) + 1
-   local max_height = -100
-   local min_height = 100
-   for i = 0, 16 do
-      local inc = prev_incline + math.random(3) - 2
-      local h = math.max(1, math.min(prev_height + inc, 20))
-      prev_incline = h - prev_height
-      prev_height = h
-      height[i] = h
-      if max_height < h then
-         max_height = h
-      end
-      if min_height > h then
-         min_height = h
-      end
-   end
-   local height_offset = - (min_height - 1)
+-- local function make_height_map()
+--    math.randomseed(os.time())
+--    local prev_incline = math.random(3) - 2
+--    local height = {}
+--    local prev_height = math.random(10) + 1
+--    local max_height = -100
+--    local min_height = 100
+--    for i = 0, 16 do
+--       local inc = prev_incline + math.random(3) - 2
+--       local h = math.max(1, math.min(prev_height + inc, 20))
+--       prev_incline = h - prev_height
+--       prev_height = h
+--       height[i] = h
+--       if max_height < h then
+--          max_height = h
+--       end
+--       if min_height > h then
+--          min_height = h
+--       end
+--    end
+--    local height_offset = - (min_height - 1)
 
-   for i = 0, 16 do
-      height[i] = height[i] + height_offset
-   end
+--    for i = 0, 16 do
+--       height[i] = height[i] + height_offset
+--    end
 
-   return height
+--    return height
+-- end
+
+local function load_height_map(ctx, mission)
+   local path = string.format("%s/levels/%03d.lua",
+                              ctx:wrap(objc.class.NSBundle)("mainBundle")("resourcePath"),
+                              mission)
+   print("loading hight map file", path)
+   local func = loadfile(path)
+   print(func)
+   local height_map = func()
+   print(table.concat(height_map, " "))
+   return height_map
 end
 
-local function make_terrain(ctx, view, world)
-   local height = make_height_map()
+local function make_terrain(ctx, view, world, mission)
+   local height = load_height_map(ctx, mission)
 
    local scr_rect = view("bounds")
    local terview = (ctx:wrap(objc.class.LLTerrainView)("alloc")
@@ -262,7 +274,7 @@ function State:initialize()
    stat.screen_bounds = {0, 0, width, height}
 end
 
-function State:game_start()
+function State:game_start(mission)
    local stat = self
 
    if stat.world then
@@ -284,7 +296,7 @@ function State:game_start()
    if self.terrain_view then
       self.terrain_view("removeFromSuperview")
    end
-   self.terrain_view = make_terrain(ctx, view, world)
+   self.terrain_view = make_terrain(ctx, view, world, mission)
 
    local screen_bounds = stat.screen_bounds
    local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
@@ -567,7 +579,7 @@ local function make_main_coro(stat)
       local mission_cleared = 0
       while true do
          stat:title_screen_coro()
-         stat:game_start()
+         stat:game_start(mission_cleared + 1)
          local hud_view = stat:show_hud(mission_cleared + 1)
          stat.hud_view = hud_view
          local cleared = stat:game_main_loop_coro()
