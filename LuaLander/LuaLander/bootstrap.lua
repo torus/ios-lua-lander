@@ -60,18 +60,18 @@ local function load_height_map(ctx, mission)
    local path = string.format("%s/levels/%03d.lua",
                               ctx:wrap(objc.class.NSBundle)("mainBundle")("resourcePath"),
                               mission)
-   print("loading hight map file", path)
+   -- print("loading hight map file", path)
    local func = loadfile(path, "bt", {height_map = function(map)
                                          local dest = {}
                                          for i, v in ipairs(map) do
-                                            print("height_map", i, v)
+                                            -- print("height_map", i, v)
                                             dest[i - 1] = v
                                          end
                                          return dest
                         end})
-   print(func)
+   -- print(func)
    local height_map = func()
-   print("height_map[0]", height_map[0])
+   -- print("height_map[0]", height_map[0])
    return height_map
 end
 
@@ -88,7 +88,7 @@ local function make_terrain(ctx, view, world, mission)
    print(x, y, sw, sh)
 
    for i = 1, 16 do
-      print("i", i)
+      -- print("i", i)
       local h1 = (height[i - 1] * 32 - sh) / 10
       local h2 = (height[i] * 32 - sh) / 10
       local x1 = (i - 1) * 64 / 10
