@@ -5,7 +5,7 @@ local function make_height_map(mission)
    local prev_height = math.random(10) + 1
    local max_height = -100
    local min_height = 100
-   for i = 0, 16 do
+   for i = 1, 17 do
       local inc = prev_incline + math.random(3) - 2
       local h = math.max(1, math.min(prev_height + inc, 20))
       prev_incline = h - prev_height
@@ -20,7 +20,7 @@ local function make_height_map(mission)
    end
    local height_offset = - (min_height - 1)
 
-   for i = 0, 16 do
+   for i = 1, 17 do
       height[i] = height[i] + height_offset
    end
 
@@ -30,10 +30,11 @@ end
 for i = 1, 10 do
    local height_map = make_height_map(i)
    local fp = io.open(string.format("%03d.lua", i), "w")
-   fp:write("return {\n")
-   for j = 0, 16 do
-      fp:write(string.format("[%d]=%d,", j, height_map[j]))
-   end
+   fp:write("return height_map {\n")
+   fp:write(table.concat(height_map, ", "))
+   -- for j = 0, 16 do
+   --    fp:write(string.format("[%d]=%d,", j, height_map[j]))
+   -- end
    fp:write("\n}\n")
    fp:close()
 end
