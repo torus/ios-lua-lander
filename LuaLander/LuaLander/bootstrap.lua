@@ -57,10 +57,19 @@ end
 -- end
 
 local function load_height_map(ctx, mission)
-   local path = string.format("%s/levels/%03d.lua",
-                              ctx:wrap(objc.class.NSBundle)("mainBundle")("resourcePath"),
-                              mission)
-   -- print("loading hight map file", path)
+   local base_path = ctx:wrap(objc.class.NSBundle)("mainBundle")("resourcePath")
+   local dirs = {"Documents", "levels"}
+   local path
+   for i, dir in ipairs(dirs) do
+      path = string.format("%s/%s/%03d.lua", base_path, dir, mission)
+      local fp = io.open(path)
+      if fp then
+         fp:close()
+         break
+      end
+   end
+
+   print("loading hight map file", path)
    local func = loadfile(path, "bt", {height_map = function(map)
                                          local dest = {}
                                          for i, v in ipairs(map) do
