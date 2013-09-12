@@ -27,35 +27,6 @@ local function set_fixture(body, width, height)
    body:CreateFixture(box, 1)
 end
 
--- local function make_height_map()
---    math.randomseed(os.time())
---    local prev_incline = math.random(3) - 2
---    local height = {}
---    local prev_height = math.random(10) + 1
---    local max_height = -100
---    local min_height = 100
---    for i = 0, 16 do
---       local inc = prev_incline + math.random(3) - 2
---       local h = math.max(1, math.min(prev_height + inc, 20))
---       prev_incline = h - prev_height
---       prev_height = h
---       height[i] = h
---       if max_height < h then
---          max_height = h
---       end
---       if min_height > h then
---          min_height = h
---       end
---    end
---    local height_offset = - (min_height - 1)
-
---    for i = 0, 16 do
---       height[i] = height[i] + height_offset
---    end
-
---    return height
--- end
-
 local function load_height_map(ctx, mission)
    local base_path = ctx:wrap(objc.class.NSBundle)("mainBundle")("resourcePath")
    local dirs = {"Documents", "levels"}
@@ -421,6 +392,8 @@ function State:update_force(accx, accy, accz)
                                                   pow * sin * 200))
             set_power(pow)
          end
+      else
+         set_power(0)
       end
    end
 
