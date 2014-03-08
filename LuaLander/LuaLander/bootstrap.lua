@@ -183,7 +183,7 @@ local function make_spaceship(ctx, world)
          local twraped = cg.CGAffineTransformWrap(t)
 
          objc.push(ctx.stack, twraped)
-         print("trans", objc.extract(ctx.stack, "CGAffineTransform"))
+         -- print("trans", objc.extract(ctx.stack, "CGAffineTransform"))
 
          jetview("setHidden:", false)
          jetview("setTransform:", twraped)

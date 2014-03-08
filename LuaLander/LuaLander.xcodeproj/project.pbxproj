@@ -896,6 +896,11 @@
 				CLASSPREFIX = LL;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Kronecker's Delta Studio";
+				TargetAttributes = {
+					9CF9660F17B135B700607D8B = {
+						DevelopmentTeam = F3YD9RGTBA;
+					};
+				};
 			};
 			buildConfigurationList = 9CF9660B17B135B700607D8B /* Build configuration list for PBXProject "LuaLander" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1274,11 +1279,14 @@
 		9CF9664C17B135B800607D8B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LuaLander/LuaLander-Prefix.pch";
 				HEADER_SEARCH_PATHS = "../work/**";
 				INFOPLIST_FILE = "LuaLander/LuaLander-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1286,11 +1294,14 @@
 		9CF9664D17B135B800607D8B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LuaLander/LuaLander-Prefix.pch";
 				HEADER_SEARCH_PATHS = "../work/**";
 				INFOPLIST_FILE = "LuaLander/LuaLander-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -8,8 +8,17 @@
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>Icon</string>
+		<string>Icon-72</string>
+		<string>Icon-Small-50</string>
+		<string>Icon-Small</string>
+		<string>Icon-76</string>
+		<string>Icon-40</string>
+	</array>
 	<key>CFBundleIdentifier</key>
-	<string>jp.torus.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>jp.torus.lualander</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -24,6 +33,8 @@
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIFileSharingEnabled</key>
+	<false/>
 	<key>UIMainStoryboardFile</key>
 	<string>MainStoryboard_iPhone</string>
 	<key>UIMainStoryboardFile~ipad</key>
@@ -38,17 +49,6 @@
 	<array>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CFBundleIconFiles</key>
-	<array>
-		<string>Icon</string>
-		<string>Icon-72</string>
-		<string>Icon-Small-50</string>
-		<string>Icon-Small</string>
-		<string>Icon-76</string>
-		<string>Icon-40</string>
-	</array>
-	<key>UIFileSharingEnabled</key>
-	<true/>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeRight</string>
