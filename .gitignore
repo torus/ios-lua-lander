@@ -4,3 +4,5 @@
 /work/
 *.ipa
 swig/*_wrap.*
+Flurry-iOS-4.4.0
+ProjectApiKey.txt

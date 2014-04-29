@@ -75,7 +75,22 @@ WRAP_TYPE_FUNC(CGRect)
 %ignore CGPDFDocumentGetRotationAngle;
 
 #define CG_BUILDING_CG
-%include <CGBase.h>
+#define CG_AVAILABLE_STARTING(x, y)
+#define CF_IMPLICIT_BRIDGING_ENABLED
+#define CF_IMPLICIT_BRIDGING_DISABLED
+#define CF_ENUM_AVAILABLE(x, y)
+
+/* #define __LP64__ 1 */
+
+%ignore CGFLOAT_TYPE;
+%ignore CGFloat;
+%include "CGBase.i"
+
+%typemap(in) CGFloat {
+    $1 = lua_tonumber(L, $input);
+}
+
+/* %include <CGBase.h> */
 %include <CGAffineTransform.h>
 %include <CGBitmapContext.h>
 %include <CGColor.h>

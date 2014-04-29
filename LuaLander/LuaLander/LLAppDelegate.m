@@ -11,6 +11,7 @@
 #import "lualib.h"
 #import "lauxlib.h"
 #import "LuaBridge.h"
+#import "Flurry.h"
 
 @implementation LLAppDelegate
 
@@ -30,6 +31,9 @@ int luaopen_b2(lua_State *);
     if (luaL_dofile(L, [fn UTF8String])) {
         NSLog(@"Lua Error: %s", lua_tostring(L, -1));
     }
+
+    NSLog(@"Flurry %@", [Flurry getFlurryAgentVersion]);
+
     return YES;
 }
 							

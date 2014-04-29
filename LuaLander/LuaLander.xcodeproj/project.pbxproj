@@ -28,12 +28,17 @@
 		9C1D405D17CB967E00A323F9 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C1D404F17CB967E00A323F9 /* Icon@2x.png */; };
 		9C1D405E17CB967E00A323F9 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C1D405017CB967E00A323F9 /* iTunesArtwork.png */; };
 		9C1D405F17CB967E00A323F9 /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C1D405117CB967E00A323F9 /* iTunesArtwork@2x.png */; };
+		9C4E1BAC190F926500741866 /* ProjectApiKey.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9C4E1BAB190F926500741866 /* ProjectApiKey.txt */; };
 		9C51A28617BBB8D7007CE54C /* CoreGraphics_wrap.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28517BBB8D7007CE54C /* CoreGraphics_wrap.m */; };
 		9C51A28917BD0153007CE54C /* LLTerrainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28817BD0153007CE54C /* LLTerrainView.m */; };
 		9C51A28B17BF85F8007CE54C /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C51A28A17BF85F8007CE54C /* CoreMotion.framework */; };
 		9C525C3618CB40EC00C063DF /* holdlikethis.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9C525C3518CB40EC00C063DF /* holdlikethis.jpg */; };
 		9C6782C717DCC1BA0095C4B4 /* levels in Resources */ = {isa = PBXBuildFile; fileRef = 9C6782C617DCC1BA0095C4B4 /* levels */; };
+		9C7171E7190260A200F9B6D6 /* libFlurry_4.4.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C7171E6190260A200F9B6D6 /* libFlurry_4.4.0.a */; };
+		9C7171EB190260BC00F9B6D6 /* libFlurryAds_4.4.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C7171EA190260BC00F9B6D6 /* libFlurryAds_4.4.0.a */; };
 		9C7903E517D4C19500C0BFFD /* hud.html in Resources */ = {isa = PBXBuildFile; fileRef = 9C7903E417D4C19500C0BFFD /* hud.html */; };
+		9C83CFCF190419E600F22784 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C83CFCE190419E600F22784 /* SystemConfiguration.framework */; };
+		9C83CFD119041A0200F22784 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C83CFD019041A0200F22784 /* Security.framework */; };
 		9C9B326217C276EB00ED256D /* LLShipContactListener.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9C9B326017C276EB00ED256D /* LLShipContactListener.mm */; };
 		9C9B326517C7A76B00ED256D /* LLWebViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9B326417C7A76B00ED256D /* LLWebViewDelegate.m */; };
 		9C9B326A17C7AFF600ED256D /* gameover.html in Resources */ = {isa = PBXBuildFile; fileRef = 9C9B326717C7AFF600ED256D /* gameover.html */; };
@@ -254,13 +259,21 @@
 		9C1D404F17CB967E00A323F9 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "../../images/Icon@2x.png"; sourceTree = "<group>"; };
 		9C1D405017CB967E00A323F9 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iTunesArtwork.png; path = ../../images/iTunesArtwork.png; sourceTree = "<group>"; };
 		9C1D405117CB967E00A323F9 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iTunesArtwork@2x.png"; path = "../../images/iTunesArtwork@2x.png"; sourceTree = "<group>"; };
+		9C4E1BAB190F926500741866 /* ProjectApiKey.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ProjectApiKey.txt; path = ../../ProjectApiKey.txt; sourceTree = "<group>"; };
 		9C51A28517BBB8D7007CE54C /* CoreGraphics_wrap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreGraphics_wrap.m; path = ../../swig/CoreGraphics_wrap.m; sourceTree = "<group>"; };
 		9C51A28717BD0153007CE54C /* LLTerrainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLTerrainView.h; sourceTree = "<group>"; };
 		9C51A28817BD0153007CE54C /* LLTerrainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLTerrainView.m; sourceTree = "<group>"; };
 		9C51A28A17BF85F8007CE54C /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		9C525C3518CB40EC00C063DF /* holdlikethis.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = holdlikethis.jpg; path = ../../webview/holdlikethis.jpg; sourceTree = "<group>"; };
 		9C6782C617DCC1BA0095C4B4 /* levels */ = {isa = PBXFileReference; lastKnownFileType = folder; name = levels; path = ../../levels; sourceTree = "<group>"; };
+		9C7171E5190260A200F9B6D6 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Flurry.h; path = "../../Flurry-iOS-4.4.0/Flurry/Flurry.h"; sourceTree = "<group>"; };
+		9C7171E6190260A200F9B6D6 /* libFlurry_4.4.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFlurry_4.4.0.a; path = "../../Flurry-iOS-4.4.0/Flurry/libFlurry_4.4.0.a"; sourceTree = "<group>"; };
+		9C7171E8190260BC00F9B6D6 /* FlurryAdDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlurryAdDelegate.h; path = "../../Flurry-iOS-4.4.0/FlurryAds/FlurryAdDelegate.h"; sourceTree = "<group>"; };
+		9C7171E9190260BC00F9B6D6 /* FlurryAds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlurryAds.h; path = "../../Flurry-iOS-4.4.0/FlurryAds/FlurryAds.h"; sourceTree = "<group>"; };
+		9C7171EA190260BC00F9B6D6 /* libFlurryAds_4.4.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFlurryAds_4.4.0.a; path = "../../Flurry-iOS-4.4.0/FlurryAds/libFlurryAds_4.4.0.a"; sourceTree = "<group>"; };
 		9C7903E417D4C19500C0BFFD /* hud.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = hud.html; path = ../../webview/hud.html; sourceTree = "<group>"; };
+		9C83CFCE190419E600F22784 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		9C83CFD019041A0200F22784 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		9C9B326017C276EB00ED256D /* LLShipContactListener.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LLShipContactListener.mm; sourceTree = "<group>"; };
 		9C9B326117C276EB00ED256D /* LLShipContactListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLShipContactListener.h; sourceTree = "<group>"; };
 		9C9B326317C7A76B00ED256D /* LLWebViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLWebViewDelegate.h; sourceTree = "<group>"; };
@@ -454,8 +467,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C83CFD119041A0200F22784 /* Security.framework in Frameworks */,
+				9C83CFCF190419E600F22784 /* SystemConfiguration.framework in Frameworks */,
 				9C51A28B17BF85F8007CE54C /* CoreMotion.framework in Frameworks */,
+				9C7171EB190260BC00F9B6D6 /* libFlurryAds_4.4.0.a in Frameworks */,
 				9C110A6B17B63CD000576079 /* QuartzCore.framework in Frameworks */,
+				9C7171E7190260A200F9B6D6 /* libFlurry_4.4.0.a in Frameworks */,
 				9CF9661417B135B700607D8B /* UIKit.framework in Frameworks */,
 				9CF9661617B135B700607D8B /* Foundation.framework in Frameworks */,
 				9CF9661817B135B700607D8B /* CoreGraphics.framework in Frameworks */,
@@ -500,6 +517,19 @@
 			name = icons;
 			sourceTree = "<group>";
 		};
+		9C7171EC190260C300F9B6D6 /* Flurry */ = {
+			isa = PBXGroup;
+			children = (
+				9C4E1BAB190F926500741866 /* ProjectApiKey.txt */,
+				9C7171E8190260BC00F9B6D6 /* FlurryAdDelegate.h */,
+				9C7171E9190260BC00F9B6D6 /* FlurryAds.h */,
+				9C7171EA190260BC00F9B6D6 /* libFlurryAds_4.4.0.a */,
+				9C7171E5190260A200F9B6D6 /* Flurry.h */,
+				9C7171E6190260A200F9B6D6 /* libFlurry_4.4.0.a */,
+			);
+			name = Flurry;
+			sourceTree = "<group>";
+		};
 		9C9B326617C7AFCA00ED256D /* WebView */ = {
 			isa = PBXGroup;
 			children = (
@@ -534,6 +564,8 @@
 		9CF9661217B135B700607D8B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9C83CFD019041A0200F22784 /* Security.framework */,
+				9C83CFCE190419E600F22784 /* SystemConfiguration.framework */,
 				9C51A28A17BF85F8007CE54C /* CoreMotion.framework */,
 				9C110A6A17B63CD000576079 /* QuartzCore.framework */,
 				9CF9661317B135B700607D8B /* UIKit.framework */,
@@ -547,6 +579,7 @@
 		9CF9661917B135B700607D8B /* LuaLander */ = {
 			isa = PBXGroup;
 			children = (
+				9C7171EC190260C300F9B6D6 /* Flurry */,
 				9C6782C617DCC1BA0095C4B4 /* levels */,
 				9C1D402F17CB90A300A323F9 /* icons */,
 				9C9B326617C7AFCA00ED256D /* WebView */,
@@ -957,6 +990,7 @@
 				9CF9663017B135B700607D8B /* MainStoryboard_iPad.storyboard in Resources */,
 				9C1D405E17CB967E00A323F9 /* iTunesArtwork.png in Resources */,
 				9CF967A517B2954C00607D8B /* README.md in Resources */,
+				9C4E1BAC190F926500741866 /* ProjectApiKey.txt in Resources */,
 				9CD0346617C0BA7F000C588A /* moon.png in Resources */,
 				9C1D405317CB967E00A323F9 /* Icon-40@2x.png in Resources */,
 				9CF967A717B2954C00607D8B /* utils.lua in Resources */,
@@ -1289,6 +1323,11 @@
 				GCC_PREFIX_HEADER = "LuaLander/LuaLander-Prefix.pch";
 				HEADER_SEARCH_PATHS = "../work/**";
 				INFOPLIST_FILE = "LuaLander/LuaLander-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/toru/src/lualander/Flurry-iOS-4.4.0/Flurry",
+					"/Users/toru/src/lualander/Flurry-iOS-4.4.0/FlurryAds",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -1304,6 +1343,11 @@
 				GCC_PREFIX_HEADER = "LuaLander/LuaLander-Prefix.pch";
 				HEADER_SEARCH_PATHS = "../work/**";
 				INFOPLIST_FILE = "LuaLander/LuaLander-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/toru/src/lualander/Flurry-iOS-4.4.0/Flurry",
+					"/Users/toru/src/lualander/Flurry-iOS-4.4.0/FlurryAds",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;

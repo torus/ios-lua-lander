@@ -232,6 +232,23 @@ function State:initialize()
    local stat = self
 
    local ctx = objc.context:create()
+   local flurry_key = ""
+
+   local base_path = ctx:wrap(objc.class.NSBundle)("mainBundle")("resourcePath")
+   for l in io.lines(base_path .. "/ProjectApiKey.txt") do
+      local capt = l:match("^API Key: (%w+)")
+      if capt then
+         flurry_key = capt
+         break
+      end
+   end
+
+   if #flurry_key > 0 then
+      print("objc.class.Flurry", objc.class.Flurry)
+      ctx:wrap(objc.class.Flurry)("setCrashReportingEnabled:", true)
+      ctx:wrap(objc.class.Flurry)("startSession:", flurry_key)
+   end
+
    local view = ctx:wrap(stat.view_controller)("view")
    local screen_bounds = {get_bounds(ctx, view)}
 
