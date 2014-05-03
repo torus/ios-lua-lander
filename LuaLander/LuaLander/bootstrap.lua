@@ -27,37 +27,7 @@ local function set_fixture(body, width, height)
    body:CreateFixture(box, 1)
 end
 
-local function load_height_map(ctx, mission)
-   local base_path = ctx:wrap(objc.class.NSBundle)("mainBundle")("resourcePath")
-   local dirs = {"Documents", "levels"}
-   local path
-   for i, dir in ipairs(dirs) do
-      path = string.format("%s/%s/%03d.lua", base_path, dir, mission)
-      local fp = io.open(path)
-      if fp then
-         fp:close()
-         break
-      end
-   end
-
-   print("loading hight map file", path)
-   local func = loadfile(path, "bt", {height_map = function(map)
-                                         local dest = {}
-                                         for i, v in ipairs(map) do
-                                            -- print("height_map", i, v)
-                                            dest[i - 1] = v
-                                         end
-                                         return dest
-                        end})
-   -- print(func)
-   local height_map = func()
-   -- print("height_map[0]", height_map[0])
-   return height_map
-end
-
-local function make_terrain(ctx, view, world, mission)
-   local height = load_height_map(ctx, mission)
-
+local function make_terrain_from_height_map(ctx, view, world, height)
    local scr_rect = view("bounds")
    local terview = (ctx:wrap(objc.class.LLTerrainView)("alloc")
                     ("initWithFrame:", -scr_rect))
@@ -112,6 +82,48 @@ local function make_terrain(ctx, view, world, mission)
 
    terview("setDrawRect:", drawRect)
    return terview
+end
+
+local function load_height_map(ctx, mission)
+   local base_path = ctx:wrap(objc.class.NSBundle)("mainBundle")("resourcePath")
+   local dirs = {"Documents", "levels"}
+   local path
+   for i, dir in ipairs(dirs) do
+      path = string.format("%s/%s/%03d.lua", base_path, dir, mission)
+      local fp = io.open(path)
+      if fp then
+         fp:close()
+         break
+      end
+   end
+
+   print("loading hight map file", path)
+   local func = loadfile(
+      path, "bt", {
+         height_map = function(map)
+            local dest = {}
+            for i, v in ipairs(map) do
+               -- print("height_map", i, v)
+               dest[i - 1] = v
+            end
+            return function(ctx, view, world)
+               return make_terrain_from_height_map(ctx, view, world, dest)
+            end
+         end
+   })
+   -- print(func)
+   local height_map = func()
+   -- print("height_map[0]", height_map[0])
+   return height_map
+end
+
+local State = {}
+
+function State:make_terrain(mission)
+   local ctx, view, world = self.ctx, self.view, self.world
+   local height = load_height_map(ctx, mission)
+
+   return height(ctx, view, world)
 end
 
 local function get_bounds(ctx, view)
@@ -193,7 +205,6 @@ local function make_spaceship(ctx, world)
    return shipview, shipbody, set_power
 end
 
-local State = {}
 function State:set_contact_listner(world)
    local listbl = {}
    local listener = b2.create_contact_listener(listbl)
@@ -295,18 +306,18 @@ function State:game_start(mission)
    local ctx = stat.ctx
    local view = stat.view
    local world = make_world()
+   stat.world = world
    local ship, shipbody, set_power = make_spaceship(ctx, world)
    view("addSubview:", -ship)
 
    if self.terrain_view then
       self.terrain_view("removeFromSuperview")
    end
-   self.terrain_view = make_terrain(ctx, view, world, mission)
+   self.terrain_view = self:make_terrain(mission)
 
    local screen_bounds = stat.screen_bounds
    local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
 
-   stat.world = world
    stat.ship = ship
    stat.shipbody = shipbody
    stat.set_power = set_power
