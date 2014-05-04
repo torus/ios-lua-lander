@@ -1,3 +1,8 @@
+2014-05-04  Toru Hisai  <toru@torus.jp>
+
+	* Flurry 組み込み。
+	* リファクタリング。
+
 2013-09-10  Toru Hisai  <toru@torus.jp>
 
 	* Documents フォルダにレベルデータをおけるようにした。

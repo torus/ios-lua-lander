@@ -6,3 +6,7 @@
 swig/*_wrap.*
 Flurry-iOS-4.4.0
 ProjectApiKey.txt
+/API_TOKEN
+/TEAM_TOKEN
+/*.mobileprovision
+/testflight_result.json

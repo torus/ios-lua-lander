@@ -2,7 +2,7 @@ APP =
 IPA = $(PWD)/LuaLander.ipa
 TESTFLIGHT_RESULT = testflight_result.json
 
-DEVELOPER_NAME = iPhone Developer: Toru Hisai (2LA63FS7DX)
+DEVELOPER_NAME = iPhone Developer: Toru Hisai (DWNJXV72FX)
 PROVISIONING_PROFILE = wildercard.mobileprovision
 
 API_TOKEN = $(shell cat API_TOKEN)
@@ -11,6 +11,7 @@ TEAM_TOKEN = $(shell cat TEAM_TOKEN)
 testflight: $(TESTFLIGHT_RESULT)
 
 $(IPA): $(APP) $(PROVISIONING_PROFILE)
+	[ x"$(APP)" != x ]
 	/usr/bin/xcrun \
   -sdk iphoneos PackageApplication -v \
   "$(APP)" \

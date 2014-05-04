@@ -934,7 +934,7 @@
 				ORGANIZATIONNAME = "Kronecker's Delta Studio";
 				TargetAttributes = {
 					9CF9660F17B135B700607D8B = {
-						DevelopmentTeam = F3YD9RGTBA;
+						DevelopmentTeam = BH53U2474Y;
 					};
 				};
 			};
@@ -1318,7 +1318,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Toru Hisai (DWNJXV72FX)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LuaLander/LuaLander-Prefix.pch";
 				HEADER_SEARCH_PATHS = "../work/**";
