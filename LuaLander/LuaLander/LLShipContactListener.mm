@@ -11,7 +11,7 @@
 #include "lua.hpp"
 
 // defined in SWIG interface
-void process_impulses(lua_State *L, const b2ContactImpulse *imp, int table_ref);
+void process_impulses(lua_State *L, b2Contact* contact, const b2ContactImpulse *imp, int table_ref);
 
 LLShipContactListener::LLShipContactListener(int ref)
 : table_ref_(ref)
@@ -21,5 +21,5 @@ LLShipContactListener::LLShipContactListener(int ref)
 void LLShipContactListener::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
 {
     lua_State *L = [[LuaBridge instance] L];
-    process_impulses(L, impulse, table_ref_);
+    process_impulses(L, contact, impulse, table_ref_);
 }

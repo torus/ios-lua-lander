@@ -1,3 +1,4 @@
+// -*- c++ -*-
 %module b2
 
 %{
@@ -9,7 +10,8 @@
 // workaround
 void b2WheelJoint::GetDefinition(b2WheelJointDef*) const {}
 
-void process_impulses(lua_State *L, const b2ContactImpulse *imp, int table_ref)
+void process_impulses(lua_State *L, b2Contact* contact,
+                      const b2ContactImpulse *imp, int table_ref)
 {
     lua_rawgeti(L, LUA_REGISTRYINDEX, table_ref);
     lua_pushstring(L, "got_impulses");
@@ -20,14 +22,14 @@ void process_impulses(lua_State *L, const b2ContactImpulse *imp, int table_ref)
         return;
     }
     lua_insert(L, -2);
-    /* SWIG_NewPointerObj(L,imp,SWIGTYPE_p_b2ContactImpulse,1); */
-    lua_newtable(L);
-    for (int i = 0; i < imp->count; i ++) {
-        /* std::cout << i << " " << imp->normalImpulses[i] << std::endl; */
-        lua_pushinteger(L, i + 1);
-        lua_pushnumber(L, imp->normalImpulses[i]);
-        lua_settable(L, -3);
-    }
+    SWIG_NewPointerObj(L,imp,SWIGTYPE_p_b2ContactImpulse,0);
+    /* lua_newtable(L); */
+    /* for (int i = 0; i < imp->count; i ++) { */
+    /*     /\* std::cout << i << " " << imp->normalImpulses[i] << std::endl; *\/ */
+    /*     lua_pushinteger(L, i + 1); */
+    /*     lua_pushnumber(L, imp->normalImpulses[i]); */
+    /*     lua_settable(L, -3); */
+    /* } */
     if (lua_pcall(L, 2, 0, 0)) {
         std::cerr << "Lua Error: " << lua_tostring(L, -1) << std::endl;
     }
@@ -51,6 +53,20 @@ int create_contact_listener(lua_State *L)
 fail:
   lua_error(L);
   return SWIG_arg;    
+}
+
+struct b2ImpulseValues {
+    float32 normalImpulse;
+    float32 tangentImpulse;
+};
+
+b2ImpulseValues get_impulse(const b2ContactImpulse *imp, int index)
+{
+    if (index < imp->count) {
+        return {imp->normalImpulses[index], imp->tangentImpulses[index]};
+    } else {
+        return {0, 0};
+    }
 }
 
 %}
@@ -115,6 +131,13 @@ fail:
 %include <Box2D/Dynamics/Joints/b2RevoluteJoint.h>
 %include <Box2D/Dynamics/Joints/b2RopeJoint.h>
 %include <Box2D/Dynamics/Joints/b2WeldJoint.h>
+
+struct b2ImpulseValues {
+    float32 normalImpulse;
+    float32 tangentImpulse;
+};
+
+b2ImpulseValues get_impulse(const b2ContactImpulse *imp, int index);
 
 %native(convertB2BodyPtr) int native_convertB2BodyPtr(lua_State *L);
 

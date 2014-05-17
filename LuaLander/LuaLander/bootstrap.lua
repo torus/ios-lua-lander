@@ -216,8 +216,22 @@ function State:set_contact_listner(world)
 
    function listbl:got_impulses(imp)
       if not stat.collision_detected then
-         for i, v in pairs(imp) do
-            print("imp", i, v)
+         -- for i, v in pairs(imp) do
+         --    print("imp", i, v)
+         --    if v > 30 then
+         --       stat.collision_detected = true
+         --       break
+         --    end
+         -- end
+         print("imp", imp.count)
+         for i = 1, imp.count do
+            local vals = b2.get_impulse(imp, i - 1)
+
+            print("imp normal", vals.normalImpulse)
+            print("imp tangent", vals.tangentImpulse)
+
+            local v = vals.normalImpulse
+
             if v > 30 then
                stat.collision_detected = true
                break
