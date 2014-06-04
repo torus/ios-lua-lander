@@ -100,6 +100,8 @@ local function load_height_map(ctx, mission)
    print("loading hight map file", path)
    local func = loadfile(
       path, "bt", {
+         ipairs = ipairs,
+         make_terrain_from_height_map = make_terrain_from_height_map,
          height_map = function(map)
             local dest = {}
             for i, v in ipairs(map) do
