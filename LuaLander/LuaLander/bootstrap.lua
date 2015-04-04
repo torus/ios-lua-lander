@@ -120,6 +120,19 @@ local function load_height_map(ctx, mission)
 end
 
 local State = {}
+local Collision = {}
+
+function Collision:type()
+   return self.type
+end
+
+function Collision:create(collision_type)
+   local col = {
+      type = collision_type
+   }
+   setmetatable(col, {__index = State})
+   return col
+end
 
 function State:make_terrain(mission)
    local ctx, view, world = self.ctx, self.view, self.world
@@ -178,6 +191,8 @@ local function make_spaceship(ctx, world)
 
    local shipbody = make_spaceship_body(world)
    set_fixture(shipbody, width, height)
+   local col = Collision:create("ship")
+   shipbody:SetUserData(col)
 
    local jetimg = ctx:wrap(objc.class.UIImage)("imageNamed:", "fire.png")
    local jetview = ctx:wrap(objc.class.UIImageView)("alloc")("initWithImage:", -jetimg)
@@ -216,25 +231,33 @@ function State:set_contact_listner(world)
    self.listbl = listbl
    local stat = self
 
-   function listbl:got_impulses(imp)
+   function listbl:got_impulses(imp, contact)
       if not stat.collision_detected then
-         -- for i, v in pairs(imp) do
-         --    print("imp", i, v)
-         --    if v > 30 then
-         --       stat.collision_detected = true
-         --       break
-         --    end
-         -- end
-         print("imp", imp.count)
+         print("imp", imp.count, contact)
+
+         local fixa = contact:GetFixtureA()
+         local fixb = contact:GetFixtureB()
+
+         print(fixa, fixb)
+
+         local bodya = fixa:GetBody()
+         local bodyb = fixb:GetBody()
+
+         print(bodya, bodyb)
+
+         local cola = bodya:GetUserData()
+         local colb = bodyb:GetUserData()
+
+         print(cola, colb)
+         print(cola and cola.type, colb and colb.type)
+
          for i = 1, imp.count do
             local vals = b2.get_impulse(imp, i - 1)
 
             print("imp normal", vals.normalImpulse)
             print("imp tangent", vals.tangentImpulse)
 
-            local v = vals.normalImpulse
-
-            if v > 30 then
+            if vals.normalImpulse > 30 then
                stat.collision_detected = true
                break
             end
@@ -529,6 +552,9 @@ function State:game_main_loop_coro()
       = self.ctx, self.world, self.view, self.ship, self.shipbody, self.set_power
 
    local x, y, width, height = get_bounds(ctx, ship)
+
+   local collision = self.shipbody:GetUserData()
+   print("State:game_main_loop_coro()", collision.type)
 
    while true do
       local elapsed, accx, accy, accz = coroutine.yield()

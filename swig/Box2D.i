@@ -23,14 +23,8 @@ void process_impulses(lua_State *L, b2Contact* contact,
     }
     lua_insert(L, -2);
     SWIG_NewPointerObj(L,imp,SWIGTYPE_p_b2ContactImpulse,0);
-    /* lua_newtable(L); */
-    /* for (int i = 0; i < imp->count; i ++) { */
-    /*     /\* std::cout << i << " " << imp->normalImpulses[i] << std::endl; *\/ */
-    /*     lua_pushinteger(L, i + 1); */
-    /*     lua_pushnumber(L, imp->normalImpulses[i]); */
-    /*     lua_settable(L, -3); */
-    /* } */
-    if (lua_pcall(L, 2, 0, 0)) {
+    SWIG_NewPointerObj(L,contact,SWIGTYPE_p_b2Contact,0);
+    if (lua_pcall(L, 3, 0, 0)) {
         std::cerr << "Lua Error: " << lua_tostring(L, -1) << std::endl;
     }
 }
@@ -95,6 +89,22 @@ b2ImpulseValues get_impulse(const b2ContactImpulse *imp, int index)
     $1 = &arr.front();
     $2 = arr.size();
     // hehehehe
+}
+
+%typemap(in, numinputs=1) (void *data) (int *ptr) {
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    ptr = new int(ref);
+    $1 = ptr;
+    // FIXME: How should it be released?
+}
+
+%typemap(out) void * {
+    if ($1) {
+        int ref = *(int*)$1;
+        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
+        SWIG_arg++;
+    }
+    // FIXME: object never released!
 }
 
 %include <Box2D/Common/b2Settings.h>
