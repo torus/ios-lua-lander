@@ -2,6 +2,21 @@ setmetatable(_G, {__index = function(tbl, key)
                      error ("undefined global variable: " .. key, 2)
 end})
 
+local Collision = {}
+local State = {}
+
+function Collision:type()
+   return self.type
+end
+
+function Collision:create(collision_type)
+   local col = {
+      type = collision_type
+   }
+   setmetatable(col, {__index = State})
+   return col
+end
+
 function bootstrap()
    -- TODO: load some scripts
    print "hello bootstrap"
@@ -59,6 +74,10 @@ local function make_terrain_from_height_map(ctx, view, world, height)
       local bodydef = b2.b2BodyDef()
       local body = world:CreateBody(bodydef)
       body:CreateFixture(poly, 0)
+      if h1 == h2 then
+         local col = Collision:create("platform")
+         body:SetUserData(col)
+      end
    end
 
    local function drawRect(rect)
@@ -117,21 +136,6 @@ local function load_height_map(ctx, mission)
    local height_map = func()
    -- print("height_map[0]", height_map[0])
    return height_map
-end
-
-local State = {}
-local Collision = {}
-
-function Collision:type()
-   return self.type
-end
-
-function Collision:create(collision_type)
-   local col = {
-      type = collision_type
-   }
-   setmetatable(col, {__index = State})
-   return col
 end
 
 function State:make_terrain(mission)
@@ -263,11 +267,16 @@ function State:set_contact_listner(world)
             end
          end
 
-         local v = stat.shipbody:GetLinearVelocity()
-         local vv = b2.b2Dot(v, v)
-         if vv < 1 then
-            print("v^2:", vv)
-            stat.successfully_landed = true
+         if (cola and cola.type == "ship" and colb and colb.type == "platform"
+             or cola and cola.type == "platform" and colb and colb.type == "ship") then
+               local v = stat.shipbody:GetLinearVelocity()
+               local vv = b2.b2Dot(v, v)
+               if vv < 1 then
+                  print("v^2:", vv)
+                  stat.successfully_landed = true
+               end
+         else
+            stat.collision_detected = true
          end
       end
    end
