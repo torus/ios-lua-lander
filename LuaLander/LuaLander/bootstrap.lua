@@ -506,6 +506,45 @@ function State:show_hud(mission)
                webview("stringByEvaluatingJavaScriptFromString:",
                        string.format("set_display({mission:%d})", mission))
             end
+            if url:match("^lualander:debug_stay") then
+               local body = self.shipbody
+               if body then
+                  local center = body:GetWorldCenter()
+                  local imp = body:GetLinearVelocity()
+                  imp.x = imp.x * -body:GetMass()
+                  imp.y = imp.y * -body:GetMass()
+                  print("debug_stay:", imp.x, imp.y)
+                  body:ApplyLinearImpulse(imp, center)
+               end
+            end
+            if url:match("^lualander:debug_up") then
+               local body = self.shipbody
+               if body then
+                  local center = body:GetWorldCenter()
+                  body:ApplyLinearImpulse(b2.b2Vec2(0, 100), center)
+               end
+            end
+            if url:match("^lualander:debug_down") then
+               local body = self.shipbody
+               if body then
+                  local center = body:GetWorldCenter()
+                  body:ApplyLinearImpulse(b2.b2Vec2(0, -100), center)
+               end
+            end
+            if url:match("^lualander:debug_left") then
+               local body = self.shipbody
+               if body then
+                  local center = body:GetWorldCenter()
+                  body:ApplyLinearImpulse(b2.b2Vec2(-100, 0), center)
+               end
+            end
+            if url:match("^lualander:debug_right") then
+               local body = self.shipbody
+               if body then
+                  local center = body:GetWorldCenter()
+                  body:ApplyLinearImpulse(b2.b2Vec2(100, 0), center)
+               end
+            end
             return true
          end
       )
