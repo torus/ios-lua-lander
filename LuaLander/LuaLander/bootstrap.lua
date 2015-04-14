@@ -684,39 +684,42 @@ local function make_main_coro(stat)
    return function()
       stat:initialize()
 
-      local mission_cleared = 0
       while true do
+         local mission_cleared = 0
          stat:title_screen_coro()
-         stat:game_start(mission_cleared + 1)
-         local hud_view = stat:show_hud(mission_cleared + 1)
-         stat.hud_view = hud_view
-         local cleared = stat:game_main_loop_coro()
-         local back_clicked = {false}
-         if cleared then
-            mission_cleared = mission_cleared + 1
-            print("welldone!")
-            stat:show_welldone(back_clicked)
-            while true do
-               if back_clicked[1] then
-                  break
-               else
-                  coroutine.yield()
+         while true do
+            stat:game_start(mission_cleared + 1)
+            local hud_view = stat:show_hud(mission_cleared + 1)
+            stat.hud_view = hud_view
+            local cleared = stat:game_main_loop_coro()
+            local back_clicked = {false}
+            if cleared then
+               mission_cleared = mission_cleared + 1
+               print("welldone!")
+               stat:show_welldone(back_clicked)
+               while true do
+                  if back_clicked[1] then
+                     break
+                  else
+                     coroutine.yield()
+                  end
                end
-            end
-         else
-            mission_cleared = 0
-            local parts = stat:on_collision_detected()
-            stat:show_gameover(back_clicked, parts)
+            else
+               mission_cleared = 0
+               local parts = stat:on_collision_detected()
+               stat:show_gameover(back_clicked, parts)
 
-            while true do
-               if back_clicked[1] then
-                  break
-               else
-                  stat.prev_time = update_explosion_coro(stat.world, stat.prev_time, parts)
+               while true do
+                  if back_clicked[1] then
+                     break
+                  else
+                     stat.prev_time = update_explosion_coro(stat.world, stat.prev_time, parts)
+                  end
                end
             end
+            hud_view("removeFromSuperview")
+            if not cleared then break end
          end
-         hud_view("removeFromSuperview")
       end
    end
 end
