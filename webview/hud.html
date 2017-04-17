@@ -19,10 +19,20 @@
 </table>
 
 <script type="text/javascript">
+var mission = 0
 function set_display(data) {
-if (data.mission != null) document.getElementById("mission").innerText = data.mission
+if (data.mission != null) {
+document.getElementById("mission").innerText = data.mission
+mission = data.mission
+}
 if (data.velocity != null) document.getElementById("velocity").innerText = data.velocity
 if (data.fuel != null) document.getElementById("fuel").innerText = data.fuel
+}
+function show_mission() {
+var div = document.createElement("div")
+div.setAttribute("style", "margin-top: 20%;text-align: center; font-weight: normal;font-size: 34pt")
+document.innerText = "Start"
+document.body.appendChild(div)
 }
 location.href="lualander:ready"
 </script>
