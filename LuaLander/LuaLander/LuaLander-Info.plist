@@ -18,7 +18,7 @@
 		<string>Icon-40</string>
 	</array>
 	<key>CFBundleIdentifier</key>
-	<string>jp.torus.lualander</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
