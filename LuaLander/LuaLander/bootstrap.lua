@@ -442,7 +442,7 @@ local function update_explosion_coro(world, prev_time, parts)
    return elapsed
 end
 
-function State:update_force(accx, accy, accz)
+function State:update_force(accx, accy, accz, fuel)
    local shipbody, set_power = self.shipbody, self.set_power
 
    local rot = shipbody:GetAngle()
@@ -455,7 +455,7 @@ function State:update_force(accx, accy, accz)
       shipbody:ApplyTorque(tor * 10000)
    end
 
-   if accz ~= 0 then
+   if accz ~= 0 and fuel > 0 then
       local a = accx * accx + accy * accy
       if a > 0 then
          local tan = accz / math.sqrt(a)
@@ -464,9 +464,12 @@ function State:update_force(accx, accy, accz)
             local sin = math.sin(rot + math.pi / 2)
             local cos = math.cos(rot + math.pi / 2)
             local pow = math.min(1, ang / (math.pi / 4))
+
+            if pow > fuel then pow = fuel end
             shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 200,
                                                   pow * sin * 200))
             set_power(pow)
+            fuel = fuel - (pow * 0.1)
          end
       else
          set_power(0)
@@ -475,6 +478,7 @@ function State:update_force(accx, accy, accz)
 
    local av = shipbody:GetAngularVelocity()
    shipbody:ApplyTorque(-av * 10000)
+   return fuel
 end
 
 function State:show_gameover(back_clicked, parts)
@@ -615,14 +619,15 @@ end
 
 function State:game_main_loop_coro()
    local stat = self
-   local ctx, world, view, ship, shipbody, set_power
-      = self.ctx, self.world, self.view, self.ship, self.shipbody, self.set_power
+   local ctx, world, view, ship, shipbody
+      = self.ctx, self.world, self.view, self.ship, self.shipbody
 
    local x, y, width, height = get_bounds(ctx, ship)
-   local fuel = 99.9
 
    local collision = self.shipbody:GetUserData()
    print("State:game_main_loop_coro()", collision.type)
+
+   local fuel = 99.9
 
    while true do
       local elapsed, accx, accy, accz = coroutine.yield()
@@ -636,7 +641,7 @@ function State:game_main_loop_coro()
          return true
       end
 
-      self:update_force(accx, accy, accz)
+      fuel = self:update_force(accx, accy, accz, fuel)
 
       local pos = shipbody:GetPosition()
       local rot = shipbody:GetAngle()
