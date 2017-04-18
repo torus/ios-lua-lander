@@ -291,22 +291,6 @@ function State:initialize()
    local stat = self
 
    local ctx = objc.context:create()
-   local flurry_key = ""
-
-   -- local base_path = ctx:wrap(objc.class.NSBundle)("mainBundle")("resourcePath")
-   -- for l in io.lines(base_path .. "/ProjectApiKey.txt") do
-   --    local capt = l:match("^API Key: (%w+)")
-   --    if capt then
-   --       flurry_key = capt
-   --       break
-   --    end
-   -- end
-
-   -- if #flurry_key > 0 then
-   --    print("objc.class.Flurry", objc.class.Flurry)
-   --    ctx:wrap(objc.class.Flurry)("setCrashReportingEnabled:", true)
-   --    ctx:wrap(objc.class.Flurry)("startSession:", flurry_key)
-   -- end
 
    local view = ctx:wrap(stat.view_controller)("view")
    local screen_bounds = {get_bounds(ctx, view)}
@@ -495,14 +479,6 @@ function State:make_adview()
 end
 
 function State:show_gameover(back_clicked, parts)
-   -- local adview = (self.ctx:wrap(objc.class.GADInterstitial)("alloc")
-   --                 ("initWithAdUnitID:", "ca-app-pub-1755065155356425/3106242002"))
-   -- local adreq = self.ctx:wrap(objc.class.GADRequest)("request")
-   -- local arr = self.ctx:wrap(objc.class.NSMutableArray)("arrayWithCapacity:", 2)
-   -- arr("addObject:", self.simulator)
-   -- arr("addObject:", "61f69d5e71cd7e65a18a12ece59bb00c")
-   -- adreq("setTestDevices:", -arr)
-   -- adview("loadRequest:", -adreq)
    local adview = self:make_adview()
 
    local function func(url, webview)
