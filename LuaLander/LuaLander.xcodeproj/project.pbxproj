@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		391B9BB6799941FDE48D39CA /* libPods-LuaLander.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29F7BDFFB91B07E364A87D55 /* libPods-LuaLander.a */; };
 		9C110A6917B5EF8300576079 /* bootstrap.lua in Resources */ = {isa = PBXBuildFile; fileRef = 9C110A6817B5EF8300576079 /* bootstrap.lua */; };
 		9C110A6B17B63CD000576079 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C110A6A17B63CD000576079 /* QuartzCore.framework */; };
 		9C110A6D17B6A66800576079 /* spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C110A6C17B6A66800576079 /* spaceship.png */; };
@@ -24,7 +25,6 @@
 		9C1D405B17CB967E00A323F9 /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C1D404D17CB967E00A323F9 /* Icon-Small@2x.png */; };
 		9C1D405C17CB967E00A323F9 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C1D404E17CB967E00A323F9 /* Icon.png */; };
 		9C1D405F17CB967E00A323F9 /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C1D405117CB967E00A323F9 /* iTunesArtwork@2x.png */; };
-		9C2203121EA547C700B5C16A /* ProjectApiKey.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9C2203111EA547C700B5C16A /* ProjectApiKey.txt */; };
 		9C51A28617BBB8D7007CE54C /* CoreGraphics_wrap.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28517BBB8D7007CE54C /* CoreGraphics_wrap.m */; };
 		9C51A28917BD0153007CE54C /* LLTerrainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28817BD0153007CE54C /* LLTerrainView.m */; };
 		9C51A28B17BF85F8007CE54C /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C51A28A17BF85F8007CE54C /* CoreMotion.framework */; };
@@ -218,6 +218,7 @@
 		9CF967A617B2954C00607D8B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 9CF9679E17B2954C00607D8B /* README.md */; };
 		9CF967A717B2954C00607D8B /* utils.lua in Resources */ = {isa = PBXBuildFile; fileRef = 9CF9679F17B2954C00607D8B /* utils.lua */; };
 		9CF967A817B2954C00607D8B /* utils.lua in Resources */ = {isa = PBXBuildFile; fileRef = 9CF9679F17B2954C00607D8B /* utils.lua */; };
+		A9B5D7FC0F8ECC99C7A7F476 /* libPods-LuaLanderTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 70E072AA60A3345FA693D941 /* libPods-LuaLanderTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -231,6 +232,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		29F7BDFFB91B07E364A87D55 /* libPods-LuaLander.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LuaLander.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A99F772E6285EC14B368481 /* Pods-LuaLander.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LuaLander.release.xcconfig"; path = "Pods/Target Support Files/Pods-LuaLander/Pods-LuaLander.release.xcconfig"; sourceTree = "<group>"; };
+		2C78CF9FBFC8A9DF167B2092 /* Pods-LuaLanderTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LuaLanderTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-LuaLanderTests/Pods-LuaLanderTests.release.xcconfig"; sourceTree = "<group>"; };
+		70E072AA60A3345FA693D941 /* libPods-LuaLanderTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LuaLanderTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		95D5756E09461A2362FE4770 /* Pods-LuaLanderTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LuaLanderTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LuaLanderTests/Pods-LuaLanderTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9C110A6817B5EF8300576079 /* bootstrap.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bootstrap.lua; sourceTree = "<group>"; };
 		9C110A6A17B63CD000576079 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		9C110A6C17B6A66800576079 /* spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spaceship.png; path = ../../images/spaceship.png; sourceTree = "<group>"; };
@@ -252,7 +258,6 @@
 		9C1D404F17CB967E00A323F9 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "../../images/Icon@2x.png"; sourceTree = "<group>"; };
 		9C1D405017CB967E00A323F9 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iTunesArtwork.png; path = ../../images/iTunesArtwork.png; sourceTree = "<group>"; };
 		9C1D405117CB967E00A323F9 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iTunesArtwork@2x.png"; path = "../../images/iTunesArtwork@2x.png"; sourceTree = "<group>"; };
-		9C2203111EA547C700B5C16A /* ProjectApiKey.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = ProjectApiKey.txt; path = ../ProjectApiKey.txt; sourceTree = "<group>"; };
 		9C51A28517BBB8D7007CE54C /* CoreGraphics_wrap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreGraphics_wrap.m; path = ../../swig/CoreGraphics_wrap.m; sourceTree = "<group>"; };
 		9C51A28717BD0153007CE54C /* LLTerrainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLTerrainView.h; sourceTree = "<group>"; };
 		9C51A28817BD0153007CE54C /* LLTerrainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLTerrainView.m; sourceTree = "<group>"; };
@@ -447,6 +452,7 @@
 		9CF9679D17B2954C00607D8B /* LuaBridgeInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LuaBridgeInternal.h; path = ../../luaobjc/LuaBridgeInternal.h; sourceTree = "<group>"; };
 		9CF9679E17B2954C00607D8B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../../luaobjc/README.md; sourceTree = "<group>"; };
 		9CF9679F17B2954C00607D8B /* utils.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = utils.lua; path = ../../luaobjc/utils.lua; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.lua; };
+		E3A0324C65ECE0986CE1CC8D /* Pods-LuaLander.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LuaLander.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LuaLander/Pods-LuaLander.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -461,6 +467,7 @@
 				9CF9661417B135B700607D8B /* UIKit.framework in Frameworks */,
 				9CF9661617B135B700607D8B /* Foundation.framework in Frameworks */,
 				9CF9661817B135B700607D8B /* CoreGraphics.framework in Frameworks */,
+				391B9BB6799941FDE48D39CA /* libPods-LuaLander.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,6 +477,7 @@
 			files = (
 				9CF9663C17B135B800607D8B /* UIKit.framework in Frameworks */,
 				9CF9663D17B135B800607D8B /* Foundation.framework in Frameworks */,
+				A9B5D7FC0F8ECC99C7A7F476 /* libPods-LuaLanderTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,11 +524,11 @@
 		9CF9660717B135B700607D8B = {
 			isa = PBXGroup;
 			children = (
-				9C2203111EA547C700B5C16A /* ProjectApiKey.txt */,
 				9CF9661917B135B700607D8B /* LuaLander */,
 				9CF9664017B135B800607D8B /* LuaLanderTests */,
 				9CF9661217B135B700607D8B /* Frameworks */,
 				9CF9661117B135B700607D8B /* Products */,
+				B5C1DEF545892184B29C124D /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -543,6 +551,8 @@
 				9CF9661317B135B700607D8B /* UIKit.framework */,
 				9CF9661517B135B700607D8B /* Foundation.framework */,
 				9CF9661717B135B700607D8B /* CoreGraphics.framework */,
+				29F7BDFFB91B07E364A87D55 /* libPods-LuaLander.a */,
+				70E072AA60A3345FA693D941 /* libPods-LuaLanderTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -854,6 +864,17 @@
 			name = LuaBridge;
 			sourceTree = "<group>";
 		};
+		B5C1DEF545892184B29C124D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E3A0324C65ECE0986CE1CC8D /* Pods-LuaLander.debug.xcconfig */,
+				2A99F772E6285EC14B368481 /* Pods-LuaLander.release.xcconfig */,
+				95D5756E09461A2362FE4770 /* Pods-LuaLanderTests.debug.xcconfig */,
+				2C78CF9FBFC8A9DF167B2092 /* Pods-LuaLanderTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -861,9 +882,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9CF9664B17B135B800607D8B /* Build configuration list for PBXNativeTarget "LuaLander" */;
 			buildPhases = (
+				8D0D19C03311C35752291C7B /* [CP] Check Pods Manifest.lock */,
 				9CF9660C17B135B700607D8B /* Sources */,
 				9CF9660D17B135B700607D8B /* Frameworks */,
 				9CF9660E17B135B700607D8B /* Resources */,
+				581F365ECFF388A7B91930FB /* [CP] Embed Pods Frameworks */,
+				7777DCB3AE23EE6D3FB84E21 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -878,10 +902,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9CF9664E17B135B800607D8B /* Build configuration list for PBXNativeTarget "LuaLanderTests" */;
 			buildPhases = (
+				0CBAE119BBEF79D9A1F37622 /* [CP] Check Pods Manifest.lock */,
 				9CF9663417B135B800607D8B /* Sources */,
 				9CF9663517B135B800607D8B /* Frameworks */,
 				9CF9663617B135B800607D8B /* Resources */,
 				9CF9663717B135B800607D8B /* ShellScript */,
+				05640CCADB46B6D2EAC4BE94 /* [CP] Embed Pods Frameworks */,
+				4C84C610FE61D5374B6D5B77 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -906,6 +933,9 @@
 				TargetAttributes = {
 					9CF9660F17B135B700607D8B = {
 						DevelopmentTeam = BH53U2474Y;
+					};
+					9CF9663817B135B800607D8B = {
+						DevelopmentTeam = "Toru Hisai";
 					};
 				};
 			};
@@ -932,7 +962,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C2203121EA547C700B5C16A /* ProjectApiKey.txt in Resources */,
 				9C1D405C17CB967E00A323F9 /* Icon.png in Resources */,
 				9CF9661E17B135B700607D8B /* InfoPlist.strings in Resources */,
 				9C9B326B17C7AFF600ED256D /* title.html in Resources */,
@@ -981,6 +1010,96 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		05640CCADB46B6D2EAC4BE94 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LuaLanderTests/Pods-LuaLanderTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		0CBAE119BBEF79D9A1F37622 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		4C84C610FE61D5374B6D5B77 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LuaLanderTests/Pods-LuaLanderTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		581F365ECFF388A7B91930FB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LuaLander/Pods-LuaLander-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7777DCB3AE23EE6D3FB84E21 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LuaLander/Pods-LuaLander-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8D0D19C03311C35752291C7B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 		9CF9663717B135B800607D8B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1239,8 +1358,9 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Toru Hisai (DWNJXV72FX)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "Toru Hisai";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1283,6 +1403,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEVELOPMENT_TEAM = "Toru Hisai";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1302,48 +1423,53 @@
 		};
 		9CF9664C17B135B800607D8B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E3A0324C65ECE0986CE1CC8D /* Pods-LuaLander.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = BH53U2474Y;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LuaLander/LuaLander-Prefix.pch";
-				HEADER_SEARCH_PATHS = "../work/**";
-				INFOPLIST_FILE = "LuaLander/LuaLander-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
+				HEADER_SEARCH_PATHS = (
+					"../work/**",
 					"$(inherited)",
-					"/Users/toru/src/lualander/Flurry-iOS-4.4.0/Flurry",
-					"/Users/toru/src/lualander/Flurry-iOS-4.4.0/FlurryAds",
 				);
+				INFOPLIST_FILE = "LuaLander/LuaLander-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.torus.lualander.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5ae2d40d-b62a-4f92-8dd0-49515f3bcc14";
+				PROVISIONING_PROFILE = "ee104c1c-9ba5-4294-8a78-c6e9b3acbc76";
+				PROVISIONING_PROFILE_SPECIFIER = "Wildcard Dev";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
 		};
 		9CF9664D17B135B800607D8B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2A99F772E6285EC14B368481 /* Pods-LuaLander.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = BH53U2474Y;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LuaLander/LuaLander-Prefix.pch";
-				HEADER_SEARCH_PATHS = "../work/**";
-				INFOPLIST_FILE = "LuaLander/LuaLander-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
+				HEADER_SEARCH_PATHS = (
+					"../work/**",
 					"$(inherited)",
-					"/Users/toru/src/lualander/Flurry-iOS-4.4.0/Flurry",
-					"/Users/toru/src/lualander/Flurry-iOS-4.4.0/FlurryAds",
 				);
+				INFOPLIST_FILE = "LuaLander/LuaLander-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.torus.lualander.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5ae2d40d-b62a-4f92-8dd0-49515f3bcc14";
+				PROVISIONING_PROFILE = "f7d7c70c-9829-4199-a3ac-874b2905bf77";
+				PROVISIONING_PROFILE_SPECIFIER = "Wildcard Dist";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};
 		9CF9664F17B135B800607D8B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 95D5756E09461A2362FE4770 /* Pods-LuaLanderTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LuaLander.app/LuaLander";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1362,6 +1488,7 @@
 		};
 		9CF9665017B135B800607D8B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2C78CF9FBFC8A9DF167B2092 /* Pods-LuaLanderTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LuaLander.app/LuaLander";
 				FRAMEWORK_SEARCH_PATHS = (

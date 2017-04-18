@@ -1,5 +1,3 @@
-/LuaLander/LuaLander.xcodeproj/project.xcworkspace/
-/LuaLander/LuaLander.xcodeproj/xcuserdata/
 /swig/Box2D_wrap.cxx
 /work/
 *.ipa
@@ -10,3 +8,8 @@ ProjectApiKey.txt
 /TEAM_TOKEN
 /*.mobileprovision
 /testflight_result.json
+xcuserdata/
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+Pods/

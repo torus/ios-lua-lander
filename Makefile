@@ -29,3 +29,6 @@ $(TESTFLIGHT_RESULT): $(IPA)
     -F distribution_lists='lualander' \
 	> $@
 	cat $@
+
+pods:
+	(cd LuaLander && $(HOME)/.gem/ruby/2.0.0/bin/pod install)
