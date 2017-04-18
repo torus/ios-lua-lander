@@ -39,6 +39,7 @@
 		9C9B326B17C7AFF600ED256D /* title.html in Resources */ = {isa = PBXBuildFile; fileRef = 9C9B326817C7AFF600ED256D /* title.html */; };
 		9C9B326C17C7AFF600ED256D /* welldone.html in Resources */ = {isa = PBXBuildFile; fileRef = 9C9B326917C7AFF600ED256D /* welldone.html */; };
 		9CA0F1221EA64EAB0012FF46 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9CA0F1211EA64EAB0012FF46 /* GoogleService-Info.plist */; };
+		9CA0F1241EA692CF0012FF46 /* complete.html in Resources */ = {isa = PBXBuildFile; fileRef = 9CA0F1231EA692CF0012FF46 /* complete.html */; };
 		9CD0346517C0BA7F000C588A /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CD0346317C0BA7F000C588A /* fire.png */; };
 		9CD0346617C0BA7F000C588A /* moon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CD0346417C0BA7F000C588A /* moon.png */; };
 		9CF9661417B135B700607D8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF9661317B135B700607D8B /* UIKit.framework */; };
@@ -276,6 +277,7 @@
 		9C9B326817C7AFF600ED256D /* title.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = title.html; path = ../../webview/title.html; sourceTree = "<group>"; };
 		9C9B326917C7AFF600ED256D /* welldone.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = welldone.html; path = ../../webview/welldone.html; sourceTree = "<group>"; };
 		9CA0F1211EA64EAB0012FF46 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
+		9CA0F1231EA692CF0012FF46 /* complete.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = complete.html; path = ../../webview/complete.html; sourceTree = "<group>"; };
 		9CD0346317C0BA7F000C588A /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire.png; path = ../../images/fire.png; sourceTree = "<group>"; };
 		9CD0346417C0BA7F000C588A /* moon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = moon.png; path = ../../images/moon.png; sourceTree = "<group>"; };
 		9CF9661017B135B700607D8B /* LuaLander.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LuaLander.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -514,6 +516,7 @@
 		9C9B326617C7AFCA00ED256D /* WebView */ = {
 			isa = PBXGroup;
 			children = (
+				9CA0F1231EA692CF0012FF46 /* complete.html */,
 				9C525C3518CB40EC00C063DF /* holdlikethis.jpg */,
 				9C7903E417D4C19500C0BFFD /* hud.html */,
 				9C9B326717C7AFF600ED256D /* gameover.html */,
@@ -996,6 +999,7 @@
 				9C1D405317CB967E00A323F9 /* Icon-40@2x.png in Resources */,
 				9CF967A717B2954C00607D8B /* utils.lua in Resources */,
 				9C110A6917B5EF8300576079 /* bootstrap.lua in Resources */,
+				9CA0F1241EA692CF0012FF46 /* complete.html in Resources */,
 				9C110A6D17B6A66800576079 /* spaceship.png in Resources */,
 				9C9B326A17C7AFF600ED256D /* gameover.html in Resources */,
 			);

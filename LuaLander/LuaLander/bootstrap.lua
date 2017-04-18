@@ -481,7 +481,7 @@ function State:update_force(accx, accy, accz, fuel)
    return fuel
 end
 
-function State:show_gameover(back_clicked, parts)
+function State:make_adview()
    local adview = (self.ctx:wrap(objc.class.GADInterstitial)("alloc")
                    ("initWithAdUnitID:", "ca-app-pub-1755065155356425/3106242002"))
    local adreq = self.ctx:wrap(objc.class.GADRequest)("request")
@@ -490,6 +490,20 @@ function State:show_gameover(back_clicked, parts)
    arr("addObject:", "61f69d5e71cd7e65a18a12ece59bb00c")
    adreq("setTestDevices:", -arr)
    adview("loadRequest:", -adreq)
+
+   return adview
+end
+
+function State:show_gameover(back_clicked, parts)
+   -- local adview = (self.ctx:wrap(objc.class.GADInterstitial)("alloc")
+   --                 ("initWithAdUnitID:", "ca-app-pub-1755065155356425/3106242002"))
+   -- local adreq = self.ctx:wrap(objc.class.GADRequest)("request")
+   -- local arr = self.ctx:wrap(objc.class.NSMutableArray)("arrayWithCapacity:", 2)
+   -- arr("addObject:", self.simulator)
+   -- arr("addObject:", "61f69d5e71cd7e65a18a12ece59bb00c")
+   -- adreq("setTestDevices:", -arr)
+   -- adview("loadRequest:", -adreq)
+   local adview = self:make_adview()
 
    local function func(url, webview)
       print("clicked", url)
@@ -620,6 +634,31 @@ function State:show_welldone(back_clicked)
    self:show_webview_hud("welldone", func)
 end
 
+function State:show_complete(back_clicked)
+   print("State:show_complete")
+   local adview = self:make_adview()
+
+   local function func(url, webview)
+      print("clicked", url)
+      local function goback()
+         self.ctx:wrap(webview)("removeFromSuperview")
+         back_clicked[1] = true
+      end
+
+      if url:match("^lualander:back") then
+         goback()
+         return false
+      elseif url:match("^lualander:watchad") then
+         adview("presentFromRootViewController:", self.view_controller)
+         goback()
+         return false
+      else
+         return true
+      end
+   end
+   self:show_webview_hud("complete", func)
+end
+
 function State:game_main_loop_coro()
    local stat = self
    local ctx, world, view, ship, shipbody
@@ -723,14 +762,27 @@ local function make_main_coro(stat)
             local back_clicked = {false}
             if cleared then
                mission_cleared = mission_cleared + 1
-               print("welldone!")
-               stat:show_welldone(back_clicked)
-               while true do
-                  if back_clicked[1] then
-                     break
-                  else
-                     coroutine.yield()
+               if mission_cleared < 10 then -- total number of missions
+                  print("welldone!")
+                  stat:show_welldone(back_clicked)
+                  while true do
+                     if back_clicked[1] then
+                        break
+                     else
+                        coroutine.yield()
+                     end
                   end
+               else
+                  print("complete!")
+                  stat:show_complete(back_clicked)
+                  while true do
+                     if back_clicked[1] then
+                        break
+                     else
+                        coroutine.yield()
+                     end
+                  end
+                  break
                end
             else
                mission_cleared = 0
