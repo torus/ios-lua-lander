@@ -568,6 +568,9 @@ function State:show_hud(mission)
                   body:ApplyLinearImpulse(b2.b2Vec2(100, 0), center)
                end
             end
+            if url:match("^lualander:debug_done") then
+               self.successfully_landed = true
+            end
             return true
          end
       )
