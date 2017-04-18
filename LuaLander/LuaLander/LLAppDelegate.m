@@ -35,7 +35,8 @@ int luaopen_b2(lua_State *);
 
     // Use Firebase library to configure APIs
     [FIRApp configure];
-
+    [GADMobileAds configureWithApplicationID:@"ca-app-pub-1755065155356425~3245842802"];
+    NSLog(@"kGADSimulatorID: %@", kGADSimulatorID);
     return YES;
 }
 							

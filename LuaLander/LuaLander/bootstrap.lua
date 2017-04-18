@@ -478,20 +478,38 @@ function State:update_force(accx, accy, accz)
 end
 
 function State:show_gameover(back_clicked, parts)
+   local adview = (self.ctx:wrap(objc.class.GADInterstitial)("alloc")
+                   ("initWithAdUnitID:", "ca-app-pub-1755065155356425/3106242002"))
+   local adreq = self.ctx:wrap(objc.class.GADRequest)("request")
+   local arr = self.ctx:wrap(objc.class.NSMutableArray)("arrayWithCapacity:", 1)
+   arr("addObject:", "61f69d5e71cd7e65a18a12ece59bb00c")
+   adreq("setTestDevices:", -arr)
+   adview("loadRequest:", -adreq)
+
    local function func(url, webview)
       print("clicked", url)
-      if url:match("^lualander:back") then
+
+      local function goback()
          self.ctx:wrap(webview)("removeFromSuperview")
          for i, part in pairs(parts) do
             self.world:DestroyBody(part.body)
             part.view("removeFromSuperview")
          end
          back_clicked[1] = true
+      end
+
+      if url:match("^lualander:back") then
+         goback()
+         return false
+      elseif url:match("^lualander:watchad") then
+         adview("presentFromRootViewController:", self.view_controller)
+         goback()
          return false
       else
          return true
       end
    end
+
    self:show_webview_hud("gameover", func)
 end
 
