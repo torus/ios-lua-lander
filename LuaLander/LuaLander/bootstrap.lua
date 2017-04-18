@@ -4,6 +4,8 @@ end})
 
 local Collision = {}
 local State = {}
+local LOG_VERSION = "1.0"
+local DEBUG_MODE = false
 
 function Collision:type()
    return self.type
@@ -325,6 +327,8 @@ end
 function State:game_start(mission)
    local stat = self
 
+   stat:analytics_log("start_" .. mission, {})
+
    if stat.world then
       stat.world = nil
       if stat.ship then
@@ -497,6 +501,7 @@ function State:show_gameover(back_clicked, parts)
          goback()
          return false
       elseif url:match("^lualander:watchad") then
+         self:analytics_log("ad_fail", {})
          adview("presentFromRootViewController:", self.view_controller)
          goback()
          return false
@@ -511,59 +516,62 @@ end
 function State:show_hud(mission)
    print("show_hud")
 
-      local webview
-      webview = self:show_webview_hud(
-         "hud",
-         function (url, wb)
-            if url:match("^lualander:ready") then
-               webview("stringByEvaluatingJavaScriptFromString:",
-                       string.format("set_display({mission:%d})", mission))
+   local webview
+   webview = self:show_webview_hud(
+      "hud",
+      function (url, wb)
+         if url:match("^lualander:ready") then
+            webview("stringByEvaluatingJavaScriptFromString:",
+                    string.format("set_display({mission:%d})", mission))
+            if DEBUG_MODE then
+               webview("stringByEvaluatingJavaScriptFromString:", "show_debug()")
             end
-            if url:match("^lualander:debug_stay") then
-               local body = self.shipbody
-               if body then
-                  local center = body:GetWorldCenter()
-                  local imp = body:GetLinearVelocity()
-                  imp.x = imp.x * -body:GetMass()
-                  imp.y = imp.y * -body:GetMass()
-                  print("debug_stay:", imp.x, imp.y)
-                  body:ApplyLinearImpulse(imp, center)
-               end
-            end
-            if url:match("^lualander:debug_up") then
-               local body = self.shipbody
-               if body then
-                  local center = body:GetWorldCenter()
-                  body:ApplyLinearImpulse(b2.b2Vec2(0, 100), center)
-               end
-            end
-            if url:match("^lualander:debug_down") then
-               local body = self.shipbody
-               if body then
-                  local center = body:GetWorldCenter()
-                  body:ApplyLinearImpulse(b2.b2Vec2(0, -100), center)
-               end
-            end
-            if url:match("^lualander:debug_left") then
-               local body = self.shipbody
-               if body then
-                  local center = body:GetWorldCenter()
-                  body:ApplyLinearImpulse(b2.b2Vec2(-100, 0), center)
-               end
-            end
-            if url:match("^lualander:debug_right") then
-               local body = self.shipbody
-               if body then
-                  local center = body:GetWorldCenter()
-                  body:ApplyLinearImpulse(b2.b2Vec2(100, 0), center)
-               end
-            end
-            if url:match("^lualander:debug_done") then
-               self.successfully_landed = true
-            end
-            return true
          end
-      )
+         if url:match("^lualander:debug_stay") then
+            local body = self.shipbody
+            if body then
+               local center = body:GetWorldCenter()
+               local imp = body:GetLinearVelocity()
+               imp.x = imp.x * -body:GetMass()
+               imp.y = imp.y * -body:GetMass()
+               print("debug_stay:", imp.x, imp.y)
+               body:ApplyLinearImpulse(imp, center)
+            end
+         end
+         if url:match("^lualander:debug_up") then
+            local body = self.shipbody
+            if body then
+               local center = body:GetWorldCenter()
+               body:ApplyLinearImpulse(b2.b2Vec2(0, 100), center)
+            end
+         end
+         if url:match("^lualander:debug_down") then
+            local body = self.shipbody
+            if body then
+               local center = body:GetWorldCenter()
+               body:ApplyLinearImpulse(b2.b2Vec2(0, -100), center)
+            end
+         end
+         if url:match("^lualander:debug_left") then
+            local body = self.shipbody
+            if body then
+               local center = body:GetWorldCenter()
+               body:ApplyLinearImpulse(b2.b2Vec2(-100, 0), center)
+            end
+         end
+         if url:match("^lualander:debug_right") then
+            local body = self.shipbody
+            if body then
+               local center = body:GetWorldCenter()
+               body:ApplyLinearImpulse(b2.b2Vec2(100, 0), center)
+            end
+         end
+         if url:match("^lualander:debug_done") then
+            self.successfully_landed = true
+         end
+         return true
+      end
+   )
 
    return webview
 end
@@ -625,6 +633,7 @@ function State:show_complete(back_clicked)
          goback()
          return false
       elseif url:match("^lualander:watchad") then
+         self:analytics_log("ad_complete", {})
          adview("presentFromRootViewController:", self.view_controller)
          goback()
          return false
@@ -635,7 +644,7 @@ function State:show_complete(back_clicked)
    self:show_webview_hud("complete", func)
 end
 
-function State:game_main_loop_coro()
+function State:game_main_loop_coro(mission)
    local stat = self
    local ctx, world, view, ship, shipbody
       = self.ctx, self.world, self.view, self.ship, self.shipbody
@@ -654,8 +663,10 @@ function State:game_main_loop_coro()
       world:Step(elapsed - stat.prev_time, 10, 8)
 
       if stat.collision_detected then
+         stat:analytics_log("fail_" .. mission, {fuel = fuel})
          return false
       elseif stat.successfully_landed then
+         stat:analytics_log("done_" .. mission, {fuel = fuel})
          return true
       end
 
@@ -678,6 +689,17 @@ function State:game_main_loop_coro()
 
       stat.prev_time = elapsed
    end
+end
+
+function State:analytics_log(event, params)
+   print("analytics_log event:", event)
+   local dict = self.ctx:wrap(objc.class.NSMutableDictionary)("dictionary")
+   params.log_version = LOG_VERSION
+   for k, v in pairs(params) do
+      dict("setObject:forKey:", v, k)
+      print("analytics_log param:", k, v)
+   end
+   self.ctx:wrap(objc.class.FIRAnalytics)("logEventWithName:parameters:", event, -dict)
 end
 
 function State:title_screen_coro()
@@ -734,11 +756,11 @@ local function make_main_coro(stat)
             stat:game_start(mission_cleared + 1)
             local hud_view = stat:show_hud(mission_cleared + 1)
             stat.hud_view = hud_view
-            local cleared = stat:game_main_loop_coro()
+            local cleared = stat:game_main_loop_coro(mission_cleared + 1)
             local back_clicked = {false}
             if cleared then
                mission_cleared = mission_cleared + 1
-               if mission_cleared < 10 then -- total number of missions
+               if mission_cleared < (DEBUG_MODE and 3 or 10) then -- total number of missions
                   print("welldone!")
                   stat:show_welldone(back_clicked)
                   while true do
