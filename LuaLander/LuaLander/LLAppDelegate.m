@@ -11,7 +11,8 @@
 #import "lualib.h"
 #import "lauxlib.h"
 #import "LuaBridge.h"
-//#import "Flurry.h"
+
+@import Firebase;
 
 @implementation LLAppDelegate
 
@@ -32,7 +33,8 @@ int luaopen_b2(lua_State *);
         NSLog(@"Lua Error: %s", lua_tostring(L, -1));
     }
 
-//    NSLog(@"Flurry %@", [Flurry getFlurryAgentVersion]);
+    // Use Firebase library to configure APIs
+    [FIRApp configure];
 
     return YES;
 }
