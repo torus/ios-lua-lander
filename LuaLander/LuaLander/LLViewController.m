@@ -12,6 +12,8 @@
 #import "lauxlib.h"
 #import "LuaBridge.h"
 
+@import GoogleMobileAds;
+
 @interface LLViewController ()
 
 @end
@@ -29,7 +31,8 @@
     lua_State *L = [[LuaBridge instance] L];
     lua_getglobal(L, "create");
     lua_pushlightuserdata(L, (__bridge void *)(self));
-    if (lua_pcall(L, 1, 1, 0)) {
+    lua_pushlightuserdata(L, (__bridge void *)(kGADSimulatorID));
+    if (lua_pcall(L, 2, 1, 0)) {
         NSLog(@"Lua Error: %s\n", lua_tostring(L, -1));
     }
     self->gameState = luaL_ref(L, LUA_REGISTRYINDEX);

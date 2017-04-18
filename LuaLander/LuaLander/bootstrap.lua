@@ -481,7 +481,8 @@ function State:show_gameover(back_clicked, parts)
    local adview = (self.ctx:wrap(objc.class.GADInterstitial)("alloc")
                    ("initWithAdUnitID:", "ca-app-pub-1755065155356425/3106242002"))
    local adreq = self.ctx:wrap(objc.class.GADRequest)("request")
-   local arr = self.ctx:wrap(objc.class.NSMutableArray)("arrayWithCapacity:", 1)
+   local arr = self.ctx:wrap(objc.class.NSMutableArray)("arrayWithCapacity:", 2)
+   arr("addObject:", self.simulator)
    arr("addObject:", "61f69d5e71cd7e65a18a12ece59bb00c")
    adreq("setTestDevices:", -arr)
    adview("loadRequest:", -adreq)
@@ -618,6 +619,7 @@ function State:game_main_loop_coro()
       = self.ctx, self.world, self.view, self.ship, self.shipbody, self.set_power
 
    local x, y, width, height = get_bounds(ctx, ship)
+   local fuel = 99.9
 
    local collision = self.shipbody:GetUserData()
    print("State:game_main_loop_coro()", collision.type)
@@ -649,7 +651,7 @@ function State:game_main_loop_coro()
       local vel = shipbody:GetLinearVelocity()
       local vel_abs = vel:Length()
       self.hud_view("stringByEvaluatingJavaScriptFromString:",
-                    string.format("set_display({velocity:%.3f})", vel_abs))
+                    string.format("set_display({velocity:%.3f, fuel:%.1f})", vel_abs, fuel))
 
       stat.prev_time = elapsed
    end
@@ -742,9 +744,10 @@ local function make_main_coro(stat)
    end
 end
 
-function create(view_controller)
+function create(view_controller, simulator)
    local stat = {
       view_controller = view_controller,
+      simulator = simulator,
       prev_time = 0
    }
    setmetatable(stat, {__index = State})
