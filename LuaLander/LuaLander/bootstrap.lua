@@ -5,6 +5,7 @@ end})
 local Collision = {}
 local State = {}
 local Hud = {Message = {}}
+local GameState = {}
 
 local LOG_VERSION = "1.0"
 local DEBUG_MODE = true
@@ -523,6 +524,17 @@ function State:show_gameover_coro()
    end
 end
 
+function GameState:create(stat, level, ship_width, ship_height)
+   local gstat = {
+      stat = stat,
+      level = level,
+      ship_width = ship_width,
+      ship_height = ship_height
+   }
+   setmetatable(gstat, {__index = GameState})
+   return gstat
+end
+
 function Hud:create(level, webview)
    local hud = {
       level = level,
@@ -700,6 +712,25 @@ function State:show_complete_coro()
    end
 end
 
+function GameState:render()
+   local pos = self.stat.shipbody:GetPosition()
+   local rot = self.stat.shipbody:GetAngle()
+
+   self.stat.ship("setTransform:",
+                  cg.CGAffineTransformWrap(
+                     cg.CGAffineTransformConcat(
+                        cg.CGAffineTransformMakeRotation(-rot),
+                        cg.CGAffineTransformMakeTranslation(
+                           pos.x * 10 - self.ship_width / 2,
+                              - pos.y * 10 - self.ship_height / 2))))
+
+   local vel = self.stat.shipbody:GetLinearVelocity()
+   local vel_abs = vel:Length()
+   self.stat.hud_view("stringByEvaluatingJavaScriptFromString:",
+                      string.format("set_display({velocity:%.3f, fuel:%.1f})",
+                                    vel_abs, self.fuel))
+end
+
 function State:game_main_loop_coro(level)
    self:initialize_game(level)
    self:create_hud(level)
@@ -708,11 +739,12 @@ function State:game_main_loop_coro(level)
       = self.ctx, self.world, self.view, self.ship, self.shipbody
 
    local x, y, width, height = get_bounds(ctx, ship)
+   local gamestat = GameState:create(self, level, width, height)
 
    local collision = self.shipbody:GetUserData()
    print("State:game_main_loop_coro()", collision.type)
 
-   local fuel = 99.9
+   gamestat.fuel = 99.9
 
    while true do
       local elapsed, accx, accy, accz = coroutine.yield()
@@ -723,29 +755,15 @@ function State:game_main_loop_coro(level)
       local pos = self.shipbody:GetPosition()
 
       if self.collision_detected then
-         self:analytics_log("fail_" .. level, {fuel = fuel, x = pos.x, y = -pos.y})
+         self:analytics_log("fail_" .. level, {fuel = gamestat.fuel, x = pos.x, y = -pos.y})
          return false
       elseif self.successfully_landed then
-         self:analytics_log("done_" .. level, {fuel = fuel, x = pos.x, y = -pos.y})
+         self:analytics_log("done_" .. level, {fuel = gamestat.fuel, x = pos.x, y = -pos.y})
          return true
       end
 
-      fuel = self:update_force(accx, accy, accz, fuel)
-
-      local pos = shipbody:GetPosition()
-      local rot = shipbody:GetAngle()
-
-      ship("setTransform:",
-           cg.CGAffineTransformWrap(
-              cg.CGAffineTransformConcat(
-                 cg.CGAffineTransformMakeRotation(-rot),
-                 cg.CGAffineTransformMakeTranslation(pos.x * 10 - width / 2,
-                                                        - pos.y * 10 - height / 2))))
-
-      local vel = shipbody:GetLinearVelocity()
-      local vel_abs = vel:Length()
-      self.hud_view("stringByEvaluatingJavaScriptFromString:",
-                    string.format("set_display({velocity:%.3f, fuel:%.1f})", vel_abs, fuel))
+      gamestat.fuel = self:update_force(accx, accy, accz, gamestat.fuel)
+      gamestat:render()
 
       self.prev_time = elapsed
    end
