@@ -326,7 +326,7 @@ function State:initialize()
    stat.screen_bounds = {0, 0, width, height}
 end
 
-function State:game_start(mission)
+function State:initialize_game(mission)
    local stat = self
 
    stat:analytics_log("start_" .. mission, {})
@@ -591,8 +591,8 @@ function Hud.Message.debug_done(hud, stat)
    stat.successfully_landed = true
 end
 
-function State:show_hud(mission)
-   print("show_hud")
+function State:create_hud(mission)
+   print("create_hud")
    local hud
    local webview
 
@@ -604,8 +604,12 @@ function State:show_hud(mission)
       end
    )
    hud = Hud:create(mission, webview)
+   self.hud_view = webview
+end
 
-   return webview
+function State:destroy_hud()
+   self.hud_view("removeFromSuperview")
+   self.hud_view = nil
 end
 
 function State:show_webview_hud(name, click_handler)
@@ -677,6 +681,9 @@ function State:show_complete(back_clicked)
 end
 
 function State:game_main_loop_coro(mission)
+   self:initialize_game(mission)
+   self:create_hud(mission)
+
    local ctx, world, view, ship, shipbody
       = self.ctx, self.world, self.view, self.ship, self.shipbody
 
@@ -784,9 +791,9 @@ local function make_main_coro(stat)
          local mission_cleared = 0
          stat:title_screen_coro()
          while true do
-            stat:game_start(mission_cleared + 1)
-            local hud_view = stat:show_hud(mission_cleared + 1)
-            stat.hud_view = hud_view
+            -- stat:initialize_game(mission_cleared + 1)
+            -- local hud_view = stat:show_hud(mission_cleared + 1)
+            -- stat.hud_view = hud_view
             local cleared = stat:game_main_loop_coro(mission_cleared + 1)
             local back_clicked = {false}
             if cleared then
@@ -826,7 +833,7 @@ local function make_main_coro(stat)
                   end
                end
             end
-            hud_view("removeFromSuperview")
+            stat:destroy_hud()
             if not cleared then break end
          end
       end
