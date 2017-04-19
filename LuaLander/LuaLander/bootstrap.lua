@@ -791,9 +791,6 @@ local function make_main_coro(stat)
          local mission_cleared = 0
          stat:title_screen_coro()
          while true do
-            -- stat:initialize_game(mission_cleared + 1)
-            -- local hud_view = stat:show_hud(mission_cleared + 1)
-            -- stat.hud_view = hud_view
             local cleared = stat:game_main_loop_coro(mission_cleared + 1)
             local back_clicked = {false}
             if cleared then
