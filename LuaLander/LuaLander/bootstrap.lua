@@ -414,8 +414,11 @@ function State:on_collision_detected(pos)
 end
 
 local function update_explosion_coro(world, prev_time, parts)
+end
+
+function State:update_explosion_coro(parts)
    local elapsed, accx, accy, accz = coroutine.yield()
-   world:Step(elapsed - prev_time, 10, 8)
+   self.world:Step(elapsed - self.prev_time, 10, 8)
 
    for i, p in pairs(parts) do
       local pos = p.body:GetPosition()
@@ -429,7 +432,7 @@ local function update_explosion_coro(world, prev_time, parts)
                                                           - pos.y * 10))))
    end
 
-   return elapsed
+   self.prev_time = elapsed
 end
 
 function State:update_force(accx, accy, accz, fuel)
@@ -824,7 +827,7 @@ local function make_main_coro(stat)
                   if back_clicked[1] then
                      break
                   else
-                     stat.prev_time = update_explosion_coro(stat.world, stat.prev_time, parts)
+                     stat:update_explosion_coro(parts)
                   end
                end
             end
