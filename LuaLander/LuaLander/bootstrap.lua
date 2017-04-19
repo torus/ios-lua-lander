@@ -639,8 +639,10 @@ function State:show_webview_hud(name, click_handler)
    return webview
 end
 
-function State:show_welldone(back_clicked)
+function State:show_welldone_coro()
    print("State:show_welldone")
+   local back_clicked = {}
+
    local function func(url, webview)
       print("clicked", url)
       if url:match("^lualander:back") then
@@ -652,6 +654,14 @@ function State:show_welldone(back_clicked)
       end
    end
    self:show_webview_hud("welldone", func)
+
+   while true do
+      if back_clicked[1] then
+         break
+      else
+         coroutine.yield()
+      end
+   end
 end
 
 function State:show_complete(back_clicked)
@@ -797,14 +807,7 @@ local function make_main_coro(stat)
                mission_cleared = mission_cleared + 1
                if mission_cleared < (DEBUG_MODE and 3 or 10) then -- total number of missions
                   print("welldone!")
-                  stat:show_welldone(back_clicked)
-                  while true do
-                     if back_clicked[1] then
-                        break
-                     else
-                        coroutine.yield()
-                     end
-                  end
+                  stat:show_welldone_coro()
                else
                   print("complete!")
                   stat:show_complete(back_clicked)
