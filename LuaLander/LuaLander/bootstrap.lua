@@ -532,9 +532,13 @@ function GameState:create(stat, level)
       stat = stat,
       level = level,
       ship_width = width,
-      ship_height = height
+      ship_height = height,
+      fuel = 99.9
    }
    setmetatable(gstat, {__index = GameState})
+
+   stat:create_hud(level)
+
    return gstat
 end
 
@@ -736,10 +740,6 @@ end
 
 function State:game_main_loop_coro(level)
    local gamestat = GameState:create(self, level)
-
-   self:create_hud(level)
-
-   gamestat.fuel = 99.9
 
    while true do
       local elapsed, accx, accy, accz = coroutine.yield()
