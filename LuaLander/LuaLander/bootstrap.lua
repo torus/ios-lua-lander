@@ -374,8 +374,6 @@ function State:terminate_game()
    print("collision_detected")
    self.ship("setHidden:", true)
    self.shipbody:SetActive(false)
-
-   return self:make_fragments()
 end
 
 function State:make_fragments()
@@ -488,6 +486,7 @@ function State:make_adview()
 end
 
 function State:show_gameover_coro(parts)
+   local parts = self:make_fragments()
    local adview = self:make_adview()
    local back_clicked = false
 
@@ -824,8 +823,8 @@ local function make_main_coro(stat)
                end
             else
                mission_cleared = 0
-               local parts = stat:terminate_game()
-               stat:show_gameover_coro(parts)
+               stat:terminate_game()
+               stat:show_gameover_coro()
             end
             stat:destroy_hud()
             if not cleared then break end
