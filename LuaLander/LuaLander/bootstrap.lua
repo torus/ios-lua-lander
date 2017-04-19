@@ -811,6 +811,7 @@ local function make_main_coro(stat)
          stat:title_screen_coro()
          while true do
             local cleared = stat:game_main_loop_coro(mission_cleared + 1)
+            local complete = false
             if cleared then
                mission_cleared = mission_cleared + 1
                if mission_cleared < (DEBUG_MODE and 3 or 10) then -- total number of missions
@@ -819,7 +820,7 @@ local function make_main_coro(stat)
                else
                   print("complete!")
                   stat:show_complete_coro()
-                  break
+                  complete = true
                end
             else
                mission_cleared = 0
@@ -827,7 +828,9 @@ local function make_main_coro(stat)
                stat:show_gameover_coro()
             end
             stat:destroy_hud()
-            if not cleared then break end
+            if not cleared or complete then
+               break            -- back to title
+            end
          end
       end
    end
