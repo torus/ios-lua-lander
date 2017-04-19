@@ -4,8 +4,10 @@ end})
 
 local Collision = {}
 local State = {}
+local Hud = {}
+
 local LOG_VERSION = "1.0"
-local DEBUG_MODE = false
+local DEBUG_MODE = true
 
 function Collision:type()
    return self.type
@@ -513,65 +515,85 @@ function State:show_gameover(back_clicked, parts)
    self:show_webview_hud("gameover", func)
 end
 
+function Hud:create(mission, webview)
+   local hud = {
+      mission = mission,
+      webview = webview
+   }
+   setmetatable(hud, {__index = Hud})
+   return hud
+end
+
+function Hud:dispatch(stat, url)
+   local mission = self.mission
+   local webview = self.webview
+
+   print("dispatch", url)
+
+   if url:match("^lualander:ready") then
+      webview("stringByEvaluatingJavaScriptFromString:",
+              string.format("set_display({mission:%d})", mission))
+      if DEBUG_MODE then
+         webview("stringByEvaluatingJavaScriptFromString:", "show_debug()")
+      end
+   end
+   if url:match("^lualander:debug_stay") then
+      local body = stat.shipbody
+      if body then
+         local center = body:GetWorldCenter()
+         local imp = body:GetLinearVelocity()
+         imp.x = imp.x * -body:GetMass()
+         imp.y = imp.y * -body:GetMass()
+         print("debug_stay:", imp.x, imp.y)
+         body:ApplyLinearImpulse(imp, center)
+      end
+   end
+   if url:match("^lualander:debug_up") then
+      local body = stat.shipbody
+      if body then
+         local center = body:GetWorldCenter()
+         body:ApplyLinearImpulse(b2.b2Vec2(0, 100), center)
+      end
+   end
+   if url:match("^lualander:debug_down") then
+      local body = stat.shipbody
+      if body then
+         local center = body:GetWorldCenter()
+         body:ApplyLinearImpulse(b2.b2Vec2(0, -100), center)
+      end
+   end
+   if url:match("^lualander:debug_left") then
+      local body = stat.shipbody
+      if body then
+         local center = body:GetWorldCenter()
+         body:ApplyLinearImpulse(b2.b2Vec2(-100, 0), center)
+      end
+   end
+   if url:match("^lualander:debug_right") then
+      local body = stat.shipbody
+      if body then
+         local center = body:GetWorldCenter()
+         body:ApplyLinearImpulse(b2.b2Vec2(100, 0), center)
+      end
+   end
+   if url:match("^lualander:debug_done") then
+      stat.successfully_landed = true
+   end
+end
+
 function State:show_hud(mission)
    print("show_hud")
-
+   local hud
    local webview
+
    webview = self:show_webview_hud(
       "hud",
       function (url, wb)
-         if url:match("^lualander:ready") then
-            webview("stringByEvaluatingJavaScriptFromString:",
-                    string.format("set_display({mission:%d})", mission))
-            if DEBUG_MODE then
-               webview("stringByEvaluatingJavaScriptFromString:", "show_debug()")
-            end
-         end
-         if url:match("^lualander:debug_stay") then
-            local body = self.shipbody
-            if body then
-               local center = body:GetWorldCenter()
-               local imp = body:GetLinearVelocity()
-               imp.x = imp.x * -body:GetMass()
-               imp.y = imp.y * -body:GetMass()
-               print("debug_stay:", imp.x, imp.y)
-               body:ApplyLinearImpulse(imp, center)
-            end
-         end
-         if url:match("^lualander:debug_up") then
-            local body = self.shipbody
-            if body then
-               local center = body:GetWorldCenter()
-               body:ApplyLinearImpulse(b2.b2Vec2(0, 100), center)
-            end
-         end
-         if url:match("^lualander:debug_down") then
-            local body = self.shipbody
-            if body then
-               local center = body:GetWorldCenter()
-               body:ApplyLinearImpulse(b2.b2Vec2(0, -100), center)
-            end
-         end
-         if url:match("^lualander:debug_left") then
-            local body = self.shipbody
-            if body then
-               local center = body:GetWorldCenter()
-               body:ApplyLinearImpulse(b2.b2Vec2(-100, 0), center)
-            end
-         end
-         if url:match("^lualander:debug_right") then
-            local body = self.shipbody
-            if body then
-               local center = body:GetWorldCenter()
-               body:ApplyLinearImpulse(b2.b2Vec2(100, 0), center)
-            end
-         end
-         if url:match("^lualander:debug_done") then
-            self.successfully_landed = true
-         end
+         hud:dispatch(self, url)
          return true
       end
    )
+   hud = Hud:create(mission, webview)
 
    return webview
 end
