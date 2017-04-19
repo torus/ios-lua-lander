@@ -413,9 +413,6 @@ function State:on_collision_detected(pos)
    return parts
 end
 
-local function update_explosion_coro(world, prev_time, parts)
-end
-
 function State:update_explosion_coro(parts)
    local elapsed, accx, accy, accz = coroutine.yield()
    self.world:Step(elapsed - self.prev_time, 10, 8)
