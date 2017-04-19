@@ -6,7 +6,7 @@
 <body style="font-family: Avenir">
 <table style="margin: 20px 0px auto auto; text-align: right">
   <tbody>
-    <tr><td>MISSION</td><td width="70px">#<span id="mission">9</span></td></tr>
+    <tr><td>MISSION</td><td width="70px">#<span id="level">9</span></td></tr>
     <tr><td>VELOCITY</td><td><span id="velocity">99.9</span></td></tr>
     <tr><td>FUEL</td><td><span id="fuel">99.9</span></td></tr>
   </tbody>
@@ -20,16 +20,16 @@
 </table>
 
 <script type="text/javascript">
-    var mission = 0
+var level = 0
 function set_display(data) {
-    if (data.mission != null) {
-        document.getElementById("mission").innerText = data.mission
-        mission = data.mission
+    if (data.level != null) {
+        document.getElementById("level").innerText = data.level
+        level = data.level
     }
     if (data.velocity != null) document.getElementById("velocity").innerText = data.velocity
     if (data.fuel != null) document.getElementById("fuel").innerText = data.fuel
 }
-function show_mission() {
+function show_level() {
     var div = document.createElement("div")
     div.setAttribute("style", "margin-top: 20%;text-align: center; font-weight: normal;font-size: 34pt")
     document.innerText = "Start"

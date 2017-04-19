@@ -8,6 +8,7 @@ local Hud = {Message = {}}
 
 local LOG_VERSION = "1.0"
 local DEBUG_MODE = true
+local TOTAL_LEVELS = DEBUG_MODE and 3 or 10
 
 function Collision:type()
    return self.type
@@ -107,12 +108,12 @@ local function make_terrain_from_height_map(ctx, view, world, height)
    return terview
 end
 
-local function load_height_map(ctx, mission)
+local function load_height_map(ctx, level)
    local base_path = ctx:wrap(objc.class.NSBundle)("mainBundle")("resourcePath")
    local dirs = {"Documents", "levels"}
    local path
    for i, dir in ipairs(dirs) do
-      path = string.format("%s/%s/%03d.lua", base_path, dir, mission)
+      path = string.format("%s/%s/%03d.lua", base_path, dir, level)
       local fp = io.open(path)
       if fp then
          fp:close()
@@ -142,9 +143,9 @@ local function load_height_map(ctx, mission)
    return height_map
 end
 
-function State:make_terrain(mission)
+function State:make_terrain(level)
    local ctx, view, world = self.ctx, self.view, self.world
-   local height = load_height_map(ctx, mission)
+   local height = load_height_map(ctx, level)
 
    return height(ctx, view, world)
 end
@@ -326,10 +327,10 @@ function State:initialize()
    stat.screen_bounds = {0, 0, width, height}
 end
 
-function State:initialize_game(mission)
+function State:initialize_game(level)
    local stat = self
 
-   stat:analytics_log("start_" .. mission, {})
+   stat:analytics_log("start_" .. level, {})
 
    if stat.world then
       stat.world = nil
@@ -351,7 +352,7 @@ function State:initialize_game(mission)
    if self.terrain_view then
       self.terrain_view("removeFromSuperview")
    end
-   self.terrain_view = self:make_terrain(mission)
+   self.terrain_view = self:make_terrain(level)
 
    local screen_bounds = stat.screen_bounds
    local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
@@ -522,9 +523,9 @@ function State:show_gameover_coro()
    end
 end
 
-function Hud:create(mission, webview)
+function Hud:create(level, webview)
    local hud = {
-      mission = mission,
+      level = level,
       webview = webview
    }
    setmetatable(hud, {__index = Hud})
@@ -532,7 +533,7 @@ function Hud:create(mission, webview)
 end
 
 function Hud:dispatch(stat, url)
-   local mission = self.mission
+   local level = self.level
    local webview = self.webview
 
    local mesg = url:match("^lualander:(.*)$")
@@ -544,7 +545,7 @@ end
 
 function Hud.Message.ready(hud, stat)
    hud.webview("stringByEvaluatingJavaScriptFromString:",
-               string.format("set_display({mission:%d})", hud.mission))
+               string.format("set_display({level:%d})", hud.level))
    if DEBUG_MODE then
       hud.webview("stringByEvaluatingJavaScriptFromString:", "show_debug()")
    end
@@ -598,7 +599,7 @@ function Hud.Message.debug_done(hud, stat)
    stat.successfully_landed = true
 end
 
-function State:create_hud(mission)
+function State:create_hud(level)
    print("create_hud")
    local hud
    local webview
@@ -610,7 +611,7 @@ function State:create_hud(mission)
          return true
       end
    )
-   hud = Hud:create(mission, webview)
+   hud = Hud:create(level, webview)
    self.hud_view = webview
 end
 
@@ -699,9 +700,9 @@ function State:show_complete_coro()
    end
 end
 
-function State:game_main_loop_coro(mission)
-   self:initialize_game(mission)
-   self:create_hud(mission)
+function State:game_main_loop_coro(level)
+   self:initialize_game(level)
+   self:create_hud(level)
 
    local ctx, world, view, ship, shipbody
       = self.ctx, self.world, self.view, self.ship, self.shipbody
@@ -722,10 +723,10 @@ function State:game_main_loop_coro(mission)
       local pos = self.shipbody:GetPosition()
 
       if self.collision_detected then
-         self:analytics_log("fail_" .. mission, {fuel = fuel, x = pos.x, y = -pos.y})
+         self:analytics_log("fail_" .. level, {fuel = fuel, x = pos.x, y = -pos.y})
          return false
       elseif self.successfully_landed then
-         self:analytics_log("done_" .. mission, {fuel = fuel, x = pos.x, y = -pos.y})
+         self:analytics_log("done_" .. level, {fuel = fuel, x = pos.x, y = -pos.y})
          return true
       end
 
@@ -809,14 +810,14 @@ local function make_main_coro(stat)
       stat:initialize()
 
       while true do
-         local mission_cleared = 0
+         local levels_cleared = 0
          stat:title_screen_coro()
          while true do
-            local cleared = stat:game_main_loop_coro(mission_cleared + 1)
+            local success = stat:game_main_loop_coro(levels_cleared + 1)
             local complete = false
-            if cleared then
-               mission_cleared = mission_cleared + 1
-               if mission_cleared < (DEBUG_MODE and 3 or 10) then -- total number of missions
+            if success then
+               levels_cleared = levels_cleared + 1
+               if levels_cleared < TOTAL_LEVELS then
                   print("welldone!")
                   stat:show_welldone_coro()
                else
@@ -825,12 +826,12 @@ local function make_main_coro(stat)
                   complete = true
                end
             else
-               mission_cleared = 0
+               levels_cleared = 0
                stat:terminate_game()
                stat:show_gameover_coro()
             end
             stat:destroy_hud()
-            if not cleared or complete then
+            if not success or complete then
                break            -- back to title
             end
          end
