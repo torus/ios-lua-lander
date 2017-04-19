@@ -741,8 +741,8 @@ function State:game_main_loop_coro(level)
    local x, y, width, height = get_bounds(ctx, ship)
    local gamestat = GameState:create(self, level, width, height)
 
-   local collision = self.shipbody:GetUserData()
-   print("State:game_main_loop_coro()", collision.type)
+   -- local collision = self.shipbody:GetUserData()
+   -- print("State:game_main_loop_coro()", collision.type)
 
    gamestat.fuel = 99.9
 
