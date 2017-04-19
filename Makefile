@@ -3,7 +3,7 @@ IPA = $(PWD)/LuaLander.ipa
 TESTFLIGHT_RESULT = testflight_result.json
 
 DEVELOPER_NAME = iPhone Developer: Toru Hisai (DWNJXV72FX)
-PROVISIONING_PROFILE = wildercard.mobileprovision
+PROVISIONING_PROFILE = Wildcard_Dist.mobileprovision
 
 API_TOKEN = $(shell cat API_TOKEN)
 TEAM_TOKEN = $(shell cat TEAM_TOKEN)
