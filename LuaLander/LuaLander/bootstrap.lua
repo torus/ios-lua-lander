@@ -6,6 +6,7 @@ local Collision = {}
 local State = {}
 local Hud = {Message = {}}
 local GameState = {}
+local SpaceShip = {}
 
 local LOG_VERSION = "1.0"
 local DEBUG_MODE = true
@@ -232,10 +233,10 @@ local function make_spaceship(ctx, world)
    return shipview, shipbody, set_power
 end
 
-function State:set_contact_listner(world)
+function State:set_contact_listner()
    local listbl = {}
    local listener = b2.create_contact_listener(listbl)
-   world:SetContactListener(listener)
+   self.world:SetContactListener(listener)
    self.collision_detected = false
    self.listener = listener
    self.listbl = listbl
@@ -275,7 +276,7 @@ function State:set_contact_listner(world)
 
          if (cola and cola.type == "ship" and colb and colb.type == "platform"
              or cola and cola.type == "platform" and colb and colb.type == "ship") then
-               local v = stat.shipbody:GetLinearVelocity()
+               local v = stat.spaceship.shipbody:GetLinearVelocity()
                local vv = b2.b2Dot(v, v)
                if vv < 1 then
                   print("v^2:", vv)
@@ -328,58 +329,73 @@ function State:initialize()
    stat.screen_bounds = {0, 0, width, height}
 end
 
+function SpaceShip:create(stat)
+   local ship, shipbody, set_power = make_spaceship(stat.ctx, stat.world)
+   local ss = {
+      shipview = ship,
+      shipbody = shipbody,
+      set_power_func = set_power
+   }
+   setmetatable(ss, {__index = SpaceShip})
+   return ss
+end
+
+function SpaceShip:set_power(pow)
+   self.set_power_func(pow)
+end
+
 function State:initialize_game(level)
-   local stat = self
+   self:analytics_log("start_" .. level, {})
 
-   stat:analytics_log("start_" .. level, {})
-
-   if stat.world then
-      stat.world = nil
-      if stat.ship then
-         stat.ship("removeFromSuperview")
-         stat.ship = nil
+   if self.world then
+      self.world = nil
+      if self.ship then
+         self.ship("removeFromSuperview")
+         self.ship = nil
       end
 
       collectgarbage()
    end
 
-   local ctx = stat.ctx
-   local view = stat.view
+   local ctx = self.ctx
+   local view = self.view
    local world = make_world()
-   stat.world = world
-   local ship, shipbody, set_power = make_spaceship(ctx, world)
-   view("addSubview:", -ship)
+   self.world = world
+   -- local ship, shipbody, set_power = make_spaceship(ctx, world)
+   local spaceship = SpaceShip:create(self)
+   view("addSubview:", -spaceship.shipview)
 
    if self.terrain_view then
       self.terrain_view("removeFromSuperview")
    end
    self.terrain_view = self:make_terrain(level)
 
-   local screen_bounds = stat.screen_bounds
+   local screen_bounds = self.screen_bounds
    local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
 
-   stat.ship = ship
-   stat.shipbody = shipbody
-   stat.set_power = set_power
-   stat.ground_bodies = groundbodies
+   -- self.ship = ship
+   -- self.shipbody = shipbody
+   self.spaceship = spaceship
+   -- self.set_power = set_power
+   self.ground_bodies = groundbodies
 
-   self.shipbody:SetTransform(b2.b2Vec2(7, -10), 0)
-   self.shipbody:SetLinearVelocity(b2.b2Vec2(500, 0))
+   spaceship.shipbody:SetTransform(b2.b2Vec2(7, -10), 0)
+   spaceship.shipbody:SetLinearVelocity(b2.b2Vec2(500, 0))
 
    self.collision_detected = false
    self.successfully_landed = false
 
-   stat:set_contact_listner(world)
+   self:set_contact_listner()
 end
 
 function State:terminate_game()
    print("terminate_game")
-   self.ship("setHidden:", true)
-   self.shipbody:SetActive(false)
+   self.spaceship.shipview("setHidden:", true)
+   self.spaceship.shipbody:SetActive(false)
 end
 
 function State:make_fragments()
-   local pos = self.shipbody:GetPosition()
+   local pos = self.spaceship.shipbody:GetPosition()
    local ctx, world, view = self.ctx, self.world, self.view
 
    local parts = {}
@@ -435,9 +451,9 @@ function State:update_explosion_coro(parts)
    self.prev_time = elapsed
 end
 
-function State:update_force(accx, accy, accz, fuel)
-   local shipbody, set_power = self.shipbody, self.set_power
-
+function GameState:update_force(stat, accx, accy, accz)
+   -- local shipbody, set_power = stat.spaceship.shipbody, stat.set_power
+   local shipbody = stat.spaceship.shipbody
    local rot = shipbody:GetAngle()
 
    if accx ~= 0 and accy ~= 0 then
@@ -448,7 +464,7 @@ function State:update_force(accx, accy, accz, fuel)
       shipbody:ApplyTorque(tor * 10000)
    end
 
-   if accz ~= 0 and fuel > 0 then
+   if accz ~= 0 and self.fuel > 0 then
       local a = accx * accx + accy * accy
       if a > 0 then
          local tan = accz / math.sqrt(a)
@@ -458,20 +474,19 @@ function State:update_force(accx, accy, accz, fuel)
             local cos = math.cos(rot + math.pi / 2)
             local pow = math.min(1, ang / (math.pi / 4))
 
-            if pow > fuel then pow = fuel end
+            if pow > self.fuel then pow = self.fuel end
             shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 200,
                                                   pow * sin * 200))
-            set_power(pow)
-            fuel = fuel - (pow * 0.1)
+            stat.spaceship:set_power(pow)
+            self.fuel = self.fuel - (pow * 0.1)
          end
       else
-         set_power(0)
+         stat.spaceship:set_power(0)
       end
    end
 
    local av = shipbody:GetAngularVelocity()
    shipbody:ApplyTorque(-av * 10000)
-   return fuel
 end
 
 function State:make_adview()
@@ -526,7 +541,7 @@ end
 
 function GameState:create(stat, level)
    stat:initialize_game(level)
-   local x, y, width, height = get_bounds(stat.ctx, stat.ship)
+   local x, y, width, height = get_bounds(stat.ctx, stat.spaceship.shipview)
 
    local gstat = {
       stat = stat,
@@ -571,7 +586,7 @@ function Hud.Message.ready(hud, stat)
 end
 
 function Hud.Message.debug_stay(hud, stat)
-   local body = stat.shipbody
+   local body = stat.spaceship.shipbody
    if body then
       local center = body:GetWorldCenter()
       local imp = body:GetLinearVelocity()
@@ -583,7 +598,7 @@ function Hud.Message.debug_stay(hud, stat)
 end
 
 function Hud.Message.debug_up(hud, stat)
-   local body = stat.shipbody
+   local body = stat.spaceship.shipbody
    if body then
       local center = body:GetWorldCenter()
       body:ApplyLinearImpulse(b2.b2Vec2(0, 100), center)
@@ -591,7 +606,7 @@ function Hud.Message.debug_up(hud, stat)
 end
 
 function Hud.Message.debug_down(hud, stat)
-   local body = stat.shipbody
+   local body = stat.spaceship.shipbody
    if body then
       local center = body:GetWorldCenter()
       body:ApplyLinearImpulse(b2.b2Vec2(0, -100), center)
@@ -599,7 +614,7 @@ function Hud.Message.debug_down(hud, stat)
 end
 
 function Hud.Message.debug_left(hud, stat)
-   local body = stat.shipbody
+   local body = stat.spaceship.shipbody
    if body then
       local center = body:GetWorldCenter()
       body:ApplyLinearImpulse(b2.b2Vec2(-100, 0), center)
@@ -607,7 +622,7 @@ function Hud.Message.debug_left(hud, stat)
 end
 
 function Hud.Message.debug_right(hud, stat)
-   local body = stat.shipbody
+   local body = stat.spaceship.shipbody
    if body then
       local center = body:GetWorldCenter()
       body:ApplyLinearImpulse(b2.b2Vec2(100, 0), center)
@@ -720,18 +735,19 @@ function State:show_complete_coro()
 end
 
 function GameState:render()
-   local pos = self.stat.shipbody:GetPosition()
-   local rot = self.stat.shipbody:GetAngle()
+   local pos = self.stat.spaceship.shipbody:GetPosition()
+   local rot = self.stat.spaceship.shipbody:GetAngle()
+   local shipview = self.stat.spaceship.shipview
 
-   self.stat.ship("setTransform:",
-                  cg.CGAffineTransformWrap(
-                     cg.CGAffineTransformConcat(
-                        cg.CGAffineTransformMakeRotation(-rot),
-                        cg.CGAffineTransformMakeTranslation(
-                           pos.x * 10 - self.ship_width / 2,
-                              - pos.y * 10 - self.ship_height / 2))))
+   shipview("setTransform:",
+            cg.CGAffineTransformWrap(
+               cg.CGAffineTransformConcat(
+                  cg.CGAffineTransformMakeRotation(-rot),
+                  cg.CGAffineTransformMakeTranslation(
+                     pos.x * 10 - self.ship_width / 2,
+                        - pos.y * 10 - self.ship_height / 2))))
 
-   local vel = self.stat.shipbody:GetLinearVelocity()
+   local vel = self.stat.spaceship.shipbody:GetLinearVelocity()
    local vel_abs = vel:Length()
    self.stat.hud_view("stringByEvaluatingJavaScriptFromString:",
                       string.format("set_display({velocity:%.3f, fuel:%.1f})",
@@ -747,7 +763,7 @@ function State:game_main_loop_coro(level)
 
       self.world:Step(elapsed - self.prev_time, 10, 8)
 
-      local pos = self.shipbody:GetPosition()
+      local pos = self.spaceship.shipbody:GetPosition()
 
       if self.collision_detected then
          self:analytics_log("fail_" .. level, {fuel = gamestat.fuel, x = pos.x, y = -pos.y})
@@ -757,7 +773,7 @@ function State:game_main_loop_coro(level)
          return true
       end
 
-      gamestat.fuel = self:update_force(accx, accy, accz, gamestat.fuel)
+      gamestat:update_force(self, accx, accy, accz)
       gamestat:render()
 
       self.prev_time = elapsed
