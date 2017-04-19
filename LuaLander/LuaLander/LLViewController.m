@@ -38,10 +38,10 @@
     self->gameState = luaL_ref(L, LUA_REGISTRYINDEX);
     
     motionManager = [[CMMotionManager alloc] init];
-    motionManager.accelerometerUpdateInterval = 1.0 / 60.0;
+    motionManager.accelerometerUpdateInterval = 1.0 / 24.0;
     [motionManager startAccelerometerUpdates];
 
-    [NSTimer scheduledTimerWithTimeInterval:1.0/60 target:self selector:@selector(onInterval:) userInfo:nil repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval:1.0/24 target:self selector:@selector(onInterval:) userInfo:nil repeats:YES];
 }
 
 - (void)didReceiveMemoryWarning
