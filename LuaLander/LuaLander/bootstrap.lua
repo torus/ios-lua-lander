@@ -677,7 +677,6 @@ function State:show_complete(back_clicked)
 end
 
 function State:game_main_loop_coro(mission)
-   local stat = self
    local ctx, world, view, ship, shipbody
       = self.ctx, self.world, self.view, self.ship, self.shipbody
 
@@ -692,13 +691,13 @@ function State:game_main_loop_coro(mission)
       local elapsed, accx, accy, accz = coroutine.yield()
       -- print(accx, accy, accz)
 
-      world:Step(elapsed - stat.prev_time, 10, 8)
+      world:Step(elapsed - self.prev_time, 10, 8)
 
-      if stat.collision_detected then
-         stat:analytics_log("fail_" .. mission, {fuel = fuel})
+      if self.collision_detected then
+         self:analytics_log("fail_" .. mission, {fuel = fuel})
          return false
-      elseif stat.successfully_landed then
-         stat:analytics_log("done_" .. mission, {fuel = fuel})
+      elseif self.successfully_landed then
+         self:analytics_log("done_" .. mission, {fuel = fuel})
          return true
       end
 
@@ -719,7 +718,7 @@ function State:game_main_loop_coro(mission)
       self.hud_view("stringByEvaluatingJavaScriptFromString:",
                     string.format("set_display({velocity:%.3f, fuel:%.1f})", vel_abs, fuel))
 
-      stat.prev_time = elapsed
+      self.prev_time = elapsed
    end
 end
 
