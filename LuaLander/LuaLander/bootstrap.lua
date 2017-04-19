@@ -370,14 +370,17 @@ function State:initialize_game(mission)
    stat:set_contact_listner(world)
 end
 
-function State:on_collision_detected(pos)
-   local pos = self.shipbody:GetPosition()
-   local ctx, world, view, ship, shipbody
-      = self.ctx, self.world, self.view, self.ship, self.shipbody
-
+function State:terminate_game()
    print("collision_detected")
-   ship("setHidden:", true)
-   shipbody:SetActive(false)
+   self.ship("setHidden:", true)
+   self.shipbody:SetActive(false)
+
+   return self:make_fragments()
+end
+
+function State:make_fragments()
+   local pos = self.shipbody:GetPosition()
+   local ctx, world, view = self.ctx, self.world, self.view
 
    local parts = {}
    for i = 1, 50 do
@@ -484,8 +487,9 @@ function State:make_adview()
    return adview
 end
 
-function State:show_gameover(back_clicked, parts)
+function State:show_gameover_coro(parts)
    local adview = self:make_adview()
+   local back_clicked = false
 
    local function func(url, webview)
       print("clicked", url)
@@ -496,7 +500,7 @@ function State:show_gameover(back_clicked, parts)
             self.world:DestroyBody(part.body)
             part.view("removeFromSuperview")
          end
-         back_clicked[1] = true
+         back_clicked = true
       end
 
       if url:match("^lualander:back") then
@@ -513,6 +517,10 @@ function State:show_gameover(back_clicked, parts)
    end
 
    self:show_webview_hud("gameover", func)
+
+   while not back_clicked do
+      self:update_explosion_coro(parts)
+   end
 end
 
 function Hud:create(mission, webview)
@@ -804,7 +812,6 @@ local function make_main_coro(stat)
          stat:title_screen_coro()
          while true do
             local cleared = stat:game_main_loop_coro(mission_cleared + 1)
-            local back_clicked = {false}
             if cleared then
                mission_cleared = mission_cleared + 1
                if mission_cleared < (DEBUG_MODE and 3 or 10) then -- total number of missions
@@ -817,16 +824,8 @@ local function make_main_coro(stat)
                end
             else
                mission_cleared = 0
-               local parts = stat:on_collision_detected()
-               stat:show_gameover(back_clicked, parts)
-
-               while true do
-                  if back_clicked[1] then
-                     break
-                  else
-                     stat:update_explosion_coro(parts)
-                  end
-               end
+               local parts = stat:terminate_game()
+               stat:show_gameover_coro(parts)
             end
             stat:destroy_hud()
             if not cleared then break end
