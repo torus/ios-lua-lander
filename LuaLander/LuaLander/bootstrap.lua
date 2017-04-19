@@ -524,12 +524,15 @@ function State:show_gameover_coro()
    end
 end
 
-function GameState:create(stat, level, ship_width, ship_height)
+function GameState:create(stat, level)
+   stat:initialize_game(level)
+   local x, y, width, height = get_bounds(stat.ctx, stat.ship)
+
    local gstat = {
       stat = stat,
       level = level,
-      ship_width = ship_width,
-      ship_height = ship_height
+      ship_width = width,
+      ship_height = height
    }
    setmetatable(gstat, {__index = GameState})
    return gstat
@@ -732,11 +735,9 @@ function GameState:render()
 end
 
 function State:game_main_loop_coro(level)
-   self:initialize_game(level)
-   self:create_hud(level)
+   local gamestat = GameState:create(self, level)
 
-   local x, y, width, height = get_bounds(self.ctx, self.ship)
-   local gamestat = GameState:create(self, level, width, height)
+   self:create_hud(level)
 
    gamestat.fuel = 99.9
 
