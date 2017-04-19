@@ -641,13 +641,13 @@ end
 
 function State:show_welldone_coro()
    print("State:show_welldone")
-   local back_clicked = {}
+   local back_clicked = false
 
    local function func(url, webview)
       print("clicked", url)
       if url:match("^lualander:back") then
          self.ctx:wrap(webview)("removeFromSuperview")
-         back_clicked[1] = true
+         back_clicked = true
          return false
       else
          return true
@@ -655,24 +655,22 @@ function State:show_welldone_coro()
    end
    self:show_webview_hud("welldone", func)
 
-   while true do
-      if back_clicked[1] then
-         break
-      else
-         coroutine.yield()
-      end
+   while not back_clicked do
+      coroutine.yield()
    end
 end
 
-function State:show_complete(back_clicked)
+function State:show_complete_coro()
    print("State:show_complete")
    local adview = self:make_adview()
+
+   local back_clicked = false
 
    local function func(url, webview)
       print("clicked", url)
       local function goback()
          self.ctx:wrap(webview)("removeFromSuperview")
-         back_clicked[1] = true
+         back_clicked = true
       end
 
       if url:match("^lualander:back") then
@@ -688,6 +686,10 @@ function State:show_complete(back_clicked)
       end
    end
    self:show_webview_hud("complete", func)
+
+   while not back_clicked do
+      coroutine.yield()
+   end
 end
 
 function State:game_main_loop_coro(mission)
@@ -810,14 +812,7 @@ local function make_main_coro(stat)
                   stat:show_welldone_coro()
                else
                   print("complete!")
-                  stat:show_complete(back_clicked)
-                  while true do
-                     if back_clicked[1] then
-                        break
-                     else
-                        coroutine.yield()
-                     end
-                  end
+                  stat:show_complete_coro()
                   break
                end
             else
