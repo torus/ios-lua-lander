@@ -735,14 +735,8 @@ function State:game_main_loop_coro(level)
    self:initialize_game(level)
    self:create_hud(level)
 
-   local ctx, world, view, ship, shipbody
-      = self.ctx, self.world, self.view, self.ship, self.shipbody
-
-   local x, y, width, height = get_bounds(ctx, ship)
+   local x, y, width, height = get_bounds(self.ctx, self.ship)
    local gamestat = GameState:create(self, level, width, height)
-
-   -- local collision = self.shipbody:GetUserData()
-   -- print("State:game_main_loop_coro()", collision.type)
 
    gamestat.fuel = 99.9
 
@@ -750,7 +744,7 @@ function State:game_main_loop_coro(level)
       local elapsed, accx, accy, accz = coroutine.yield()
       -- print(accx, accy, accz)
 
-      world:Step(elapsed - self.prev_time, 10, 8)
+      self.world:Step(elapsed - self.prev_time, 10, 8)
 
       local pos = self.shipbody:GetPosition()
 
