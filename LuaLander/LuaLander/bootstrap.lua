@@ -372,7 +372,7 @@ function State:initialize_game(level)
 end
 
 function State:terminate_game()
-   print("collision_detected")
+   print("terminate_game")
    self.ship("setHidden:", true)
    self.shipbody:SetActive(false)
 end
@@ -825,6 +825,7 @@ local function make_main_coro(stat)
                   stat:show_complete_coro()
                   complete = true
                end
+               stat:terminate_game()
             else
                levels_cleared = 0
                stat:terminate_game()
