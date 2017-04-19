@@ -485,7 +485,7 @@ function State:make_adview()
    return adview
 end
 
-function State:show_gameover_coro(parts)
+function State:show_gameover_coro()
    local parts = self:make_fragments()
    local adview = self:make_adview()
    local back_clicked = false
@@ -719,11 +719,13 @@ function State:game_main_loop_coro(mission)
 
       world:Step(elapsed - self.prev_time, 10, 8)
 
+      local pos = self.shipbody:GetPosition()
+
       if self.collision_detected then
-         self:analytics_log("fail_" .. mission, {fuel = fuel})
+         self:analytics_log("fail_" .. mission, {fuel = fuel, x = pos.x, y = -pos.y})
          return false
       elseif self.successfully_landed then
-         self:analytics_log("done_" .. mission, {fuel = fuel})
+         self:analytics_log("done_" .. mission, {fuel = fuel, x = pos.x, y = -pos.y})
          return true
       end
 
