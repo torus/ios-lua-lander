@@ -361,7 +361,6 @@ function State:initialize_game(level)
    local view = self.view
    local world = make_world()
    self.world = world
-   -- local ship, shipbody, set_power = make_spaceship(ctx, world)
    local spaceship = SpaceShip:create(self)
    view("addSubview:", -spaceship.shipview)
 
@@ -373,10 +372,7 @@ function State:initialize_game(level)
    local screen_bounds = self.screen_bounds
    local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
 
-   -- self.ship = ship
-   -- self.shipbody = shipbody
    self.spaceship = spaceship
-   -- self.set_power = set_power
    self.ground_bodies = groundbodies
 
    spaceship.shipbody:SetTransform(b2.b2Vec2(7, -10), 0)
@@ -452,7 +448,6 @@ function State:update_explosion_coro(parts)
 end
 
 function GameState:update_force(stat, accx, accy, accz)
-   -- local shipbody, set_power = stat.spaceship.shipbody, stat.set_power
    local shipbody = stat.spaceship.shipbody
    local rot = shipbody:GetAngle()
 
