@@ -12,12 +12,12 @@
 		9C110A6B17B63CD000576079 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C110A6A17B63CD000576079 /* QuartzCore.framework */; };
 		9C110A6D17B6A66800576079 /* spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C110A6C17B6A66800576079 /* spaceship.png */; };
 		9C37606F1EA8C82F008B374E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C37606E1EA8C82F008B374E /* Images.xcassets */; };
-		9C3760711EA8C8E1008B374E /* splashscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 9C3760701EA8C8E1008B374E /* splashscreen.png */; };
 		9C51A28617BBB8D7007CE54C /* CoreGraphics_wrap.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28517BBB8D7007CE54C /* CoreGraphics_wrap.m */; };
 		9C51A28917BD0153007CE54C /* LLTerrainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C51A28817BD0153007CE54C /* LLTerrainView.m */; };
 		9C51A28B17BF85F8007CE54C /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C51A28A17BF85F8007CE54C /* CoreMotion.framework */; };
 		9C525C3618CB40EC00C063DF /* holdlikethis.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9C525C3518CB40EC00C063DF /* holdlikethis.jpg */; };
 		9C6782C717DCC1BA0095C4B4 /* levels in Resources */ = {isa = PBXBuildFile; fileRef = 9C6782C617DCC1BA0095C4B4 /* levels */; };
+		9C6815731EAAC655001A0DE8 /* ready.html in Resources */ = {isa = PBXBuildFile; fileRef = 9C6815721EAAC655001A0DE8 /* ready.html */; };
 		9C7903E517D4C19500C0BFFD /* hud.html in Resources */ = {isa = PBXBuildFile; fileRef = 9C7903E417D4C19500C0BFFD /* hud.html */; };
 		9C83CFCF190419E600F22784 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C83CFCE190419E600F22784 /* SystemConfiguration.framework */; };
 		9C83CFD119041A0200F22784 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C83CFD019041A0200F22784 /* Security.framework */; };
@@ -36,9 +36,6 @@
 		9CF9661E17B135B700607D8B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9CF9661C17B135B700607D8B /* InfoPlist.strings */; };
 		9CF9662017B135B700607D8B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9661F17B135B700607D8B /* main.m */; };
 		9CF9662417B135B700607D8B /* LLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9662317B135B700607D8B /* LLAppDelegate.m */; };
-		9CF9662617B135B700607D8B /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CF9662517B135B700607D8B /* Default.png */; };
-		9CF9662817B135B700607D8B /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CF9662717B135B700607D8B /* Default@2x.png */; };
-		9CF9662A17B135B700607D8B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CF9662917B135B700607D8B /* Default-568h@2x.png */; };
 		9CF9662D17B135B700607D8B /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CF9662B17B135B700607D8B /* MainStoryboard_iPhone.storyboard */; };
 		9CF9663017B135B700607D8B /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CF9662E17B135B700607D8B /* MainStoryboard_iPad.storyboard */; };
 		9CF9663317B135B700607D8B /* LLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF9663217B135B700607D8B /* LLViewController.m */; };
@@ -231,13 +228,13 @@
 		9C110A6A17B63CD000576079 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		9C110A6C17B6A66800576079 /* spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spaceship.png; path = ../../images/spaceship.png; sourceTree = "<group>"; };
 		9C37606E1EA8C82F008B374E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		9C3760701EA8C8E1008B374E /* splashscreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = splashscreen.png; path = ../../images/splashscreen.png; sourceTree = "<group>"; };
 		9C51A28517BBB8D7007CE54C /* CoreGraphics_wrap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreGraphics_wrap.m; path = ../../swig/CoreGraphics_wrap.m; sourceTree = "<group>"; };
 		9C51A28717BD0153007CE54C /* LLTerrainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLTerrainView.h; sourceTree = "<group>"; };
 		9C51A28817BD0153007CE54C /* LLTerrainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLTerrainView.m; sourceTree = "<group>"; };
 		9C51A28A17BF85F8007CE54C /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		9C525C3518CB40EC00C063DF /* holdlikethis.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = holdlikethis.jpg; path = ../../webview/holdlikethis.jpg; sourceTree = "<group>"; };
 		9C6782C617DCC1BA0095C4B4 /* levels */ = {isa = PBXFileReference; lastKnownFileType = folder; name = levels; path = ../../levels; sourceTree = "<group>"; };
+		9C6815721EAAC655001A0DE8 /* ready.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = ready.html; path = ../../webview/ready.html; sourceTree = "<group>"; };
 		9C7903E417D4C19500C0BFFD /* hud.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = hud.html; path = ../../webview/hud.html; sourceTree = "<group>"; };
 		9C83CFCE190419E600F22784 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9C83CFD019041A0200F22784 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -262,9 +259,6 @@
 		9CF9662117B135B700607D8B /* LuaLander-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LuaLander-Prefix.pch"; sourceTree = "<group>"; };
 		9CF9662217B135B700607D8B /* LLAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LLAppDelegate.h; sourceTree = "<group>"; };
 		9CF9662317B135B700607D8B /* LLAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LLAppDelegate.m; sourceTree = "<group>"; };
-		9CF9662517B135B700607D8B /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		9CF9662717B135B700607D8B /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		9CF9662917B135B700607D8B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		9CF9662C17B135B700607D8B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		9CF9662F17B135B700607D8B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		9CF9663117B135B700607D8B /* LLViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LLViewController.h; sourceTree = "<group>"; };
@@ -463,6 +457,7 @@
 		9C9B326617C7AFCA00ED256D /* WebView */ = {
 			isa = PBXGroup;
 			children = (
+				9C6815721EAAC655001A0DE8 /* ready.html */,
 				9CA0F1231EA692CF0012FF46 /* complete.html */,
 				9C525C3518CB40EC00C063DF /* holdlikethis.jpg */,
 				9C7903E417D4C19500C0BFFD /* hud.html */,
@@ -512,7 +507,6 @@
 		9CF9661917B135B700607D8B /* LuaLander */ = {
 			isa = PBXGroup;
 			children = (
-				9C3760701EA8C8E1008B374E /* splashscreen.png */,
 				9CA0F1211EA64EAB0012FF46 /* GoogleService-Info.plist */,
 				9C6782C617DCC1BA0095C4B4 /* levels */,
 				9C9B326617C7AFCA00ED256D /* WebView */,
@@ -549,9 +543,6 @@
 				9CF9661C17B135B700607D8B /* InfoPlist.strings */,
 				9CF9661F17B135B700607D8B /* main.m */,
 				9CF9662117B135B700607D8B /* LuaLander-Prefix.pch */,
-				9CF9662517B135B700607D8B /* Default.png */,
-				9CF9662717B135B700607D8B /* Default@2x.png */,
-				9CF9662917B135B700607D8B /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -919,15 +910,12 @@
 				9CF9661E17B135B700607D8B /* InfoPlist.strings in Resources */,
 				9C9B326B17C7AFF600ED256D /* title.html in Resources */,
 				9C9B326C17C7AFF600ED256D /* welldone.html in Resources */,
+				9C6815731EAAC655001A0DE8 /* ready.html in Resources */,
 				9C37606F1EA8C82F008B374E /* Images.xcassets in Resources */,
 				9CA0F1221EA64EAB0012FF46 /* GoogleService-Info.plist in Resources */,
-				9CF9662617B135B700607D8B /* Default.png in Resources */,
 				9C6782C717DCC1BA0095C4B4 /* levels in Resources */,
 				9C7903E517D4C19500C0BFFD /* hud.html in Resources */,
 				9C525C3618CB40EC00C063DF /* holdlikethis.jpg in Resources */,
-				9CF9662817B135B700607D8B /* Default@2x.png in Resources */,
-				9CF9662A17B135B700607D8B /* Default-568h@2x.png in Resources */,
-				9C3760711EA8C8E1008B374E /* splashscreen.png in Resources */,
 				9CD0346517C0BA7F000C588A /* fire.png in Resources */,
 				9CF9662D17B135B700607D8B /* MainStoryboard_iPhone.storyboard in Resources */,
 				9CF9663017B135B700607D8B /* MainStoryboard_iPad.storyboard in Resources */,
@@ -1372,7 +1360,6 @@
 			baseConfigurationReference = E3A0324C65ECE0986CE1CC8D /* Pods-LuaLander.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = BH53U2474Y;
@@ -1389,7 +1376,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "ee104c1c-9ba5-4294-8a78-c6e9b3acbc76";
 				PROVISIONING_PROFILE_SPECIFIER = "Wildcard Dev";
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1399,7 +1386,6 @@
 			baseConfigurationReference = 2A99F772E6285EC14B368481 /* Pods-LuaLander.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = BH53U2474Y;
@@ -1416,7 +1402,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "f7d7c70c-9829-4199-a3ac-874b2905bf77";
 				PROVISIONING_PROFILE_SPECIFIER = "Wildcard Dist";
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
