@@ -362,6 +362,7 @@ function State:initialize_game(level)
    local world = make_world()
    self.world = world
    local spaceship = SpaceShip:create(self)
+   spaceship.shipview("setHidden:", true)
    view("addSubview:", -spaceship.shipview)
 
    if self.terrain_view then
@@ -546,8 +547,6 @@ function GameState:create(stat, level)
       fuel = 99.9
    }
    setmetatable(gstat, {__index = GameState})
-
-   stat:create_hud(level)
 
    return gstat
 end
@@ -751,6 +750,27 @@ end
 
 function State:game_main_loop_coro(level)
    local gamestat = GameState:create(self, level)
+   self:create_hud(level)
+
+   local clicked = false
+   local function func(url, webview)
+      print("clicked", url)
+      if url:match("^lualander:start") then
+         self.ctx:wrap(webview)("removeFromSuperview")
+         clicked = true
+         return false
+      else
+         return true
+      end
+   end
+   self:show_webview_hud("ready", func)
+
+   self.spaceship.shipview("setHidden:", false)
+   gamestat:render()
+
+   while not clicked do
+      coroutine.yield()
+   end
 
    while true do
       local elapsed, accx, accy, accz = coroutine.yield()
