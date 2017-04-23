@@ -9,8 +9,9 @@ local GameState = {}
 local SpaceShip = {}
 
 local LOG_VERSION = "1.0"
-local DEBUG_MODE = false
-local TOTAL_LEVELS = DEBUG_MODE and 3 or 10
+local DEBUG_MODE = true
+-- local TOTAL_LEVELS = DEBUG_MODE and 3 or 10
+local TOTAL_LEVELS = 10
 
 function Collision:type()
    return self.type

@@ -1,13 +1,17 @@
 local function make_height_map(mission)
    math.randomseed(mission)
-   local prev_incline = math.random(3) - 2
+   local prev_incline = (math.random(3) - 2) * math.log(mission + 1) * 0.3
    local height = {}
-   local prev_height = math.random(10) + 1
+   local prev_height = math.random(mission) + 1
    local max_height = -100
    local min_height = 100
    for i = 1, 17 do
-      local inc = prev_incline + math.random(3) - 2
-      local h = math.max(1, math.min(prev_height + inc, 20))
+      local inc = (prev_incline + math.random(3) - 2) * math.log(mission + 1) * 0.3
+      if prev_incline * inc < 0 then
+         inc = 0
+      end
+      local h = prev_height + inc
+      -- local h = math.max(1, math.min(prev_height + inc, 20))
       prev_incline = h - prev_height
       prev_height = h
       height[i] = h
@@ -21,7 +25,7 @@ local function make_height_map(mission)
    local height_offset = - (min_height - 1)
 
    for i = 1, 17 do
-      height[i] = height[i] + height_offset
+      height[i] = math.floor(height[i] + height_offset)
    end
 
    return height
