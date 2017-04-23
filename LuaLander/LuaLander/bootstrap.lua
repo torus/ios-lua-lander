@@ -503,6 +503,7 @@ function State:show_gameover_coro()
    local parts = self:make_fragments()
    local adview = self:make_adview()
    local back_clicked = false
+   local continue = false
 
    local function func(url, webview)
       print("clicked", url)
@@ -522,6 +523,7 @@ function State:show_gameover_coro()
       elseif url:match("^lualander:watchad") then
          self:analytics_log("ad_fail", {})
          adview("presentFromRootViewController:", self.view_controller)
+         continue = true
          goback()
          return false
       else
@@ -534,6 +536,8 @@ function State:show_gameover_coro()
    while not back_clicked do
       self:update_explosion_coro(parts)
    end
+
+   return continue
 end
 
 function GameState:create(stat, level)
@@ -860,6 +864,7 @@ local function make_main_coro(stat)
          while true do
             local success = stat:game_main_loop_coro(levels_cleared + 1)
             local complete = false
+            local continue = false
             if success then
                levels_cleared = levels_cleared + 1
                if levels_cleared < TOTAL_LEVELS then
@@ -872,12 +877,11 @@ local function make_main_coro(stat)
                end
                stat:terminate_game()
             else
-               levels_cleared = 0
                stat:terminate_game()
-               stat:show_gameover_coro()
+               continue = stat:show_gameover_coro()
             end
             stat:destroy_hud()
-            if not success or complete then
+            if not (success or continue) or complete then
                break            -- back to title
             end
          end
