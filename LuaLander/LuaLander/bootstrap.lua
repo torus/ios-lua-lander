@@ -377,7 +377,7 @@ function State:initialize_game(level)
    self.ground_bodies = groundbodies
 
    spaceship.shipbody:SetTransform(b2.b2Vec2(7, -10), 0)
-   spaceship.shipbody:SetLinearVelocity(b2.b2Vec2(500, 0))
+   spaceship.shipbody:SetLinearVelocity(b2.b2Vec2(5, 0))
 
    self.collision_detected = false
    self.successfully_landed = false
@@ -768,12 +768,14 @@ function State:game_main_loop_coro(level)
    self.spaceship.shipview("setHidden:", false)
    gamestat:render()
 
+   local elapsed, accx, accy, accz
    while not clicked do
-      coroutine.yield()
+      elapsed, accx, accy, accz = coroutine.yield()
    end
 
    while true do
-      local elapsed, accx, accy, accz = coroutine.yield()
+      self.prev_time = elapsed
+      elapsed, accx, accy, accz = coroutine.yield()
       -- print(accx, accy, accz)
 
       self.world:Step(elapsed - self.prev_time, 10, 8)
@@ -790,8 +792,6 @@ function State:game_main_loop_coro(level)
 
       gamestat:update_force(self, accx, accy, accz)
       gamestat:render()
-
-      self.prev_time = elapsed
    end
 end
 
