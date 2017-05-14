@@ -9,9 +9,9 @@ local GameState = {}
 local SpaceShip = {}
 
 local LOG_VERSION = "1.0"
-local DEBUG_MODE = false
--- local TOTAL_LEVELS = DEBUG_MODE and 3 or 10
-local TOTAL_LEVELS = 10
+local DEBUG_MODE = true
+local TOTAL_LEVELS = DEBUG_MODE and 3 or 10
+-- local TOTAL_LEVELS = 10
 
 function Collision:type()
    return self.type
@@ -146,8 +146,8 @@ local function load_height_map(ctx, level)
    return height_map
 end
 
-function State:make_terrain(level)
-   local ctx, view, world = self.ctx, self.view, self.world
+function GameState:make_terrain(level)
+   local ctx, view, world = self.stat.ctx, self.stat.view, self.world
    local height = load_height_map(ctx, level)
 
    return height(ctx, view, world)
@@ -234,7 +234,7 @@ local function make_spaceship(ctx, world)
    return shipview, shipbody, set_power
 end
 
-function State:set_contact_listner()
+function GameState:set_contact_listner()
    local listbl = {}
    local listener = b2.create_contact_listener(listbl)
    self.world:SetContactListener(listener)
@@ -330,8 +330,8 @@ function State:initialize()
    stat.screen_bounds = {0, 0, width, height}
 end
 
-function SpaceShip:create(stat)
-   local ship, shipbody, set_power = make_spaceship(stat.ctx, stat.world)
+function SpaceShip:create(ctx, world)
+   local ship, shipbody, set_power = make_spaceship(ctx, world)
    local ss = {
       shipview = ship,
       shipbody = shipbody,
@@ -345,8 +345,8 @@ function SpaceShip:set_power(pow)
    self.set_power_func(pow)
 end
 
-function State:initialize_game(level)
-   self:analytics_log("start_" .. level, {})
+function GameState:initialize(level)
+   self.stat:analytics_log("start_" .. level, {})
 
    if self.world then
       self.world = nil
@@ -358,24 +358,26 @@ function State:initialize_game(level)
       collectgarbage()
    end
 
-   local ctx = self.ctx
-   local view = self.view
    local world = make_world()
    self.world = world
-   local spaceship = SpaceShip:create(self)
+   local spaceship = SpaceShip:create(self.stat.ctx, world)
    spaceship.shipview("setHidden:", true)
-   view("addSubview:", -spaceship.shipview)
+   self.stat.view("addSubview:", -spaceship.shipview)
 
    if self.terrain_view then
       self.terrain_view("removeFromSuperview")
    end
    self.terrain_view = self:make_terrain(level)
 
-   local screen_bounds = self.screen_bounds
+   local screen_bounds = self.stat.screen_bounds
    local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
 
    self.spaceship = spaceship
    self.ground_bodies = groundbodies
+
+   local x, y, width, height = get_bounds(self.stat.ctx, spaceship.shipview)
+   self.ship_width = width
+   self.ship_height = height
 
    spaceship.shipbody:SetTransform(b2.b2Vec2(7, -10), 0)
    spaceship.shipbody:SetLinearVelocity(b2.b2Vec2(5, 0))
@@ -386,15 +388,15 @@ function State:initialize_game(level)
    self:set_contact_listner()
 end
 
-function State:terminate_game()
-   print("terminate_game")
+function GameState:hide_spaceship()
+   print("hide_spaceship")
    self.spaceship.shipview("setHidden:", true)
    self.spaceship.shipbody:SetActive(false)
 end
 
-function State:make_fragments()
+function GameState:make_fragments()
    local pos = self.spaceship.shipbody:GetPosition()
-   local ctx, world, view = self.ctx, self.world, self.view
+   local ctx, world, view = self.stat.ctx, self.world, self.stat.view
 
    local parts = {}
    for i = 1, 50 do
@@ -430,9 +432,9 @@ function State:make_fragments()
    return parts
 end
 
-function State:update_explosion_coro(parts)
+function GameState:update_explosion_coro(parts)
    local elapsed, accx, accy, accz = coroutine.yield()
-   self.world:Step(elapsed - self.prev_time, 10, 8)
+   self.world:Step(elapsed - self.stat.prev_time, 10, 8)
 
    for i, p in pairs(parts) do
       local pos = p.body:GetPosition()
@@ -446,11 +448,11 @@ function State:update_explosion_coro(parts)
                                                           - pos.y * 10))))
    end
 
-   self.prev_time = elapsed
+   self.stat.prev_time = elapsed
 end
 
 function GameState:update_force(stat, accx, accy, accz)
-   local shipbody = stat.spaceship.shipbody
+   local shipbody = self.spaceship.shipbody
    local rot = shipbody:GetAngle()
 
    if accx ~= 0 and accy ~= 0 then
@@ -474,11 +476,11 @@ function GameState:update_force(stat, accx, accy, accz)
             if pow > self.fuel then pow = self.fuel end
             shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 200,
                                                   pow * sin * 200))
-            stat.spaceship:set_power(pow)
+            self.spaceship:set_power(pow)
             self.fuel = self.fuel - (pow * 0.1)
          end
       else
-         stat.spaceship:set_power(0)
+         self.spaceship:set_power(0)
       end
    end
 
@@ -499,9 +501,9 @@ function State:make_adview()
    return adview
 end
 
-function State:show_gameover_coro()
+function GameState:show_gameover_coro()
    local parts = self:make_fragments()
-   local adview = self:make_adview()
+   local adview = self.stat:make_adview()
    local back_clicked = false
    local continue = false
 
@@ -509,7 +511,7 @@ function State:show_gameover_coro()
       print("clicked", url)
 
       local function goback()
-         self.ctx:wrap(webview)("removeFromSuperview")
+         self.stat.ctx:wrap(webview)("removeFromSuperview")
          for i, part in pairs(parts) do
             self.world:DestroyBody(part.body)
             part.view("removeFromSuperview")
@@ -521,8 +523,8 @@ function State:show_gameover_coro()
          goback()
          return false
       elseif url:match("^lualander:watchad") then
-         self:analytics_log("ad_fail", {})
-         adview("presentFromRootViewController:", self.view_controller)
+         self.stat:analytics_log("ad_fail", {})
+         adview("presentFromRootViewController:", self.stat.view_controller)
          continue = true
          goback()
          return false
@@ -531,7 +533,7 @@ function State:show_gameover_coro()
       end
    end
 
-   self:show_webview_hud("gameover", func)
+   self.stat:show_webview_hud("gameover", func)
 
    while not back_clicked do
       self:update_explosion_coro(parts)
@@ -541,14 +543,9 @@ function State:show_gameover_coro()
 end
 
 function GameState:create(stat, level)
-   stat:initialize_game(level)
-   local x, y, width, height = get_bounds(stat.ctx, stat.spaceship.shipview)
-
    local gstat = {
       stat = stat,
       level = level,
-      ship_width = width,
-      ship_height = height,
       fuel = 99.9
    }
    setmetatable(gstat, {__index = GameState})
@@ -632,12 +629,12 @@ function Hud.Message.debug_done(hud, stat)
    stat.successfully_landed = true
 end
 
-function State:create_hud(level)
+function GameState:create_hud(level)
    print("create_hud")
    local hud
    local webview
 
-   webview = self:show_webview_hud(
+   webview = self.stat:show_webview_hud(
       "hud",
       function (url, wb)
          hud:dispatch(self, url)
@@ -648,7 +645,7 @@ function State:create_hud(level)
    self.hud_view = webview
 end
 
-function State:destroy_hud()
+function GameState:destroy_hud()
    self.hud_view("removeFromSuperview")
    self.hud_view = nil
 end
@@ -734,9 +731,9 @@ function State:show_complete_coro()
 end
 
 function GameState:render()
-   local pos = self.stat.spaceship.shipbody:GetPosition()
-   local rot = self.stat.spaceship.shipbody:GetAngle()
-   local shipview = self.stat.spaceship.shipview
+   local pos = self.spaceship.shipbody:GetPosition()
+   local rot = self.spaceship.shipbody:GetAngle()
+   local shipview = self.spaceship.shipview
 
    shipview("setTransform:",
             cg.CGAffineTransformWrap(
@@ -746,16 +743,18 @@ function GameState:render()
                      pos.x * 10 - self.ship_width / 2,
                         - pos.y * 10 - self.ship_height / 2))))
 
-   local vel = self.stat.spaceship.shipbody:GetLinearVelocity()
+   local vel = self.spaceship.shipbody:GetLinearVelocity()
    local vel_abs = vel:Length()
-   self.stat.hud_view("stringByEvaluatingJavaScriptFromString:",
-                      string.format("set_display({velocity:%.3f, fuel:%.1f})",
-                                    vel_abs, self.fuel))
+   self.hud_view("stringByEvaluatingJavaScriptFromString:",
+                 string.format("set_display({velocity:%.3f, fuel:%.1f})",
+                               vel_abs, self.fuel))
 end
 
 function State:game_main_loop_coro(level)
    local gamestat = GameState:create(self, level)
-   self:create_hud(level)
+
+   gamestat:initialize(level)
+   gamestat:create_hud(level)
 
    local clicked = false
    local function func(url, webview)
@@ -770,7 +769,7 @@ function State:game_main_loop_coro(level)
    end
    self:show_webview_hud("ready", func)
 
-   self.spaceship.shipview("setHidden:", false)
+   gamestat.spaceship.shipview("setHidden:", false)
    gamestat:render()
 
    local elapsed, accx, accy, accz
@@ -778,26 +777,56 @@ function State:game_main_loop_coro(level)
       elapsed, accx, accy, accz = coroutine.yield()
    end
 
+   local success = false
    while true do
       self.prev_time = elapsed
       elapsed, accx, accy, accz = coroutine.yield()
       -- print(accx, accy, accz)
 
-      self.world:Step(elapsed - self.prev_time, 10, 8)
+      gamestat.world:Step(elapsed - self.prev_time, 10, 8)
 
-      local pos = self.spaceship.shipbody:GetPosition()
+      local pos = gamestat.spaceship.shipbody:GetPosition()
 
-      if self.collision_detected then
+      if gamestat.collision_detected then
          self:analytics_log("fail_" .. level, {fuel = gamestat.fuel, x = pos.x, y = -pos.y})
-         return false
-      elseif self.successfully_landed then
+         success = false
+         break
+      elseif gamestat.successfully_landed then
          self:analytics_log("done_" .. level, {fuel = gamestat.fuel, x = pos.x, y = -pos.y})
-         return true
+         success = true
+         break
       end
 
       gamestat:update_force(self, accx, accy, accz)
       gamestat:render()
    end
+
+   local result
+   if success then
+      if level < TOTAL_LEVELS then
+         print("welldone!")
+         self:show_welldone_coro()
+         result = "next"
+      else
+         print("complete!")
+         self:show_complete_coro()
+         result = "complete"
+      end
+      gamestat:hide_spaceship()
+   else
+      gamestat:hide_spaceship()
+      local continue = gamestat:show_gameover_coro()
+      if continue then
+         result = "continue"
+      else
+         result = "back"
+      end
+   end
+
+   gamestat.terrain_view("removeFromSuperview")
+   gamestat:destroy_hud()
+
+   return result
 end
 
 function State:analytics_log(event, params)
@@ -862,27 +891,15 @@ local function make_main_coro(stat)
          local levels_cleared = 0
          stat:title_screen_coro()
          while true do
-            local success = stat:game_main_loop_coro(levels_cleared + 1)
-            local complete = false
-            local continue = false
-            if success then
+            local result = stat:game_main_loop_coro(levels_cleared + 1)
+            print("result", result)
+            if result == "next" then
                levels_cleared = levels_cleared + 1
-               if levels_cleared < TOTAL_LEVELS then
-                  print("welldone!")
-                  stat:show_welldone_coro()
-               else
-                  print("complete!")
-                  stat:show_complete_coro()
-                  complete = true
-               end
-               stat:terminate_game()
-            else
-               stat:terminate_game()
-               continue = stat:show_gameover_coro()
-            end
-            stat:destroy_hud()
-            if not (success or continue) or complete then
-               break            -- back to title
+            elseif result == "complete" then
+               break
+            elseif result == "continue" then
+            elseif result == "back" then
+               break
             end
          end
       end
