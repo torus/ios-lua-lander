@@ -747,32 +747,37 @@ function GameState:render()
                                vel_abs, self.fuel))
 end
 
-function State:game_main_loop_coro(level)
-   local gamestat = GameState:create(self, level)
-
-   gamestat:initialize(level)
-   gamestat:create_hud(level)
-
+function GameState:show_ready_hud_coro()
    local clicked = false
    local function func(url, webview)
       print("clicked", url)
       if url:match("^lualander:start") then
-         self.ctx:wrap(webview)("removeFromSuperview")
+         self.stat.ctx:wrap(webview)("removeFromSuperview")
          clicked = true
          return false
       else
          return true
       end
    end
-   self:show_webview_hud("ready", func)
+   self.stat:show_webview_hud("ready", func)
 
-   gamestat.spaceship.shipview("setHidden:", false)
-   gamestat:render()
+   self.spaceship.shipview("setHidden:", false)
+   self:render()
 
    local elapsed, accx, accy, accz
    while not clicked do
       elapsed, accx, accy, accz = coroutine.yield()
    end
+end
+
+function State:game_main_loop_coro(level)
+   local gamestat = GameState:create(self, level)
+
+   gamestat:initialize(level)
+   gamestat:create_hud(level)
+   gamestat:show_ready_hud_coro()
+
+   local elapsed, accx, accy, accz = coroutine.yield()
 
    local success = false
    while true do
