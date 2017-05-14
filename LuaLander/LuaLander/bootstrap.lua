@@ -828,8 +828,8 @@ function GameState:show_result(success)
    return result
 end
 
-function State:game_main_loop_coro(level)
-   local gamestat = GameState:create(self, level)
+function GameState:exec(stat, level)
+   local gamestat = GameState:create(stat, level)
 
    gamestat:initialize()
    gamestat:create_hud()
@@ -842,6 +842,10 @@ function State:game_main_loop_coro(level)
    gamestat:destroy_hud()
 
    return result
+end
+
+function State:game_main_loop_coro(level)
+   return GameState:exec(self, level)
 end
 
 function State:analytics_log(event, params)
@@ -906,7 +910,7 @@ local function make_main_coro(stat)
          local levels_cleared = 0
          stat:title_screen_coro()
          while true do
-            local result = stat:game_main_loop_coro(levels_cleared + 1)
+            local result = GameState:exec(stat, levels_cleared + 1)
             print("result", result)
             if result == "next" then
                levels_cleared = levels_cleared + 1
