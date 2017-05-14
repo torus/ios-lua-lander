@@ -345,8 +345,8 @@ function SpaceShip:set_power(pow)
    self.set_power_func(pow)
 end
 
-function GameState:initialize(level)
-   self.stat:analytics_log("start_" .. level, {})
+function GameState:initialize()
+   self.stat:analytics_log("start_" .. self.level, {})
 
    if self.world then
       self.world = nil
@@ -364,7 +364,7 @@ function GameState:initialize(level)
    spaceship.shipview("setHidden:", true)
    self.stat.view("addSubview:", -spaceship.shipview)
 
-   self.terrain_view = self:make_terrain(level)
+   self.terrain_view = self:make_terrain(self.level)
 
    local screen_bounds = self.stat.screen_bounds
    local groundbodies = make_ground(world, {screen_bounds[3], screen_bounds[4]})
@@ -431,7 +431,7 @@ end
 
 function GameState:update_explosion_coro(parts)
    local elapsed, accx, accy, accz = coroutine.yield()
-   self.world:Step(elapsed - self.stat.prev_time, 10, 8)
+   self.world:Step(elapsed - self.prev_time, 10, 8)
 
    for i, p in pairs(parts) do
       local pos = p.body:GetPosition()
@@ -445,10 +445,10 @@ function GameState:update_explosion_coro(parts)
                                                           - pos.y * 10))))
    end
 
-   self.stat.prev_time = elapsed
+   self.prev_time = elapsed
 end
 
-function GameState:update_force(stat, accx, accy, accz)
+function GameState:update_force(accx, accy, accz)
    local shipbody = self.spaceship.shipbody
    local rot = shipbody:GetAngle()
 
@@ -626,7 +626,7 @@ function Hud.Message.debug_done(hud, stat)
    stat.successfully_landed = true
 end
 
-function GameState:create_hud(level)
+function GameState:create_hud()
    print("create_hud")
    local hud
    local webview
@@ -638,7 +638,7 @@ function GameState:create_hud(level)
          return true
       end
    )
-   hud = Hud:create(level, webview)
+   hud = Hud:create(self.level, webview)
    self.hud_view = webview
 end
 
@@ -674,37 +674,37 @@ function State:show_webview_hud(name, click_handler)
    return webview
 end
 
-function State:show_welldone_coro()
-   print("State:show_welldone")
+function GameState:show_welldone_coro()
+   print("GameState:show_welldone")
    local back_clicked = false
 
    local function func(url, webview)
       print("clicked", url)
       if url:match("^lualander:back") then
-         self.ctx:wrap(webview)("removeFromSuperview")
+         self.stat.ctx:wrap(webview)("removeFromSuperview")
          back_clicked = true
          return false
       else
          return true
       end
    end
-   self:show_webview_hud("welldone", func)
+   self.stat:show_webview_hud("welldone", func)
 
    while not back_clicked do
       coroutine.yield()
    end
 end
 
-function State:show_complete_coro()
-   print("State:show_complete")
-   local adview = self:make_adview()
+function GameState:show_complete_coro()
+   print("GameState:show_complete")
+   local adview = self.stat:make_adview()
 
    local back_clicked = false
 
    local function func(url, webview)
       print("clicked", url)
       local function goback()
-         self.ctx:wrap(webview)("removeFromSuperview")
+         self.stat.ctx:wrap(webview)("removeFromSuperview")
          back_clicked = true
       end
 
@@ -712,15 +712,15 @@ function State:show_complete_coro()
          goback()
          return false
       elseif url:match("^lualander:watchad") then
-         self:analytics_log("ad_complete", {})
-         adview("presentFromRootViewController:", self.view_controller)
+         self.stat:analytics_log("ad_complete", {})
+         adview("presentFromRootViewController:", self.stat.view_controller)
          goback()
          return false
       else
          return true
       end
    end
-   self:show_webview_hud("complete", func)
+   self.stat:show_webview_hud("complete", func)
 
    while not back_clicked do
       coroutine.yield()
@@ -770,42 +770,42 @@ function GameState:show_ready_hud_coro()
    end
 end
 
-function State:game_main_loop_coro(level)
-   local gamestat = GameState:create(self, level)
-
-   gamestat:initialize(level)
-   gamestat:create_hud(level)
-   gamestat:show_ready_hud_coro()
-
+function GameState:main_loop_coro()
    local elapsed, accx, accy, accz = coroutine.yield()
 
    local success = false
    while true do
       self.prev_time = elapsed
       elapsed, accx, accy, accz = coroutine.yield()
-      -- print(accx, accy, accz)
 
-      gamestat.world:Step(elapsed - self.prev_time, 10, 8)
+      self.world:Step(elapsed - self.prev_time, 10, 8)
 
-      local pos = gamestat.spaceship.shipbody:GetPosition()
+      local pos = self.spaceship.shipbody:GetPosition()
 
-      if gamestat.collision_detected then
-         self:analytics_log("fail_" .. level, {fuel = gamestat.fuel, x = pos.x, y = -pos.y})
+      if self.collision_detected then
+         self.stat:analytics_log("fail_" .. self.level,
+                                 {fuel = self.fuel, x = pos.x, y = -pos.y})
          success = false
          break
-      elseif gamestat.successfully_landed then
-         self:analytics_log("done_" .. level, {fuel = gamestat.fuel, x = pos.x, y = -pos.y})
+      elseif self.successfully_landed then
+         self.stat:analytics_log("done_" .. self.level,
+                                 {fuel = self.fuel, x = pos.x, y = -pos.y})
          success = true
          break
       end
 
-      gamestat:update_force(self, accx, accy, accz)
-      gamestat:render()
+      self:update_force(accx, accy, accz)
+      self:render()
    end
 
+   return success
+end
+
+function GameState:show_result(success)
    local result
+
    if success then
-      if level < TOTAL_LEVELS then
+      if self.level < TOTAL_LEVELS then
          print("welldone!")
          self:show_welldone_coro()
          result = "next"
@@ -814,16 +814,29 @@ function State:game_main_loop_coro(level)
          self:show_complete_coro()
          result = "complete"
       end
-      gamestat:hide_spaceship()
+      self:hide_spaceship()
    else
-      gamestat:hide_spaceship()
-      local continue = gamestat:show_gameover_coro()
+      self:hide_spaceship()
+      local continue = self:show_gameover_coro()
       if continue then
          result = "continue"
       else
          result = "back"
       end
    end
+
+   return result
+end
+
+function State:game_main_loop_coro(level)
+   local gamestat = GameState:create(self, level)
+
+   gamestat:initialize()
+   gamestat:create_hud()
+   gamestat:show_ready_hud_coro()
+
+   local success = gamestat:main_loop_coro()
+   local result = gamestat:show_result(success)
 
    gamestat.terrain_view("removeFromSuperview")
    gamestat:destroy_hud()
@@ -911,8 +924,7 @@ end
 function create(view_controller, simulator)
    local stat = {
       view_controller = view_controller,
-      simulator = simulator,
-      prev_time = 0
+      simulator = simulator
    }
    setmetatable(stat, {__index = State})
    stat.main_coro = coroutine.create(make_main_coro(stat))
