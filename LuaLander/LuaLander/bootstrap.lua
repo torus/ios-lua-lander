@@ -364,9 +364,6 @@ function GameState:initialize(level)
    spaceship.shipview("setHidden:", true)
    self.stat.view("addSubview:", -spaceship.shipview)
 
-   if self.terrain_view then
-      self.terrain_view("removeFromSuperview")
-   end
    self.terrain_view = self:make_terrain(level)
 
    local screen_bounds = self.stat.screen_bounds
