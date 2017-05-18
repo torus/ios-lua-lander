@@ -348,16 +348,6 @@ end
 function GameState:initialize()
    self.stat:analytics_log("start_" .. self.level, {})
 
-   if self.world then
-      self.world = nil
-      if self.ship then
-         self.ship("removeFromSuperview")
-         self.ship = nil
-      end
-
-      collectgarbage()
-   end
-
    local world = make_world()
    self.world = world
    local spaceship = SpaceShip:create(self.stat.ctx, world)
