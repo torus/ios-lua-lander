@@ -7,6 +7,7 @@
 <table style="margin: 20px 0px auto auto; text-align: right">
   <tbody>
     <tr><td>MISSION</td><td width="70px">#<span id="level">9</span></td></tr>
+    <tr><td>THRUST</td><td><span id="thrust">99.9</span></td></tr>
     <tr><td>VELOCITY</td><td><span id="velocity">99.9</span></td></tr>
     <tr><td>FUEL</td><td><span id="fuel">99.9</span></td></tr>
   </tbody>
@@ -28,6 +29,7 @@ function set_display(data) {
     }
     if (data.velocity != null) document.getElementById("velocity").innerText = data.velocity
     if (data.fuel != null) document.getElementById("fuel").innerText = data.fuel
+    if (data.thrust != null) document.getElementById("thrust").innerText = data.thrust * 1000
 }
 function show_level() {
     var div = document.createElement("div")

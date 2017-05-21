@@ -446,6 +446,20 @@ function GameState:update_explosion_coro(parts)
    self.prev_time = input.elapsed
 end
 
+function GameState.power_from_input(accx, accy, accz)
+   local a = accx * accx + accy * accy
+   local pow = 0
+   if a > 0 then
+      local tan = accz / math.sqrt(a)
+      if tan < 0 then
+         local ang = - math.atan(tan)
+         pow = math.min(1, ang / (math.pi / 4))
+      end
+   end
+
+   return pow
+end
+
 function GameState:update_force(accx, accy, accz)
    local shipbody = self.spaceship.shipbody
    local rot = shipbody:GetAngle()
@@ -459,24 +473,35 @@ function GameState:update_force(accx, accy, accz)
    end
 
    if accz ~= 0 and self.fuel > 0 then
-      local a = accx * accx + accy * accy
-      if a > 0 then
-         local tan = accz / math.sqrt(a)
-         if tan < 0 then
-            local ang = - math.atan(tan)
-            local sin = math.sin(rot + math.pi / 2)
-            local cos = math.cos(rot + math.pi / 2)
-            local pow = math.min(1, ang / (math.pi / 4))
+      local pow = GameState.power_from_input(accx, accy, accz)
+      
+      if pow > self.fuel then pow = self.fuel end
+      local sin = math.sin(rot + math.pi / 2)
+      local cos = math.cos(rot + math.pi / 2)
+      shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 200,
+                                            pow * sin * 200))
+      self.spaceship:set_power(pow)
+      self.fuel = self.fuel - (pow * 0.1)
+      self.thrust = pow
 
-            if pow > self.fuel then pow = self.fuel end
-            shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 200,
-                                                  pow * sin * 200))
-            self.spaceship:set_power(pow)
-            self.fuel = self.fuel - (pow * 0.1)
-         end
-      else
-         self.spaceship:set_power(0)
-      end
+      -- local a = accx * accx + accy * accy
+      -- if a > 0 then
+      --    local tan = accz / math.sqrt(a)
+      --    if tan < 0 then
+      --       local ang = - math.atan(tan)
+      --       local sin = math.sin(rot + math.pi / 2)
+      --       local cos = math.cos(rot + math.pi / 2)
+      --       local pow = math.min(1, ang / (math.pi / 4))
+
+      --       if pow > self.fuel then pow = self.fuel end
+      --       shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 200,
+      --                                             pow * sin * 200))
+      --       self.spaceship:set_power(pow)
+      --       self.fuel = self.fuel - (pow * 0.1)
+      --    end
+      -- else
+      --    self.spaceship:set_power(0)
+      -- end
    end
 
    local av = shipbody:GetAngularVelocity()
@@ -541,7 +566,8 @@ function GameState:create(stat, level)
    local gstat = {
       stat = stat,
       level = level,
-      fuel = 99.9
+      fuel = 99.9,
+      thrust = 0
    }
    setmetatable(gstat, {__index = GameState})
 
@@ -741,8 +767,8 @@ function GameState:render()
    local vel = self.spaceship.shipbody:GetLinearVelocity()
    local vel_abs = vel:Length()
    self.hud_view("stringByEvaluatingJavaScriptFromString:",
-                 string.format("set_display({velocity:%.3f, fuel:%.1f})",
-                               vel_abs, self.fuel))
+                 string.format("set_display({velocity:%.3f, fuel:%.1f, thrust:%.3f})",
+                               vel_abs, self.fuel, self.thrust))
 end
 
 function GameState:show_ready_hud_coro()
@@ -757,14 +783,17 @@ function GameState:show_ready_hud_coro()
          return true
       end
    end
-   self.stat:show_webview_hud("ready", func)
+   local hud_view = self.stat:show_webview_hud("ready", func)
 
    self.spaceship.shipview("setHidden:", false)
    self:render()
 
-   local elapsed, accx, accy, accz
    while not clicked do
-      self.stat:next_frame()
+      local input = self.stat:next_frame()
+      local pow = GameState.power_from_input(input.accx, input.accy, input.accz)
+      self.hud_view("stringByEvaluatingJavaScriptFromString:",
+                    string.format("set_display({fuel:%.3f, velocity:%.3f, thrust:%.3f})",
+                                  self.fuel, 0, pow))
    end
 end
 
