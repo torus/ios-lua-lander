@@ -478,8 +478,8 @@ function GameState:update_force(accx, accy, accz)
       if pow > self.fuel then pow = self.fuel end
       local sin = math.sin(rot + math.pi / 2)
       local cos = math.cos(rot + math.pi / 2)
-      shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 200,
-                                            pow * sin * 200))
+      shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 100,
+                                            pow * sin * 100))
       self.spaceship:set_power(pow)
       self.fuel = self.fuel - (pow * 0.1)
       self.thrust = pow

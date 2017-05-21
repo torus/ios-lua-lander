@@ -22,6 +22,7 @@
 
 <script type="text/javascript">
 var level = 0
+var int_id
 function set_display(data) {
     if (data.level != null) {
         document.getElementById("level").innerText = data.level
@@ -29,7 +30,25 @@ function set_display(data) {
     }
     if (data.velocity != null) document.getElementById("velocity").innerText = data.velocity
     if (data.fuel != null) document.getElementById("fuel").innerText = data.fuel
-    if (data.thrust != null) document.getElementById("thrust").innerText = data.thrust * 1000
+    var thrust_warning = false
+    if (data.thrust != null) {
+        var elem = document.getElementById("thrust")
+        elem.innerText = data.thrust * 1000
+        thrust_warning = data.thrust > 0.7
+        if (thrust_warning && !int_id) {
+            var phase = 0
+            int_id = setInterval(function() {
+                var col = Math.floor(128 * Math.sin(phase)) + 128
+                var color = "rgb(255," + col + "," + col + ")"
+                elem.style.backgroundColor = color
+                phase += 0.3
+            }, 1000 / 12)
+        } else if (!thrust_warning && int_id) {
+            clearInterval(int_id)
+            int_id = null
+            elem.style.backgroundColor = "rgb(255,255,255)"
+        }
+    }
 }
 function show_level() {
     var div = document.createElement("div")
