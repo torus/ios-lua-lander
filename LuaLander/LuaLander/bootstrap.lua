@@ -483,25 +483,6 @@ function GameState:update_force(accx, accy, accz)
       self.spaceship:set_power(pow)
       self.fuel = self.fuel - (pow * 0.1)
       self.thrust = pow
-
-      -- local a = accx * accx + accy * accy
-      -- if a > 0 then
-      --    local tan = accz / math.sqrt(a)
-      --    if tan < 0 then
-      --       local ang = - math.atan(tan)
-      --       local sin = math.sin(rot + math.pi / 2)
-      --       local cos = math.cos(rot + math.pi / 2)
-      --       local pow = math.min(1, ang / (math.pi / 4))
-
-      --       if pow > self.fuel then pow = self.fuel end
-      --       shipbody:ApplyForceToCenter(b2.b2Vec2(pow * cos * 200,
-      --                                             pow * sin * 200))
-      --       self.spaceship:set_power(pow)
-      --       self.fuel = self.fuel - (pow * 0.1)
-      --    end
-      -- else
-      --    self.spaceship:set_power(0)
-      -- end
    end
 
    local av = shipbody:GetAngularVelocity()
