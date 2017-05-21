@@ -419,9 +419,17 @@ function GameState:make_fragments()
    return parts
 end
 
-function GameState:update_explosion_coro(parts)
+function State:next_frame()
    local elapsed, accx, accy, accz = coroutine.yield()
-   self.world:Step(elapsed - self.prev_time, 10, 8)
+   return {elapsed = elapsed,
+           accx = accx,
+           accy = accy,
+           accz = accz}
+end
+
+function GameState:update_explosion_coro(parts)
+   local input = self.stat:next_frame()
+   self.world:Step(input.elapsed - self.prev_time, 10, 8)
 
    for i, p in pairs(parts) do
       local pos = p.body:GetPosition()
@@ -435,7 +443,7 @@ function GameState:update_explosion_coro(parts)
                                                           - pos.y * 10))))
    end
 
-   self.prev_time = elapsed
+   self.prev_time = input.elapsed
 end
 
 function GameState:update_force(accx, accy, accz)
@@ -681,7 +689,7 @@ function GameState:show_welldone_coro()
    self.stat:show_webview_hud("welldone", func)
 
    while not back_clicked do
-      coroutine.yield()
+      self.stat:next_frame()
    end
 end
 
@@ -713,7 +721,7 @@ function GameState:show_complete_coro()
    self.stat:show_webview_hud("complete", func)
 
    while not back_clicked do
-      coroutine.yield()
+      self.stat:next_frame()
    end
 end
 
@@ -756,19 +764,19 @@ function GameState:show_ready_hud_coro()
 
    local elapsed, accx, accy, accz
    while not clicked do
-      elapsed, accx, accy, accz = coroutine.yield()
+      self.stat:next_frame()
    end
 end
 
 function GameState:main_loop_coro()
-   local elapsed, accx, accy, accz = coroutine.yield()
+   local input = self.stat:next_frame()
 
    local success = false
    while true do
-      self.prev_time = elapsed
-      elapsed, accx, accy, accz = coroutine.yield()
+      self.prev_time = input.elapsed
+      input = self.stat:next_frame()
 
-      self.world:Step(elapsed - self.prev_time, 10, 8)
+      self.world:Step(input.elapsed - self.prev_time, 10, 8)
 
       local pos = self.spaceship.shipbody:GetPosition()
 
@@ -784,7 +792,7 @@ function GameState:main_loop_coro()
          break
       end
 
-      self:update_force(accx, accy, accz)
+      self:update_force(input.accx, input.accy, input.accz)
       self:render()
    end
 
@@ -887,7 +895,7 @@ function State:title_screen_coro()
       if started then
          break
       else
-         coroutine.yield()
+         self:next_frame()
       end
    end
 end
